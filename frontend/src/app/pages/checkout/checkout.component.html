@@ -1,0 +1,67 @@
+<section class="section">
+  <div class="container">
+    <h1 class="section-title fade-up">Checkout</h1>
+
+    @if (cart.items().length === 0) {
+      <p class="section-lead">Your bag is empty.</p>
+      <a routerLink="/shop" class="btn">Continue shopping</a>
+    } @else {
+      <div class="checkout-layout fade-up">
+        <form class="form" (ngSubmit)="submit()">
+          <label>
+            Full name
+            <input name="customerName" [(ngModel)]="form.customerName" required />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" [(ngModel)]="form.email" required />
+          </label>
+          <label>
+            Phone
+            <input name="phone" [(ngModel)]="form.phone" />
+          </label>
+          <label>
+            Shipping address
+            <input
+              name="shippingAddress"
+              [(ngModel)]="form.shippingAddress"
+              required
+            />
+          </label>
+          <div class="row">
+            <label>
+              City
+              <input name="city" [(ngModel)]="form.city" required />
+            </label>
+            <label>
+              Postal code
+              <input name="postalCode" [(ngModel)]="form.postalCode" required />
+            </label>
+          </div>
+
+          @if (error()) {
+            <p class="error">{{ error() }}</p>
+          }
+
+          <button class="btn" type="submit" [disabled]="submitting()">
+            {{ submitting() ? 'Placing order…' : 'Place order' }}
+          </button>
+        </form>
+
+        <aside class="summary">
+          <h2>Order summary</h2>
+          @for (item of cart.items(); track item.product.id) {
+            <div class="row-line">
+              <span>{{ item.product.name }} × {{ item.quantity }}</span>
+              <span>{{ item.product.price * item.quantity | currency }}</span>
+            </div>
+          }
+          <div class="row-line total">
+            <span>Total</span>
+            <span>{{ cart.total() | currency }}</span>
+          </div>
+        </aside>
+      </div>
+    }
+  </div>
+</section>

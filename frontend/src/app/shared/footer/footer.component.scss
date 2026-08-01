@@ -1,0 +1,44 @@
+.site-footer {
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.footer-inner {
+  padding: 2.5rem 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.brand-mark {
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.footer-copy,
+.legal {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.footer-links a:hover {
+  color: var(--blush-deep);
+}
+
+@media (min-width: 768px) {
+  .footer-inner {
+    grid-template-columns: 1.4fr 1fr auto;
+    align-items: end;
+  }
+}

@@ -1,0 +1,10 @@
+<a class="product-card" [routerLink]="['/product', product.slug]">
+  <div class="media">
+    <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+  </div>
+  <div class="meta">
+    <p class="category">{{ product.categoryName }}</p>
+    <h3>{{ product.name }}</h3>
+    <p class="price">{{ product.price | currency }}</p>
+  </div>
+</a>

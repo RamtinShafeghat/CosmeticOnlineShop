@@ -1,0 +1,44 @@
+.product-card {
+  display: grid;
+  gap: 1rem;
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.media {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--petal);
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.product-card:hover .media img {
+  transform: scale(1.04);
+}
+
+.category {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blush-deep);
+  margin-bottom: 0.35rem;
+}
+
+h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.price {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}

@@ -1,0 +1,114 @@
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 7rem 1fr auto;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.line img {
+  width: 7rem;
+  height: 8.5rem;
+  object-fit: cover;
+  background: var(--petal);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  display: inline-block;
+  margin-bottom: 0.35rem;
+}
+
+.price,
+.note {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.line-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 0.85rem;
+}
+
+label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+input {
+  width: 4.2rem;
+  min-height: 2.4rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0 0.5rem;
+}
+
+.linkish {
+  border: 0;
+  background: transparent;
+  color: var(--blush-deep);
+  cursor: pointer;
+  padding: 0;
+}
+
+.summary {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+}
+
+.summary h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.row.total {
+  color: var(--ink);
+  font-weight: 500;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.note {
+  margin: 1rem 0 1.25rem;
+}
+
+.full {
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .line {
+    grid-template-columns: 5.5rem 1fr;
+  }
+
+  .line-total {
+    grid-column: 2;
+  }
+}

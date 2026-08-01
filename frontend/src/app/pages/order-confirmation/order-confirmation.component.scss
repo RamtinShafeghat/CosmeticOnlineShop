@@ -1,0 +1,50 @@
+.narrow {
+  max-width: 40rem;
+}
+
+.eyebrow {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--blush-deep);
+  margin-bottom: 0.75rem;
+}
+
+.panel {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+  margin-bottom: 1.5rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.row span:last-child {
+  text-align: right;
+}
+
+.row.total {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 1rem 0;
+}
+
+.status {
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+}
+
+.status.error {
+  color: #9b3b45;
+}

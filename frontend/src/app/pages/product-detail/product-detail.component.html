@@ -1,0 +1,44 @@
+<section class="section">
+  <div class="container">
+    @if (loading()) {
+      <p class="status">Loading product…</p>
+    } @else if (error() || !product()) {
+      <p class="status error">{{ error() || 'Product not found.' }}</p>
+      <a routerLink="/shop" class="btn">Back to shop</a>
+    } @else {
+      <div class="detail fade-up">
+        <div class="media">
+          <img [src]="product()!.imageUrl" [alt]="product()!.name" />
+        </div>
+        <div class="info">
+          <p class="eyebrow">{{ product()!.categoryName }} · {{ product()!.brand }}</p>
+          <h1>{{ product()!.name }}</h1>
+          <p class="price">{{ product()!.price | currency }}</p>
+          <p class="description">{{ product()!.description }}</p>
+          <p class="meta">Skin type: {{ product()!.skinType }} · In stock: {{ product()!.stock }}</p>
+
+          <div class="actions">
+            <label>
+              Qty
+              <input
+                type="number"
+                min="1"
+                [max]="product()!.stock"
+                [(ngModel)]="quantity"
+                name="quantity"
+              />
+            </label>
+            <button class="btn" type="button" (click)="addToBag()" [disabled]="product()!.stock < 1">
+              Add to bag
+            </button>
+            <a routerLink="/cart" class="btn btn-ghost">View bag</a>
+          </div>
+
+          @if (added()) {
+            <p class="added">Added to your bag.</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>

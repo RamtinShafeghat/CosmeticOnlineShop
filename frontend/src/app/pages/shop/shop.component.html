@@ -1,0 +1,55 @@
+<section class="section shop">
+  <div class="container">
+    <div class="shop-header fade-up">
+      <div>
+        <h1 class="section-title">Shop</h1>
+        <p class="section-lead">
+          Discover Velora skincare, makeup, fragrance, and body care.
+        </p>
+      </div>
+      <form class="search" (ngSubmit)="onSearch()">
+        <input
+          type="search"
+          name="search"
+          [(ngModel)]="search"
+          placeholder="Search products"
+          aria-label="Search products"
+        />
+        <button class="btn" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="filters fade-up">
+      <a
+        routerLink="/shop"
+        class="filter"
+        [class.active]="!activeCategorySlug()"
+      >
+        All
+      </a>
+      @for (category of categories(); track category.id) {
+        <a
+          [routerLink]="['/shop', category.slug]"
+          class="filter"
+          [class.active]="activeCategorySlug() === category.slug"
+        >
+          {{ category.name }}
+        </a>
+      }
+    </div>
+
+    @if (loading()) {
+      <p class="status">Loading products…</p>
+    } @else if (error()) {
+      <p class="status error">{{ error() }}</p>
+    } @else if (products().length === 0) {
+      <p class="status">No products match your filters.</p>
+    } @else {
+      <div class="product-grid">
+        @for (product of products(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    }
+  </div>
+</section>

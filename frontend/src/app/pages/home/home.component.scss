@@ -1,0 +1,134 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  align-items: end;
+  color: #fffaf8;
+  overflow: hidden;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(42, 34, 36, 0.18) 10%, rgba(42, 34, 36, 0.62) 100%),
+    url('https://images.unsplash.com/photo-1596462502278-27bfdd403348?auto=format&fit=crop&w=1800&q=80')
+      center / cover no-repeat;
+  transform: scale(1.02);
+  animation: heroDrift 14s ease-in-out infinite alternate;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2.5rem, var(--max));
+  margin: 0 auto 5.5rem;
+  max-width: 38rem;
+}
+
+.hero-brand {
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.hero h1 {
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  font-weight: 500;
+  max-width: 16ch;
+  margin-bottom: 0.9rem;
+}
+
+.hero-lead {
+  font-size: 1.05rem;
+  max-width: 34ch;
+  color: rgba(255, 250, 248, 0.88);
+  margin-bottom: 1.8rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.hero .btn-ghost {
+  border-color: rgba(255, 250, 248, 0.7);
+  color: #fffaf8;
+}
+
+.hero .btn-ghost:hover {
+  background: #fffaf8;
+  color: var(--ink);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+.status {
+  color: var(--ink-soft);
+}
+
+.status.error {
+  color: #9b3b45;
+}
+
+.ritual {
+  padding-top: 1rem;
+}
+
+.ritual-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.ritual-panel {
+  min-height: 24rem;
+  background:
+    linear-gradient(160deg, rgba(217, 137, 147, 0.28), rgba(255, 250, 248, 0.1)),
+    url('https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80')
+      center / cover no-repeat;
+  animation: softPulse 6s ease-in-out infinite;
+}
+
+@keyframes heroDrift {
+  from {
+    transform: scale(1.02) translateY(0);
+  }
+  to {
+    transform: scale(1.06) translateY(-1.5%);
+  }
+}
+
+@media (max-width: 960px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ritual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ritual-panel {
+    min-height: 16rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-content {
+    width: min(100% - 1.5rem, var(--max));
+    margin-bottom: 4rem;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
