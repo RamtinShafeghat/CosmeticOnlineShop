@@ -32,39 +32,54 @@ frontend/                    # Angular storefront
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - Node.js 20+ and npm
 
-### Install the .NET 8 SDK
+### Cursor Desktop / Cloud Agent
 
-If `dotnet` says **command not found**, install the SDK first, then **restart the Cursor terminal** (or Cursor itself).
+This repo includes `.cursor/environment.json`, which installs the .NET SDK and puts `dotnet` on your PATH.
+
+If a terminal still says `dotnet: command not found`, run either:
+
+```bash
+# one-time PATH fix for this session
+export DOTNET_ROOT="$HOME/.dotnet"
+export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
+sudo ln -sf "$HOME/.dotnet/dotnet" /usr/local/bin/dotnet
+```
+
+or use the helper script (installs .NET if needed):
+
+```bash
+./scripts/run-api.sh
+```
+
+### Install the .NET 8 SDK (local machine)
+
+If you are running outside Cursor’s provisioned environment and `dotnet` is missing:
 
 **macOS (Homebrew):**
 ```bash
 brew install --cask dotnet-sdk
 ```
 
-**Windows:**
-1. Download the [.NET 8 SDK installer](https://dotnet.microsoft.com/download/dotnet/8.0)
-2. Run it, then open a **new** terminal and run `dotnet --version`
+**Windows:** download the [.NET 8 SDK installer](https://dotnet.microsoft.com/download/dotnet/8.0), then open a new terminal.
 
-**Linux (Ubuntu/Debian):**
+**Linux:**
 ```bash
-wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
-bash dotnet-install.sh --channel 8.0
+curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0
 echo 'export DOTNET_ROOT="$HOME/.dotnet"' >> ~/.bashrc
-echo 'export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools"' >> ~/.bashrc
+echo 'export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"' >> ~/.bashrc
 source ~/.bashrc
+sudo ln -sf "$HOME/.dotnet/dotnet" /usr/local/bin/dotnet
 ```
 
-Verify:
-```bash
-dotnet --version
-```
-You should see something like `8.0.x`.
+Verify with `dotnet --version` (expect `8.0.x`).
 
 ## Run locally
 
 ### 1. Start the API
 
 ```bash
+./scripts/run-api.sh
+# or:
 cd backend/CosmeticShop.Api
 dotnet run --launch-profile http
 ```
@@ -75,6 +90,8 @@ Swagger: `http://localhost:5041/swagger`
 ### 2. Start the Angular storefront
 
 ```bash
+./scripts/run-web.sh
+# or:
 cd frontend
 npm install
 npm start
