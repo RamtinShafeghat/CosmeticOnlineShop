@@ -89,6 +89,21 @@ Swagger: `http://localhost:5041/swagger`
 
 ### 2. Start the Angular storefront
 
+You do **not** need a global `ng` command. Use `npm` from the `frontend` folder.
+
+**Windows (Command Prompt / PowerShell):**
+```bat
+cd frontend
+npm install
+npm start
+```
+
+Or double-run / call:
+```bat
+scripts\run-web.cmd
+```
+
+**macOS / Linux:**
 ```bash
 ./scripts/run-web.sh
 # or:
@@ -97,9 +112,30 @@ npm install
 npm start
 ```
 
+If you see `'ng' is not recognized`, you ran `ng` directly. Use `npm start` instead (it uses the local Angular CLI from `node_modules`).
+
 Storefront: `http://localhost:4200`
 
 The frontend calls `http://localhost:5041/api` (see `frontend/src/environments/environment.ts`). CORS is enabled for the Angular dev server.
+
+### Opening the site from Cursor Desktop
+
+The API and Angular app run **inside the Cursor cloud VM**, not on your laptop. Opening `http://localhost:4200` in Chrome on your computer will fail unless Cursor is forwarding that port.
+
+Do one of these:
+
+1. **Port forward (recommended)**  
+   - In Cursor Desktop, open the cloud agent.  
+   - Look for the **plug / Ports** control (often top-right).  
+   - Confirm ports `4200` (frontend) and `5041` (API) are forwarded.  
+   - Open the **forwarded local URL** Cursor shows (it may not be 4200 if that port was busy).
+
+2. **Simple Browser inside Cursor**  
+   - `Ctrl/Cmd+Shift+P` → **Simple Browser: Show**  
+   - Enter `http://localhost:4200`
+
+3. **Remote desktop**  
+   - Take control of the agent desktop and open `http://localhost:4200` in the VM browser.
 
 ## API overview
 
