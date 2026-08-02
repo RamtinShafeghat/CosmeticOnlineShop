@@ -89,6 +89,21 @@ Swagger: `http://localhost:5041/swagger`
 
 ### 2. Start the Angular storefront
 
+You do **not** need a global `ng` command. Use `npm` from the `frontend` folder.
+
+**Windows (Command Prompt / PowerShell):**
+```bat
+cd frontend
+npm install
+npm start
+```
+
+Or double-run / call:
+```bat
+scripts\run-web.cmd
+```
+
+**macOS / Linux:**
 ```bash
 ./scripts/run-web.sh
 # or:
@@ -96,6 +111,8 @@ cd frontend
 npm install
 npm start
 ```
+
+If you see `'ng' is not recognized`, you ran `ng` directly. Use `npm start` instead (it uses the local Angular CLI from `node_modules`).
 
 Storefront: `http://localhost:4200`
 
