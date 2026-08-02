@@ -1,0 +1,16 @@
+{
+  "name": "velora-cosmetics-shop",
+  "install": "set -euo pipefail; if [ ! -x \"$HOME/.dotnet/dotnet\" ]; then curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0 --install-dir \"$HOME/.dotnet\"; fi; grep -q 'DOTNET_ROOT' \"$HOME/.bashrc\" || { printf '\\n# .NET SDK\\nexport DOTNET_ROOT=\"$HOME/.dotnet\"\\nexport PATH=\"$HOME/.dotnet:$HOME/.dotnet/tools:$PATH\"\\n' >> \"$HOME/.bashrc\"; }; sudo ln -sf \"$HOME/.dotnet/dotnet\" /usr/local/bin/dotnet; export DOTNET_ROOT=\"$HOME/.dotnet\"; export PATH=\"$HOME/.dotnet:$HOME/.dotnet/tools:$PATH\"; dotnet --info; node --version; npm --version; dotnet restore backend/CosmeticShop.sln; npm --prefix frontend ci || npm --prefix frontend install",
+  "terminals": [
+    {
+      "name": "api",
+      "command": "dotnet run --project backend/CosmeticShop.Api --launch-profile http",
+      "description": "ASP.NET Core API on http://localhost:5041"
+    },
+    {
+      "name": "web",
+      "command": "npm --prefix frontend start",
+      "description": "Angular storefront on http://localhost:4200"
+    }
+  ]
+}
