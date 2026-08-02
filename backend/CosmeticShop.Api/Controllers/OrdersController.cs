@@ -61,6 +61,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
             {
                 ProductId = product.Id,
                 ProductName = product.Name,
+                ProductNameFa = product.NameFa,
                 UnitPrice = product.Price,
                 Quantity = item.Quantity
             };
@@ -114,6 +115,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
                 .Select(i => new OrderItemDto(
                     i.ProductId,
                     i.ProductName,
+                    i.ProductNameFa,
                     i.UnitPrice,
                     i.Quantity,
                     i.UnitPrice * i.Quantity))

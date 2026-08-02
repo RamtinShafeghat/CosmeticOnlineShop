@@ -1,29 +1,30 @@
 <section class="section">
   <div class="container narrow fade-up">
     @if (loading()) {
-      <p class="status">Loading order…</p>
+      <p class="status">{{ 'order.loading' | t }}</p>
     } @else if (error() || !order()) {
-      <p class="status error">{{ error() || 'Order not found.' }}</p>
-      <a routerLink="/shop" class="btn">Back to shop</a>
+      <p class="status error">{{ 'order.notFound' | t }}</p>
+      <a routerLink="/shop" class="btn">{{ 'order.back' | t }}</a>
     } @else {
-      <p class="eyebrow">Thank you</p>
-      <h1 class="section-title">Order #{{ order()!.id }} confirmed</h1>
+      <p class="eyebrow">{{ 'order.thanks' | t }}</p>
+      <h1 class="section-title">
+        {{ 'order.confirmed' | t: { id: order()!.id } }}
+      </h1>
       <p class="section-lead">
-        We’ve emailed a receipt to {{ order()!.email }}. Your Velora order is on
-        its way to being prepared.
+        {{ 'order.receipt' | t: { email: order()!.email } }}
       </p>
 
       <div class="panel">
         <div class="row">
-          <span>Status</span>
-          <span>{{ order()!.status }}</span>
+          <span>{{ 'order.status' | t }}</span>
+          <span>{{ statusLabel(order()!.status) }}</span>
         </div>
         <div class="row">
-          <span>Placed</span>
-          <span>{{ order()!.createdAt | date: 'medium' }}</span>
+          <span>{{ 'order.placed' | t }}</span>
+          <span>{{ order()!.createdAt | date: 'medium':undefined:i18n.locale() }}</span>
         </div>
         <div class="row">
-          <span>Ship to</span>
+          <span>{{ 'order.shipTo' | t }}</span>
           <span>
             {{ order()!.customerName }}<br />
             {{ order()!.shippingAddress }}<br />
@@ -35,28 +36,44 @@
 
         @for (item of order()!.items; track item.productId) {
           <div class="row">
-            <span>{{ item.productName }} × {{ item.quantity }}</span>
-            <span>{{ item.lineTotal | currency }}</span>
+            <span>
+              {{
+                i18n.lang() === 'fa'
+                  ? item.productNameFa || item.productName
+                  : item.productName
+              }}
+              × {{ item.quantity }}
+            </span>
+            <span>
+              {{
+                item.lineTotal | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+              }}
+            </span>
           </div>
         }
 
         <div class="row">
-          <span>Shipping</span>
+          <span>{{ 'order.shipping' | t }}</span>
           <span>
             @if (order()!.shippingCost === 0) {
-              Free
+              {{ 'order.free' | t }}
             } @else {
-              {{ order()!.shippingCost | currency }}
+              {{
+                order()!.shippingCost
+                  | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+              }}
             }
           </span>
         </div>
         <div class="row total">
-          <span>Total</span>
-          <span>{{ order()!.total | currency }}</span>
+          <span>{{ 'order.total' | t }}</span>
+          <span>
+            {{ order()!.total | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+          </span>
         </div>
       </div>
 
-      <a routerLink="/shop" class="btn">Continue shopping</a>
+      <a routerLink="/shop" class="btn">{{ 'order.continue' | t }}</a>
     }
   </div>
 </section>

@@ -2,20 +2,18 @@
   <div class="container">
     <div class="shop-header fade-up">
       <div>
-        <h1 class="section-title">Shop</h1>
-        <p class="section-lead">
-          Discover Velora skincare, makeup, fragrance, and body care.
-        </p>
+        <h1 class="section-title">{{ 'shop.title' | t }}</h1>
+        <p class="section-lead">{{ 'shop.lead' | t }}</p>
       </div>
       <form class="search" (ngSubmit)="onSearch()">
         <input
           type="search"
           name="search"
           [(ngModel)]="search"
-          placeholder="Search products"
-          aria-label="Search products"
+          [placeholder]="'shop.searchPlaceholder' | t"
+          [attr.aria-label]="'shop.searchPlaceholder' | t"
         />
-        <button class="btn" type="submit">Search</button>
+        <button class="btn" type="submit">{{ 'shop.search' | t }}</button>
       </form>
     </div>
 
@@ -25,7 +23,7 @@
         class="filter"
         [class.active]="!activeCategorySlug()"
       >
-        All
+        {{ 'shop.all' | t }}
       </a>
       @for (category of categories(); track category.id) {
         <a
@@ -33,17 +31,17 @@
           class="filter"
           [class.active]="activeCategorySlug() === category.slug"
         >
-          {{ category.name }}
+          {{ i18n.categoryName(category) }}
         </a>
       }
     </div>
 
     @if (loading()) {
-      <p class="status">Loading products…</p>
-    } @else if (error()) {
-      <p class="status error">{{ error() }}</p>
+      <p class="status">{{ 'shop.loading' | t }}</p>
+    } @else if (errorKey()) {
+      <p class="status error">{{ errorKey()! | t }}</p>
     } @else if (products().length === 0) {
-      <p class="status">No products match your filters.</p>
+      <p class="status">{{ 'shop.empty' | t }}</p>
     } @else {
       <div class="product-grid">
         @for (product of products(); track product.id) {

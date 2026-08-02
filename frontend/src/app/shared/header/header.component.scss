@@ -68,3 +68,32 @@
   font-size: 0.7rem;
   font-weight: 600;
 }
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  min-height: 2rem;
+  padding: 0 0.65rem;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+}
+
+.lang-btn.active {
+  background: var(--ink);
+  color: var(--foam);
+}
+
+@media (max-width: 720px) {
+  .nav {
+    gap: 0.85rem;
+    font-size: 0.75rem;
+  }
+}

@@ -1,27 +1,27 @@
 <section class="section">
   <div class="container">
-    <h1 class="section-title fade-up">Checkout</h1>
+    <h1 class="section-title fade-up">{{ 'checkout.title' | t }}</h1>
 
     @if (cart.items().length === 0) {
-      <p class="section-lead">Your bag is empty.</p>
-      <a routerLink="/shop" class="btn">Continue shopping</a>
+      <p class="section-lead">{{ 'checkout.empty' | t }}</p>
+      <a routerLink="/shop" class="btn">{{ 'checkout.continue' | t }}</a>
     } @else {
       <div class="checkout-layout fade-up">
         <form class="form" (ngSubmit)="submit()">
           <label>
-            Full name
+            {{ 'checkout.fullName' | t }}
             <input name="customerName" [(ngModel)]="form.customerName" required />
           </label>
           <label>
-            Email
+            {{ 'checkout.email' | t }}
             <input type="email" name="email" [(ngModel)]="form.email" required />
           </label>
           <label>
-            Phone
+            {{ 'checkout.phone' | t }}
             <input name="phone" [(ngModel)]="form.phone" />
           </label>
           <label>
-            Shipping address
+            {{ 'checkout.address' | t }}
             <input
               name="shippingAddress"
               [(ngModel)]="form.shippingAddress"
@@ -30,35 +30,46 @@
           </label>
           <div class="row">
             <label>
-              City
+              {{ 'checkout.city' | t }}
               <input name="city" [(ngModel)]="form.city" required />
             </label>
             <label>
-              Postal code
+              {{ 'checkout.postal' | t }}
               <input name="postalCode" [(ngModel)]="form.postalCode" required />
             </label>
           </div>
 
-          @if (error()) {
-            <p class="error">{{ error() }}</p>
+          @if (errorMessage()) {
+            <p class="error">{{ errorMessage() }}</p>
+          } @else if (errorKey()) {
+            <p class="error">{{ errorKey()! | t }}</p>
           }
 
           <button class="btn" type="submit" [disabled]="submitting()">
-            {{ submitting() ? 'Placing order…' : 'Place order' }}
+            {{ (submitting() ? 'checkout.placing' : 'checkout.placeOrder') | t }}
           </button>
         </form>
 
         <aside class="summary">
-          <h2>Order summary</h2>
+          <h2>{{ 'checkout.summary' | t }}</h2>
           @for (item of cart.items(); track item.product.id) {
             <div class="row-line">
-              <span>{{ item.product.name }} × {{ item.quantity }}</span>
-              <span>{{ item.product.price * item.quantity | currency }}</span>
+              <span>
+                {{ i18n.productName(item.product) }} × {{ item.quantity }}
+              </span>
+              <span>
+                {{
+                  item.product.price * item.quantity
+                    | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+                }}
+              </span>
             </div>
           }
           <div class="row-line total">
-            <span>Total</span>
-            <span>{{ cart.total() | currency }}</span>
+            <span>{{ 'cart.total' | t }}</span>
+            <span>
+              {{ cart.total() | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+            </span>
           </div>
         </aside>
       </div>

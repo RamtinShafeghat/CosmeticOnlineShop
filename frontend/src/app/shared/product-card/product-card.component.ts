@@ -1,6 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LanguageService } from '../../core/i18n/language.service';
 import { Product } from '../../core/models/shop.models';
 
 @Component({
@@ -12,4 +13,5 @@ import { Product } from '../../core/models/shop.models';
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
+  readonly i18n = inject(LanguageService);
 }

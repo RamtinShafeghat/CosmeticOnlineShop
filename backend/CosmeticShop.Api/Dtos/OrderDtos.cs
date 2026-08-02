@@ -38,6 +38,7 @@ public class CreateOrderDto
 public record OrderItemDto(
     int ProductId,
     string ProductName,
+    string ProductNameFa,
     decimal UnitPrice,
     int Quantity,
     decimal LineTotal);

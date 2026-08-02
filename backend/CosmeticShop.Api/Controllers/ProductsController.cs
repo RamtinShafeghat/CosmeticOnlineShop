@@ -35,7 +35,9 @@ public class ProductsController(AppDbContext db) : ControllerBase
             var term = search.Trim().ToLower();
             query = query.Where(p =>
                 p.Name.ToLower().Contains(term) ||
+                p.NameFa.Contains(search.Trim()) ||
                 p.ShortDescription.ToLower().Contains(term) ||
+                p.ShortDescriptionFa.Contains(search.Trim()) ||
                 p.Brand.ToLower().Contains(term));
         }
 
@@ -45,8 +47,10 @@ public class ProductsController(AppDbContext db) : ControllerBase
             .Select(p => new ProductListItemDto(
                 p.Id,
                 p.Name,
+                p.NameFa,
                 p.Slug,
                 p.ShortDescription,
+                p.ShortDescriptionFa,
                 p.Price,
                 p.ImageUrl,
                 p.Brand,
@@ -54,7 +58,8 @@ public class ProductsController(AppDbContext db) : ControllerBase
                 p.Stock,
                 p.IsFeatured,
                 p.CategoryId,
-                p.Category!.Name))
+                p.Category!.Name,
+                p.Category!.NameFa))
             .ToListAsync();
 
         return Ok(products);
@@ -63,24 +68,8 @@ public class ProductsController(AppDbContext db) : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductDetailDto>> GetById(int id)
     {
-        var product = await db.Products
-            .AsNoTracking()
-            .Include(p => p.Category)
+        var product = await MapDetailQuery()
             .Where(p => p.Id == id)
-            .Select(p => new ProductDetailDto(
-                p.Id,
-                p.Name,
-                p.Slug,
-                p.Description,
-                p.ShortDescription,
-                p.Price,
-                p.ImageUrl,
-                p.Brand,
-                p.SkinType,
-                p.Stock,
-                p.IsFeatured,
-                p.CategoryId,
-                p.Category!.Name))
             .FirstOrDefaultAsync();
 
         return product is null ? NotFound() : Ok(product);
@@ -89,16 +78,26 @@ public class ProductsController(AppDbContext db) : ControllerBase
     [HttpGet("slug/{slug}")]
     public async Task<ActionResult<ProductDetailDto>> GetBySlug(string slug)
     {
-        var product = await db.Products
+        var product = await MapDetailQuery()
+            .Where(p => p.Slug == slug)
+            .FirstOrDefaultAsync();
+
+        return product is null ? NotFound() : Ok(product);
+    }
+
+    private IQueryable<ProductDetailDto> MapDetailQuery() =>
+        db.Products
             .AsNoTracking()
             .Include(p => p.Category)
-            .Where(p => p.Slug == slug)
             .Select(p => new ProductDetailDto(
                 p.Id,
                 p.Name,
+                p.NameFa,
                 p.Slug,
                 p.Description,
+                p.DescriptionFa,
                 p.ShortDescription,
+                p.ShortDescriptionFa,
                 p.Price,
                 p.ImageUrl,
                 p.Brand,
@@ -106,9 +105,6 @@ public class ProductsController(AppDbContext db) : ControllerBase
                 p.Stock,
                 p.IsFeatured,
                 p.CategoryId,
-                p.Category!.Name))
-            .FirstOrDefaultAsync();
-
-        return product is null ? NotFound() : Ok(product);
-    }
+                p.Category!.Name,
+                p.Category!.NameFa));
 }

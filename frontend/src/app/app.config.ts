@@ -1,7 +1,17 @@
+import { registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import localeFa from '@angular/common/locales/fa';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideZoneChangeDetection
+} from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
+import { LanguageService } from './core/i18n/language.service';
+
+registerLocaleData(localeFa);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,6 +20,9 @@ export const appConfig: ApplicationConfig = {
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top' })
     ),
-    provideHttpClient()
+    provideHttpClient(),
+    provideAppInitializer(() => {
+      inject(LanguageService);
+    })
   ]
 };

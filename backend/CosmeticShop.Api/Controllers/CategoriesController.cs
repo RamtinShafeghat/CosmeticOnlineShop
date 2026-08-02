@@ -18,8 +18,10 @@ public class CategoriesController(AppDbContext db) : ControllerBase
             .Select(c => new CategoryDto(
                 c.Id,
                 c.Name,
+                c.NameFa,
                 c.Slug,
                 c.Description,
+                c.DescriptionFa,
                 c.Products.Count))
             .ToListAsync();
 
@@ -35,8 +37,10 @@ public class CategoriesController(AppDbContext db) : ControllerBase
             .Select(c => new CategoryDto(
                 c.Id,
                 c.Name,
+                c.NameFa,
                 c.Slug,
                 c.Description,
+                c.DescriptionFa,
                 c.Products.Count))
             .FirstOrDefaultAsync();
 

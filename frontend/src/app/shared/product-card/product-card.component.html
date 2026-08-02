@@ -1,10 +1,12 @@
 <a class="product-card" [routerLink]="['/product', product.slug]">
   <div class="media">
-    <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+    <img [src]="product.imageUrl" [alt]="i18n.productName(product)" loading="lazy" />
   </div>
   <div class="meta">
-    <p class="category">{{ product.categoryName }}</p>
-    <h3>{{ product.name }}</h3>
-    <p class="price">{{ product.price | currency }}</p>
+    <p class="category">{{ i18n.categoryName(product) }}</p>
+    <h3>{{ i18n.productName(product) }}</h3>
+    <p class="price">
+      {{ product.price | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+    </p>
   </div>
 </a>
