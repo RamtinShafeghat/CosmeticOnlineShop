@@ -3,8 +3,10 @@ namespace CosmeticShop.Api.Dtos;
 public record ProductListItemDto(
     int Id,
     string Name,
+    string NameFa,
     string Slug,
     string ShortDescription,
+    string ShortDescriptionFa,
     decimal Price,
     string ImageUrl,
     string Brand,
@@ -12,14 +14,18 @@ public record ProductListItemDto(
     int Stock,
     bool IsFeatured,
     int CategoryId,
-    string CategoryName);
+    string CategoryName,
+    string CategoryNameFa);
 
 public record ProductDetailDto(
     int Id,
     string Name,
+    string NameFa,
     string Slug,
     string Description,
+    string DescriptionFa,
     string ShortDescription,
+    string ShortDescriptionFa,
     decimal Price,
     string ImageUrl,
     string Brand,
@@ -27,11 +33,14 @@ public record ProductDetailDto(
     int Stock,
     bool IsFeatured,
     int CategoryId,
-    string CategoryName);
+    string CategoryName,
+    string CategoryNameFa);
 
 public record CategoryDto(
     int Id,
     string Name,
+    string NameFa,
     string Slug,
     string Description,
+    string DescriptionFa,
     int ProductCount);

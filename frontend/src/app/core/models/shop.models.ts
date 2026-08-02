@@ -1,17 +1,22 @@
 export interface Category {
   id: number;
   name: string;
+  nameFa: string;
   slug: string;
   description: string;
+  descriptionFa: string;
   productCount: number;
 }
 
 export interface Product {
   id: number;
   name: string;
+  nameFa: string;
   slug: string;
   shortDescription: string;
+  shortDescriptionFa: string;
   description?: string;
+  descriptionFa?: string;
   price: number;
   imageUrl: string;
   brand: string;
@@ -20,6 +25,7 @@ export interface Product {
   isFeatured: boolean;
   categoryId: number;
   categoryName: string;
+  categoryNameFa: string;
 }
 
 export interface CartItem {
@@ -45,6 +51,7 @@ export interface CreateOrderRequest {
 export interface OrderItem {
   productId: number;
   productName: string;
+  productNameFa: string;
   unitPrice: number;
   quantity: number;
   lineTotal: number;

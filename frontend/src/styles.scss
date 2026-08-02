@@ -11,6 +11,7 @@
   --radius: 0;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Outfit', sans-serif;
+  --font-fa: 'Vazirmatn', 'Tahoma', sans-serif;
   --max: 1120px;
 }
 
@@ -35,6 +36,28 @@ body {
     radial-gradient(900px 500px at 100% 0%, #f3e7dc 0%, transparent 50%),
     linear-gradient(180deg, var(--foam) 0%, var(--mist) 100%);
   min-height: 100vh;
+}
+
+body.lang-fa {
+  font-family: var(--font-fa);
+}
+
+body.lang-fa h1,
+body.lang-fa h2,
+body.lang-fa h3,
+body.lang-fa .brand-mark,
+body.lang-fa .section-title,
+body.lang-fa .name {
+  font-family: var(--font-fa);
+  letter-spacing: 0;
+}
+
+body.lang-fa .nav,
+body.lang-fa .btn,
+body.lang-fa .filter,
+body.lang-fa .category,
+body.lang-fa .eyebrow {
+  letter-spacing: 0.02em;
 }
 
 img {

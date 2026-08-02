@@ -1,6 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { LanguageService } from '../../core/i18n/language.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { Category, Product } from '../../core/models/shop.models';
 import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
@@ -9,7 +11,7 @@ import { ProductCardComponent } from '../../shared/product-card/product-card.com
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [RouterLink, FormsModule, ProductCardComponent],
+  imports: [RouterLink, FormsModule, ProductCardComponent, TranslatePipe],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
 })
@@ -17,18 +19,19 @@ export class ShopComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
   private readonly route = inject(ActivatedRoute);
+  readonly i18n = inject(LanguageService);
 
   readonly categories = signal<Category[]>([]);
   readonly products = signal<Product[]>([]);
   readonly loading = signal(true);
-  readonly error = signal<string | null>(null);
+  readonly errorKey = signal<'shop.error' | 'shop.categoryMissing' | null>(null);
   readonly activeCategorySlug = signal<string | null>(null);
   search = '';
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe({
       next: (categories) => this.categories.set(categories),
-      error: () => this.error.set('Unable to load categories.')
+      error: () => this.errorKey.set('shop.error')
     });
 
     this.route.paramMap.subscribe((params) => {
@@ -44,10 +47,9 @@ export class ShopComponent implements OnInit {
 
   private loadProducts(): void {
     this.loading.set(true);
-    this.error.set(null);
+    this.errorKey.set(null);
 
     const slug = this.activeCategorySlug();
-    const category = this.categories().find((c) => c.slug === slug);
 
     const fetch = () => {
       const categoryId = slug
@@ -55,7 +57,7 @@ export class ShopComponent implements OnInit {
         : undefined;
 
       if (slug && categoryId == null && this.categories().length > 0) {
-        this.error.set('Category not found.');
+        this.errorKey.set('shop.categoryMissing');
         this.products.set([]);
         this.loading.set(false);
         return;
@@ -72,7 +74,7 @@ export class ShopComponent implements OnInit {
             this.loading.set(false);
           },
           error: () => {
-            this.error.set('Unable to load products. Is the API running?');
+            this.errorKey.set('shop.error');
             this.loading.set(false);
           }
         });
@@ -85,14 +87,13 @@ export class ShopComponent implements OnInit {
           fetch();
         },
         error: () => {
-          this.error.set('Unable to load categories.');
+          this.errorKey.set('shop.error');
           this.loading.set(false);
         }
       });
       return;
     }
 
-    void category;
     fetch();
   }
 }

@@ -17,6 +17,7 @@ An online cosmetics shop with an **ASP.NET Core** Web API backend and an **Angul
 - Client-side shopping bag (persisted in `localStorage`)
 - Checkout and order creation with stock checks
 - Seeded Velora sample catalog (skincare, makeup, fragrance, body care)
+- Bilingual UI: English and Persian (فارسی), with RTL layout and language switcher
 
 ## Project structure
 

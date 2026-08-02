@@ -2,28 +2,24 @@
   <div class="hero-media" aria-hidden="true"></div>
   <div class="hero-content fade-up">
     <p class="brand-mark hero-brand">Velora</p>
-    <h1>Skin that feels quietly luminous.</h1>
-    <p class="hero-lead">
-      Refined skincare and soft-color makeup crafted for everyday radiance.
-    </p>
+    <h1>{{ 'home.headline' | t }}</h1>
+    <p class="hero-lead">{{ 'home.lead' | t }}</p>
     <div class="hero-actions">
-      <a routerLink="/shop" class="btn">Shop the collection</a>
-      <a routerLink="/shop/skincare" class="btn btn-ghost">Explore skincare</a>
+      <a routerLink="/shop" class="btn">{{ 'home.ctaShop' | t }}</a>
+      <a routerLink="/shop/skincare" class="btn btn-ghost">{{ 'home.ctaSkincare' | t }}</a>
     </div>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <h2 class="section-title fade-up">Featured rituals</h2>
-    <p class="section-lead fade-up">
-      A curated edit of Velora essentials—serums, soft color, and scent.
-    </p>
+    <h2 class="section-title fade-up">{{ 'home.featuredTitle' | t }}</h2>
+    <p class="section-lead fade-up">{{ 'home.featuredLead' | t }}</p>
 
     @if (loading()) {
-      <p class="status">Loading the collection…</p>
+      <p class="status">{{ 'home.loading' | t }}</p>
     } @else if (error()) {
-      <p class="status error">{{ error() }}</p>
+      <p class="status error">{{ 'home.error' | t }}</p>
     } @else {
       <div class="product-grid">
         @for (product of featured(); track product.id) {
@@ -37,12 +33,9 @@
 <section class="ritual section">
   <div class="container ritual-grid">
     <div class="ritual-copy fade-up">
-      <h2 class="section-title">Beauty, unhurried.</h2>
-      <p class="section-lead">
-        Velora formulas favor clean textures, soft finishes, and ingredients that
-        earn their place in a daily ritual.
-      </p>
-      <a routerLink="/shop" class="btn">Browse all products</a>
+      <h2 class="section-title">{{ 'home.ritualTitle' | t }}</h2>
+      <p class="section-lead">{{ 'home.ritualLead' | t }}</p>
+      <a routerLink="/shop" class="btn">{{ 'home.browseAll' | t }}</a>
     </div>
     <div class="ritual-panel" aria-hidden="true"></div>
   </div>

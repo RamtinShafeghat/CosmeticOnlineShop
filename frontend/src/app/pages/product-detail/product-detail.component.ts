@@ -1,7 +1,9 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { LanguageService } from '../../core/i18n/language.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { Product } from '../../core/models/shop.models';
 import { CartService } from '../../core/services/cart.service';
 import { ProductService } from '../../core/services/product.service';
@@ -9,7 +11,7 @@ import { ProductService } from '../../core/services/product.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, RouterLink],
+  imports: [CurrencyPipe, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
@@ -17,10 +19,11 @@ export class ProductDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly cart = inject(CartService);
+  readonly i18n = inject(LanguageService);
 
   readonly product = signal<Product | null>(null);
   readonly loading = signal(true);
-  readonly error = signal<string | null>(null);
+  readonly error = signal(false);
   readonly added = signal(false);
   quantity = 1;
 
@@ -28,7 +31,7 @@ export class ProductDetailComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const slug = params.get('slug');
       if (!slug) {
-        this.error.set('Product not found.');
+        this.error.set(true);
         this.loading.set(false);
         return;
       }
@@ -42,7 +45,7 @@ export class ProductDetailComponent implements OnInit {
           this.loading.set(false);
         },
         error: () => {
-          this.error.set('Product not found.');
+          this.error.set(true);
           this.loading.set(false);
         }
       });

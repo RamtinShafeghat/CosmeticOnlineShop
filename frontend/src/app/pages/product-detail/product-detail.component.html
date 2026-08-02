@@ -1,25 +1,32 @@
 <section class="section">
   <div class="container">
     @if (loading()) {
-      <p class="status">Loading product…</p>
+      <p class="status">{{ 'product.loading' | t }}</p>
     } @else if (error() || !product()) {
-      <p class="status error">{{ error() || 'Product not found.' }}</p>
-      <a routerLink="/shop" class="btn">Back to shop</a>
+      <p class="status error">{{ 'product.notFound' | t }}</p>
+      <a routerLink="/shop" class="btn">{{ 'product.backToShop' | t }}</a>
     } @else {
       <div class="detail fade-up">
         <div class="media">
-          <img [src]="product()!.imageUrl" [alt]="product()!.name" />
+          <img [src]="product()!.imageUrl" [alt]="i18n.productName(product()!)" />
         </div>
         <div class="info">
-          <p class="eyebrow">{{ product()!.categoryName }} · {{ product()!.brand }}</p>
-          <h1>{{ product()!.name }}</h1>
-          <p class="price">{{ product()!.price | currency }}</p>
-          <p class="description">{{ product()!.description }}</p>
-          <p class="meta">Skin type: {{ product()!.skinType }} · In stock: {{ product()!.stock }}</p>
+          <p class="eyebrow">
+            {{ i18n.categoryName(product()!) }} · {{ product()!.brand }}
+          </p>
+          <h1>{{ i18n.productName(product()!) }}</h1>
+          <p class="price">
+            {{ product()!.price | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+          </p>
+          <p class="description">{{ i18n.productDescription(product()!) }}</p>
+          <p class="meta">
+            {{ 'product.skinType' | t }}: {{ i18n.skinType(product()!.skinType) }}
+            · {{ 'product.inStock' | t }}: {{ product()!.stock }}
+          </p>
 
           <div class="actions">
             <label>
-              Qty
+              {{ 'product.qty' | t }}
               <input
                 type="number"
                 min="1"
@@ -28,14 +35,19 @@
                 name="quantity"
               />
             </label>
-            <button class="btn" type="button" (click)="addToBag()" [disabled]="product()!.stock < 1">
-              Add to bag
+            <button
+              class="btn"
+              type="button"
+              (click)="addToBag()"
+              [disabled]="product()!.stock < 1"
+            >
+              {{ 'product.addToBag' | t }}
             </button>
-            <a routerLink="/cart" class="btn btn-ghost">View bag</a>
+            <a routerLink="/cart" class="btn btn-ghost">{{ 'product.viewBag' | t }}</a>
           </div>
 
           @if (added()) {
-            <p class="added">Added to your bag.</p>
+            <p class="added">{{ 'product.added' | t }}</p>
           }
         </div>
       </div>

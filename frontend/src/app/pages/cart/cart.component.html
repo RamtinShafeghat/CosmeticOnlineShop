@@ -1,24 +1,32 @@
 <section class="section">
   <div class="container">
-    <h1 class="section-title fade-up">Your bag</h1>
+    <h1 class="section-title fade-up">{{ 'cart.title' | t }}</h1>
 
     @if (cart.items().length === 0) {
-      <p class="section-lead">Your bag is empty.</p>
-      <a routerLink="/shop" class="btn">Continue shopping</a>
+      <p class="section-lead">{{ 'cart.empty' | t }}</p>
+      <a routerLink="/shop" class="btn">{{ 'cart.continue' | t }}</a>
     } @else {
       <div class="cart-layout fade-up">
         <div class="lines">
           @for (item of cart.items(); track item.product.id) {
             <article class="line">
-              <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+              <img
+                [src]="item.product.imageUrl"
+                [alt]="i18n.productName(item.product)"
+              />
               <div>
                 <a [routerLink]="['/product', item.product.slug]" class="name">
-                  {{ item.product.name }}
+                  {{ i18n.productName(item.product) }}
                 </a>
-                <p class="price">{{ item.product.price | currency }}</p>
+                <p class="price">
+                  {{
+                    item.product.price
+                      | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+                  }}
+                </p>
                 <div class="line-actions">
                   <label>
-                    Qty
+                    {{ 'cart.qty' | t }}
                     <input
                       type="number"
                       min="1"
@@ -27,40 +35,53 @@
                       (change)="updateQuantity(item.product.id, $event)"
                     />
                   </label>
-                  <button type="button" class="linkish" (click)="cart.remove(item.product.id)">
-                    Remove
+                  <button
+                    type="button"
+                    class="linkish"
+                    (click)="cart.remove(item.product.id)"
+                  >
+                    {{ 'cart.remove' | t }}
                   </button>
                 </div>
               </div>
               <p class="line-total">
-                {{ item.product.price * item.quantity | currency }}
+                {{
+                  item.product.price * item.quantity
+                    | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+                }}
               </p>
             </article>
           }
         </div>
 
         <aside class="summary">
-          <h2>Summary</h2>
+          <h2>{{ 'cart.summary' | t }}</h2>
           <div class="row">
-            <span>Subtotal</span>
-            <span>{{ cart.subtotal() | currency }}</span>
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <span>
+              {{ cart.subtotal() | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+            </span>
           </div>
           <div class="row">
-            <span>Shipping</span>
+            <span>{{ 'cart.shipping' | t }}</span>
             <span>
               @if (cart.shipping() === 0) {
-                Free
+                {{ 'cart.free' | t }}
               } @else {
-                {{ cart.shipping() | currency }}
+                {{
+                  cart.shipping() | currency: 'USD':'symbol':'1.2-2':i18n.locale()
+                }}
               }
             </span>
           </div>
           <div class="row total">
-            <span>Total</span>
-            <span>{{ cart.total() | currency }}</span>
+            <span>{{ 'cart.total' | t }}</span>
+            <span>
+              {{ cart.total() | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+            </span>
           </div>
-          <p class="note">Free shipping on orders over $75.</p>
-          <a routerLink="/checkout" class="btn full">Checkout</a>
+          <p class="note">{{ 'cart.note' | t }}</p>
+          <a routerLink="/checkout" class="btn full">{{ 'cart.checkout' | t }}</a>
         </aside>
       </div>
     }
