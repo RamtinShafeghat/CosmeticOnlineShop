@@ -1,0 +1,16 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a routerLink="/" class="brand-mark">Velora</a>
+
+    <nav class="nav" aria-label="Primary">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/shop" routerLinkActive="active">Shop</a>
+      <a routerLink="/cart" routerLinkActive="active" class="cart-link">
+        Bag
+        @if (cart.count() > 0) {
+          <span class="cart-count">{{ cart.count() }}</span>
+        }
+      </a>
+    </nav>
+  </div>
+</header>

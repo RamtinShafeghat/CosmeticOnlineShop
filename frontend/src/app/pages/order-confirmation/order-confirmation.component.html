@@ -1,0 +1,62 @@
+<section class="section">
+  <div class="container narrow fade-up">
+    @if (loading()) {
+      <p class="status">Loading order…</p>
+    } @else if (error() || !order()) {
+      <p class="status error">{{ error() || 'Order not found.' }}</p>
+      <a routerLink="/shop" class="btn">Back to shop</a>
+    } @else {
+      <p class="eyebrow">Thank you</p>
+      <h1 class="section-title">Order #{{ order()!.id }} confirmed</h1>
+      <p class="section-lead">
+        We’ve emailed a receipt to {{ order()!.email }}. Your Velora order is on
+        its way to being prepared.
+      </p>
+
+      <div class="panel">
+        <div class="row">
+          <span>Status</span>
+          <span>{{ order()!.status }}</span>
+        </div>
+        <div class="row">
+          <span>Placed</span>
+          <span>{{ order()!.createdAt | date: 'medium' }}</span>
+        </div>
+        <div class="row">
+          <span>Ship to</span>
+          <span>
+            {{ order()!.customerName }}<br />
+            {{ order()!.shippingAddress }}<br />
+            {{ order()!.city }}, {{ order()!.postalCode }}
+          </span>
+        </div>
+
+        <hr />
+
+        @for (item of order()!.items; track item.productId) {
+          <div class="row">
+            <span>{{ item.productName }} × {{ item.quantity }}</span>
+            <span>{{ item.lineTotal | currency }}</span>
+          </div>
+        }
+
+        <div class="row">
+          <span>Shipping</span>
+          <span>
+            @if (order()!.shippingCost === 0) {
+              Free
+            } @else {
+              {{ order()!.shippingCost | currency }}
+            }
+          </span>
+        </div>
+        <div class="row total">
+          <span>Total</span>
+          <span>{{ order()!.total | currency }}</span>
+        </div>
+      </div>
+
+      <a routerLink="/shop" class="btn">Continue shopping</a>
+    }
+  </div>
+</section>

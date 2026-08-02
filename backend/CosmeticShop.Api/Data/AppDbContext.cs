@@ -1,0 +1,61 @@
+using CosmeticShop.Api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace CosmeticShop.Api.Data;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+{
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Category>()
+            .HasIndex(c => c.Slug)
+            .IsUnique();
+
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.Slug)
+            .IsUnique();
+
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Subtotal)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.ShippingCost)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Total)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<OrderItem>()
+            .Property(i => i.UnitPrice)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<OrderItem>()
+            .HasOne(i => i.Order)
+            .WithMany(o => o.Items)
+            .HasForeignKey(i => i.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<OrderItem>()
+            .HasOne(i => i.Product)
+            .WithMany()
+            .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}
