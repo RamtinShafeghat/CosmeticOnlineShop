@@ -8,4 +8,5 @@ if [ ! -d node_modules ]; then
   npm install
 fi
 
-exec npm start
+# Bind on 0.0.0.0 so Cursor Desktop port forwarding can reach the app.
+exec npx ng serve --host 0.0.0.0 --port 4200
