@@ -29,8 +29,36 @@ frontend/                    # Angular storefront
 
 ## Prerequisites
 
-- .NET 8 SDK
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - Node.js 20+ and npm
+
+### Install the .NET 8 SDK
+
+If `dotnet` says **command not found**, install the SDK first, then **restart the Cursor terminal** (or Cursor itself).
+
+**macOS (Homebrew):**
+```bash
+brew install --cask dotnet-sdk
+```
+
+**Windows:**
+1. Download the [.NET 8 SDK installer](https://dotnet.microsoft.com/download/dotnet/8.0)
+2. Run it, then open a **new** terminal and run `dotnet --version`
+
+**Linux (Ubuntu/Debian):**
+```bash
+wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+bash dotnet-install.sh --channel 8.0
+echo 'export DOTNET_ROOT="$HOME/.dotnet"' >> ~/.bashrc
+echo 'export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Verify:
+```bash
+dotnet --version
+```
+You should see something like `8.0.x`.
 
 ## Run locally
 
