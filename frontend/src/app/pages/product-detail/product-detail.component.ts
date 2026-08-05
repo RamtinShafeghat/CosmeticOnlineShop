@@ -2,6 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { AssetUrlPipe } from '../../core/asset-url.pipe';
 import { LanguageService } from '../../core/i18n/language.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { Product } from '../../core/models/shop.models';
@@ -11,7 +12,7 @@ import { ProductService } from '../../core/services/product.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, RouterLink, TranslatePipe],
+  imports: [CurrencyPipe, FormsModule, RouterLink, TranslatePipe, AssetUrlPipe],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })

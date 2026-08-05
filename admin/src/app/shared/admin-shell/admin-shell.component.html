@@ -1,0 +1,25 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <p class="mark">Velora</p>
+      <p class="sub">Admin</p>
+    </div>
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a routerLink="/categories" routerLinkActive="active">Categories</a>
+      <a routerLink="/products" routerLinkActive="active">Products</a>
+      <a routerLink="/orders" routerLinkActive="active">Orders</a>
+    </nav>
+    <button type="button" class="logout" (click)="auth.logout()">Sign out</button>
+  </aside>
+
+  <section class="content">
+    <header class="topbar">
+      <p>{{ auth.profile()?.displayName || 'Admin' }}</p>
+      <p class="email">{{ auth.profile()?.email }}</p>
+    </header>
+    <main>
+      <router-outlet />
+    </main>
+  </section>
+</div>

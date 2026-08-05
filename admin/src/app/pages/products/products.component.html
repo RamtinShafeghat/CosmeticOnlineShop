@@ -1,0 +1,53 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <h1>Products</h1>
+      <p class="lead">Manage catalog products and upload images from your computer.</p>
+    </div>
+    <a routerLink="/products/new" class="btn">New product</a>
+  </div>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @if (message()) {
+    <p class="ok">{{ message() }}</p>
+  }
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products(); track product.id) {
+          <tr>
+            <td>
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl | assetUrl" [alt]="product.name" />
+              }
+            </td>
+            <td>
+              <strong>{{ product.name }}</strong>
+              <div class="muted">{{ product.nameFa }}</div>
+            </td>
+            <td>{{ product.categoryName }}</td>
+            <td>{{ product.price | currency }}</td>
+            <td>{{ product.stock }}</td>
+            <td class="actions">
+              <a [routerLink]="['/products', product.id]">Edit</a>
+              <button type="button" (click)="remove(product)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

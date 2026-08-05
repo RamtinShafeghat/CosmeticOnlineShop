@@ -11,7 +11,7 @@
           @for (item of cart.items(); track item.product.id) {
             <article class="line">
               <img
-                [src]="item.product.imageUrl"
+                [src]="item.product.imageUrl | assetUrl"
                 [alt]="i18n.productName(item.product)"
               />
               <div>

@@ -8,7 +8,7 @@
     } @else {
       <div class="detail fade-up">
         <div class="media">
-          <img [src]="product()!.imageUrl" [alt]="i18n.productName(product()!)" />
+          <img [src]="product()!.imageUrl | assetUrl" [alt]="i18n.productName(product()!)" />
         </div>
         <div class="info">
           <p class="eyebrow">

@@ -1,0 +1,44 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <h1>Categories</h1>
+      <p class="lead">Create and edit shop categories (EN / FA).</p>
+    </div>
+    <a routerLink="/categories/new" class="btn">New category</a>
+  </div>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @if (message()) {
+    <p class="ok">{{ message() }}</p>
+  }
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Persian</th>
+          <th>Slug</th>
+          <th>Products</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (category of categories(); track category.id) {
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.nameFa }}</td>
+            <td>{{ category.slug }}</td>
+            <td>{{ category.productCount }}</td>
+            <td class="actions">
+              <a [routerLink]="['/categories', category.id]">Edit</a>
+              <button type="button" (click)="remove(category)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

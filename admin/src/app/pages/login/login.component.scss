@@ -1,0 +1,71 @@
+.login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(900px 500px at 10% 0%, #f3d6db 0%, transparent 55%),
+    linear-gradient(180deg, #fffaf8 0%, #f4efec 100%);
+}
+
+.card {
+  width: min(100%, 26rem);
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(42, 34, 36, 0.1);
+  padding: 1.75rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.brand {
+  margin: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+}
+
+h1 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+}
+
+.hint,
+.error {
+  margin: 0;
+  color: #6b5f61;
+}
+
+.error {
+  color: #9b3b45;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6b5f61;
+}
+
+input {
+  min-height: 2.8rem;
+  border: 1px solid rgba(42, 34, 36, 0.14);
+  padding: 0 0.8rem;
+  background: #fff;
+}
+
+.btn {
+  min-height: 2.9rem;
+  border: 0;
+  background: #1f1a1b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

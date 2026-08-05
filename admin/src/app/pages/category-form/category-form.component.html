@@ -1,0 +1,35 @@
+<section class="page">
+  <a routerLink="/categories" class="back">← Back to categories</a>
+  <h1>{{ id ? 'Edit category' : 'New category' }}</h1>
+
+  <form class="form panel" (ngSubmit)="save()">
+    <label>
+      Name (EN)
+      <input name="name" [(ngModel)]="form.name" required />
+    </label>
+    <label>
+      Name (FA)
+      <input name="nameFa" [(ngModel)]="form.nameFa" />
+    </label>
+    <label>
+      Slug (optional)
+      <input name="slug" [(ngModel)]="form.slug" />
+    </label>
+    <label>
+      Description (EN)
+      <textarea name="description" rows="3" [(ngModel)]="form.description"></textarea>
+    </label>
+    <label>
+      Description (FA)
+      <textarea name="descriptionFa" rows="3" [(ngModel)]="form.descriptionFa"></textarea>
+    </label>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <button class="btn" type="submit" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Save category' }}
+    </button>
+  </form>
+</section>
