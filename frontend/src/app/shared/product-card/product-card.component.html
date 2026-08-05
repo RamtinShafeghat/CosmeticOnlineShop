@@ -1,6 +1,6 @@
 <a class="product-card" [routerLink]="['/product', product.slug]">
   <div class="media">
-    <img [src]="product.imageUrl" [alt]="i18n.productName(product)" loading="lazy" />
+    <img [src]="product.imageUrl | assetUrl" [alt]="i18n.productName(product)" loading="lazy" />
   </div>
   <div class="meta">
     <p class="category">{{ i18n.categoryName(product) }}</p>

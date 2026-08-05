@@ -1,0 +1,57 @@
+<section class="page">
+  <h1>Dashboard</h1>
+  <p class="lead">Overview of your Velora catalog and recent orders.</p>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <div class="stats">
+    <article>
+      <p class="label">Categories</p>
+      <p class="value">{{ categories().length }}</p>
+      <a routerLink="/categories">Manage</a>
+    </article>
+    <article>
+      <p class="label">Products</p>
+      <p class="value">{{ products().length }}</p>
+      <a routerLink="/products">Manage</a>
+    </article>
+    <article>
+      <p class="label">Orders</p>
+      <p class="value">{{ orders().length }}</p>
+      <a routerLink="/orders">View all</a>
+    </article>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Recent orders</h2>
+      <a routerLink="/orders">Open orders</a>
+    </div>
+    @if (orders().length === 0) {
+      <p class="muted">No orders yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders().slice(0, 5); track order.id) {
+            <tr>
+              <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
+              <td>{{ order.customerName }}</td>
+              <td>{{ order.status }}</td>
+              <td>{{ order.total | currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</section>

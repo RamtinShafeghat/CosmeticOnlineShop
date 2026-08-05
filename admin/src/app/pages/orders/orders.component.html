@@ -1,0 +1,40 @@
+<section class="page">
+  <h1>Orders</h1>
+  <p class="lead">All customer orders placed from the storefront.</p>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Placed</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of orders(); track order.id) {
+          <tr>
+            <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
+            <td>{{ order.customerName }}</td>
+            <td>{{ order.email }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.itemCount }}</td>
+            <td>{{ order.total | currency }}</td>
+            <td>{{ order.createdAt | date: 'medium' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (orders().length === 0 && !error()) {
+      <p class="muted">No orders yet.</p>
+    }
+  </div>
+</section>

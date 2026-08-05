@@ -1,13 +1,15 @@
+using CosmeticShop.Api;
 using CosmeticShop.Api.Models;
+using CosmeticShop.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CosmeticShop.Api.Data;
 
 public static class DbSeeder
 {
-    public static async Task SeedAsync(AppDbContext db)
+    public static async Task SeedAsync(AppDbContext db, AdminSeedOptions adminSeed)
     {
-        // SQLite EnsureCreated does not add new columns; recreate if bilingual schema is missing.
+        // SQLite EnsureCreated does not add new columns; recreate if schema is missing fields.
         if (await db.Database.CanConnectAsync())
         {
             try
@@ -15,6 +17,7 @@ public static class DbSeeder
                 _ = await db.Products.AsNoTracking().Select(p => p.NameFa).FirstOrDefaultAsync();
                 _ = await db.Categories.AsNoTracking().Select(c => c.NameFa).FirstOrDefaultAsync();
                 _ = await db.OrderItems.AsNoTracking().Select(i => i.ProductNameFa).FirstOrDefaultAsync();
+                _ = await db.AdminUsers.AsNoTracking().Select(u => u.Email).FirstOrDefaultAsync();
             }
             catch
             {
@@ -23,6 +26,7 @@ public static class DbSeeder
         }
 
         await db.Database.EnsureCreatedAsync();
+        await EnsureAdminUserAsync(db, adminSeed);
 
         if (await db.Products.AnyAsync())
         {
@@ -243,6 +247,23 @@ public static class DbSeeder
         };
 
         db.Products.AddRange(products);
+        await db.SaveChangesAsync();
+    }
+
+    private static async Task EnsureAdminUserAsync(AppDbContext db, AdminSeedOptions adminSeed)
+    {
+        var email = adminSeed.Email.Trim().ToLowerInvariant();
+        if (await db.AdminUsers.AnyAsync(u => u.Email == email))
+        {
+            return;
+        }
+
+        db.AdminUsers.Add(new AdminUser
+        {
+            Email = email,
+            DisplayName = string.IsNullOrWhiteSpace(adminSeed.DisplayName) ? "Admin" : adminSeed.DisplayName.Trim(),
+            PasswordHash = PasswordHasher.Hash(adminSeed.Password)
+        });
         await db.SaveChangesAsync();
     }
 }

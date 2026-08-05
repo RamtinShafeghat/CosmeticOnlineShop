@@ -1,0 +1,99 @@
+<section class="page">
+  <a routerLink="/products" class="back">← Back to products</a>
+  <h1>{{ id ? 'Edit product' : 'New product' }}</h1>
+
+  <form class="form panel" (ngSubmit)="save()">
+    <div class="grid">
+      <label>
+        Name (EN)
+        <input name="name" [(ngModel)]="form.name" required />
+      </label>
+      <label>
+        Name (FA)
+        <input name="nameFa" [(ngModel)]="form.nameFa" />
+      </label>
+      <label>
+        Slug (optional)
+        <input name="slug" [(ngModel)]="form.slug" />
+      </label>
+      <label>
+        Category
+        <select name="categoryId" [(ngModel)]="form.categoryId" required>
+          @for (category of categories; track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Price
+        <input type="number" step="0.01" min="0" name="price" [(ngModel)]="form.price" required />
+      </label>
+      <label>
+        Stock
+        <input type="number" min="0" name="stock" [(ngModel)]="form.stock" required />
+      </label>
+      <label>
+        Brand
+        <input name="brand" [(ngModel)]="form.brand" />
+      </label>
+      <label>
+        Skin type
+        <select name="skinType" [(ngModel)]="form.skinType">
+          <option value="All">All</option>
+          <option value="Dry">Dry</option>
+          <option value="Normal">Normal</option>
+          <option value="Sensitive">Sensitive</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="checkbox">
+      <input type="checkbox" name="isFeatured" [(ngModel)]="form.isFeatured" />
+      Featured product
+    </label>
+
+    <label>
+      Short description (EN)
+      <textarea name="shortDescription" rows="2" [(ngModel)]="form.shortDescription"></textarea>
+    </label>
+    <label>
+      Short description (FA)
+      <textarea name="shortDescriptionFa" rows="2" [(ngModel)]="form.shortDescriptionFa"></textarea>
+    </label>
+    <label>
+      Description (EN)
+      <textarea name="description" rows="4" [(ngModel)]="form.description"></textarea>
+    </label>
+    <label>
+      Description (FA)
+      <textarea name="descriptionFa" rows="4" [(ngModel)]="form.descriptionFa"></textarea>
+    </label>
+
+    <div class="image-block">
+      <label>
+        Product image (from your computer)
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+      </label>
+      <label>
+        Or image URL
+        <input name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+      </label>
+      @if (previewUrl) {
+        <img [src]="previewUrl | assetUrl" alt="Product preview" />
+      }
+    </div>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @if (message()) {
+      <p class="ok">{{ message() }}</p>
+    }
+
+    <button class="btn" type="submit" [disabled]="saving() || uploading()">
+      {{
+        uploading() ? 'Uploading image…' : saving() ? 'Saving…' : 'Save product'
+      }}
+    </button>
+  </form>
+</section>
