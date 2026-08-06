@@ -263,6 +263,11 @@ tbody tr:hover {
   color: var(--ok);
 }
 
+.badge.warn {
+  background: rgba(196, 140, 70, 0.14);
+  color: #8a5a2b;
+}
+
 .error {
   color: var(--danger);
 }

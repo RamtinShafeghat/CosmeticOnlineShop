@@ -11,11 +11,31 @@
         <p class="eyebrow">{{ 'orderDetail.eyebrow' | t }}</p>
         <h1>{{ 'orderDetail.title' | t: { id: order()!.id } }}</h1>
         <p class="lead">
-          <span class="badge ok">{{ i18n.status(order()!.status) }}</span>
+          <span
+            class="badge"
+            [class.ok]="order()!.status === 'Confirmed'"
+            [class.warn]="order()!.status === 'Pending'"
+          >
+            {{ i18n.status(order()!.status) }}
+          </span>
           · {{ order()!.createdAt | date: 'medium' : undefined : i18n.locale() }}
         </p>
       </div>
+      @if (order()!.status === 'Pending') {
+        <button
+          type="button"
+          class="btn"
+          [disabled]="confirming()"
+          (click)="confirm()"
+        >
+          {{ confirming() ? ('orderDetail.confirming' | t) : ('orderDetail.confirm' | t) }}
+        </button>
+      }
     </div>
+
+    @if (message()) {
+      <p class="ok">{{ message() }}</p>
+    }
 
     <div class="detail-grid">
       <div class="panel">

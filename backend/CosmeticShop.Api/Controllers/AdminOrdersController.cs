@@ -12,10 +12,18 @@ namespace CosmeticShop.Api.Controllers;
 public class AdminOrdersController(AppDbContext db) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AdminOrderListItemDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<AdminOrderListItemDto>>> GetAll(
+        [FromQuery] string? status = null)
     {
-        var orders = await db.Orders
-            .AsNoTracking()
+        var query = db.Orders.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            var normalized = status.Trim();
+            query = query.Where(o => o.Status == normalized);
+        }
+
+        var orders = await query
             .OrderByDescending(o => o.CreatedAt)
             .Select(o => new AdminOrderListItemDto(
                 o.Id,
@@ -43,7 +51,39 @@ public class AdminOrdersController(AppDbContext db) : ControllerBase
             return NotFound();
         }
 
-        var dto = new OrderDto(
+        return Ok(MapOrder(order));
+    }
+
+    [HttpPost("{id:int}/confirm")]
+    public async Task<ActionResult<OrderDto>> Confirm(int id)
+    {
+        var order = await db.Orders
+            .Include(o => o.Items)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order is null)
+        {
+            return NotFound();
+        }
+
+        if (order.Status == "Confirmed")
+        {
+            return Ok(MapOrder(order));
+        }
+
+        if (order.Status != "Pending")
+        {
+            return BadRequest(new { message = $"Order cannot be confirmed from status '{order.Status}'." });
+        }
+
+        order.Status = "Confirmed";
+        await db.SaveChangesAsync();
+
+        return Ok(MapOrder(order));
+    }
+
+    private static OrderDto MapOrder(Models.Order order) =>
+        new(
             order.Id,
             order.CustomerName,
             order.Email,
@@ -65,7 +105,4 @@ public class AdminOrdersController(AppDbContext db) : ControllerBase
                     i.Quantity,
                     i.UnitPrice * i.Quantity))
                 .ToList());
-
-        return Ok(dto);
-    }
 }

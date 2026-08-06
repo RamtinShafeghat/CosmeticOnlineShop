@@ -1,5 +1,18 @@
 <section class="hero">
-  <div class="hero-media" aria-hidden="true"></div>
+  <div class="hero-carousel" aria-hidden="true">
+    @for (slide of slides; track slide.image; let i = $index) {
+      <div
+        class="hero-slide"
+        [class.active]="activeSlide() === i"
+        [style.background-image]="
+          'linear-gradient(180deg, rgba(42, 34, 36, 0.18) 10%, rgba(42, 34, 36, 0.62) 100%), url(' +
+          slide.image +
+          ')'
+        "
+      ></div>
+    }
+  </div>
+
   <div class="hero-content fade-up">
     <p class="brand-mark hero-brand">Velora</p>
     <h1>{{ 'home.headline' | t }}</h1>
@@ -8,6 +21,28 @@
       <a routerLink="/shop" class="btn">{{ 'home.ctaShop' | t }}</a>
       <a routerLink="/shop/skincare" class="btn btn-ghost">{{ 'home.ctaSkincare' | t }}</a>
     </div>
+  </div>
+
+  <div class="hero-controls">
+    <button type="button" class="carousel-nav prev" (click)="prevSlide()" [attr.aria-label]="'Previous'">
+      ‹
+    </button>
+    <div class="carousel-dots" role="tablist">
+      @for (slide of slides; track slide.image; let i = $index) {
+        <button
+          type="button"
+          class="dot"
+          role="tab"
+          [class.active]="activeSlide() === i"
+          [attr.aria-label]="'Slide ' + (i + 1)"
+          [attr.aria-selected]="activeSlide() === i"
+          (click)="goToSlide(i)"
+        ></button>
+      }
+    </div>
+    <button type="button" class="carousel-nav next" (click)="nextSlide()" [attr.aria-label]="'Next'">
+      ›
+    </button>
   </div>
 </section>
 

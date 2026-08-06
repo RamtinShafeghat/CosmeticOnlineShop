@@ -7,6 +7,29 @@
     </div>
   </div>
 
+  <div class="tabs" role="tablist">
+    <button
+      type="button"
+      role="tab"
+      class="tab"
+      [class.active]="tab() === 'Pending'"
+      [attr.aria-selected]="tab() === 'Pending'"
+      (click)="setTab('Pending')"
+    >
+      {{ 'orders.tabPending' | t }}
+    </button>
+    <button
+      type="button"
+      role="tab"
+      class="tab"
+      [class.active]="tab() === 'Confirmed'"
+      [attr.aria-selected]="tab() === 'Confirmed'"
+      (click)="setTab('Confirmed')"
+    >
+      {{ 'orders.tabConfirmed' | t }}
+    </button>
+  </div>
+
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }
@@ -22,6 +45,9 @@
           <th>{{ 'orders.items' | t }}</th>
           <th>{{ 'common.total' | t }}</th>
           <th>{{ 'orders.placed' | t }}</th>
+          @if (tab() === 'Pending') {
+            <th></th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -30,16 +56,40 @@
             <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
             <td>{{ order.customerName }}</td>
             <td>{{ order.email }}</td>
-            <td><span class="badge ok">{{ i18n.status(order.status) }}</span></td>
+            <td>
+              <span
+                class="badge"
+                [class.ok]="order.status === 'Confirmed'"
+                [class.warn]="order.status === 'Pending'"
+              >
+                {{ i18n.status(order.status) }}
+              </span>
+            </td>
             <td>{{ order.itemCount }}</td>
             <td>{{ order.total | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</td>
             <td>{{ order.createdAt | date: 'medium' : undefined : i18n.locale() }}</td>
+            @if (tab() === 'Pending') {
+              <td class="actions">
+                <button
+                  type="button"
+                  class="confirm-btn"
+                  [disabled]="confirmingId() === order.id"
+                  (click)="confirm(order, $event)"
+                >
+                  {{
+                    confirmingId() === order.id
+                      ? ('orderDetail.confirming' | t)
+                      : ('orders.confirm' | t)
+                  }}
+                </button>
+              </td>
+            }
           </tr>
         }
       </tbody>
     </table>
     @if (orders().length === 0 && !error()) {
-      <p class="muted empty">{{ 'orders.empty' | t }}</p>
+      <p class="muted empty">{{ emptyKey() | t }}</p>
     }
   </div>
 </section>

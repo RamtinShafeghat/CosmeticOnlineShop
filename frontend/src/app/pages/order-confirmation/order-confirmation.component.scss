@@ -48,3 +48,23 @@ hr {
 .status.error {
   color: #9b3b45;
 }
+
+.status-pill {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.status-pill.pending {
+  color: #8a5a2b;
+  background: rgba(196, 140, 70, 0.12);
+  border-color: rgba(196, 140, 70, 0.35);
+}
+
+.status-pill.confirmed {
+  color: #2f6b4f;
+  background: rgba(47, 107, 79, 0.1);
+  border-color: rgba(47, 107, 79, 0.3);
+}

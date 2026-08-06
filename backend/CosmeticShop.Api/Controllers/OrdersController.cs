@@ -78,7 +78,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
             ShippingAddress = request.ShippingAddress.Trim(),
             City = request.City.Trim(),
             PostalCode = request.PostalCode.Trim(),
-            Status = "Confirmed",
+            Status = "Pending",
             Subtotal = subtotal,
             ShippingCost = shipping,
             Total = subtotal + shipping,
