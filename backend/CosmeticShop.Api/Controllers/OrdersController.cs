@@ -58,20 +58,32 @@ public class OrdersController(AppDbContext db) : ControllerBase
         }
 
         var productIds = quantityByProductId.Keys.ToList();
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        // Load catalog rows for pricing/names, then reserve stock with an atomic
+        // UPDATE ... WHERE Stock >= qty so concurrent checkouts cannot oversell.
         var products = await db.Products
+            .AsNoTracking()
             .Where(p => productIds.Contains(p.Id))
             .ToDictionaryAsync(p => p.Id);
 
         if (products.Count != productIds.Count)
         {
+            await transaction.RollbackAsync();
             return BadRequest(new { message = "One or more products were not found." });
         }
 
         foreach (var (productId, quantity) in quantityByProductId)
         {
             var product = products[productId];
-            if (product.Stock < quantity)
+            var reserved = await db.Products
+                .Where(p => p.Id == productId && p.Stock >= quantity)
+                .ExecuteUpdateAsync(setters =>
+                    setters.SetProperty(p => p.Stock, p => p.Stock - quantity));
+
+            if (reserved == 0)
             {
+                await transaction.RollbackAsync();
                 return BadRequest(new
                 {
                     message = $"Insufficient stock for '{product.Name}'. Available: {product.Stock}."
@@ -114,11 +126,6 @@ public class OrdersController(AppDbContext db) : ControllerBase
             Items = orderItems
         };
 
-        foreach (var (productId, quantity) in quantityByProductId)
-        {
-            products[productId].Stock -= quantity;
-        }
-
         if (customerId is not null && request.SaveAddress)
         {
             var hasDefault = await db.CustomerAddresses.AnyAsync(a => a.CustomerId == customerId && a.IsDefault);
@@ -137,6 +144,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
 
         db.Orders.Add(order);
         await db.SaveChangesAsync();
+        await transaction.CommitAsync();
 
         return CreatedAtAction(
             nameof(GetById),

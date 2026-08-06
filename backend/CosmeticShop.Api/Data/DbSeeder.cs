@@ -321,6 +321,30 @@ public static class DbSeeder
             }
         }
 
+        if (!await TableExistsAsync(db, "ProductRatings"))
+        {
+            Console.WriteLine("Adding ProductRatings table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "ProductRatings" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_ProductRatings" PRIMARY KEY AUTOINCREMENT,
+                    "ProductId" INTEGER NOT NULL,
+                    "CustomerId" INTEGER NOT NULL,
+                    "Stars" INTEGER NOT NULL,
+                    "CreatedAt" TEXT NOT NULL,
+                    "UpdatedAt" TEXT NOT NULL,
+                    CONSTRAINT "FK_ProductRatings_Products_ProductId"
+                        FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE CASCADE,
+                    CONSTRAINT "FK_ProductRatings_Customers_CustomerId"
+                        FOREIGN KEY ("CustomerId") REFERENCES "Customers" ("Id") ON DELETE CASCADE
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE UNIQUE INDEX "IX_ProductRatings_ProductId_CustomerId" ON "ProductRatings" ("ProductId", "CustomerId");""");
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE INDEX "IX_ProductRatings_CustomerId" ON "ProductRatings" ("CustomerId");""");
+        }
+
         if (!await TableExistsAsync(db, "AdminUsers"))
         {
             Console.WriteLine("Adding AdminUsers table to existing SQLite database…");

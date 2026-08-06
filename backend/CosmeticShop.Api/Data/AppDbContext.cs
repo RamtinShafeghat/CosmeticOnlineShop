@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<CustomerAddress> CustomerAddresses => Set<CustomerAddress>();
+    public DbSet<ProductRating> ProductRatings => Set<ProductRating>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,5 +81,21 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany(c => c.Orders)
             .HasForeignKey(o => o.CustomerId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<ProductRating>()
+            .HasIndex(r => new { r.ProductId, r.CustomerId })
+            .IsUnique();
+
+        modelBuilder.Entity<ProductRating>()
+            .HasOne(r => r.Product)
+            .WithMany(p => p.Ratings)
+            .HasForeignKey(r => r.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductRating>()
+            .HasOne(r => r.Customer)
+            .WithMany(c => c.Ratings)
+            .HasForeignKey(r => r.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

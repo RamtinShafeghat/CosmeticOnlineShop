@@ -23,7 +23,7 @@ public class AdminProductsController(
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductListItemDto>>> GetAll([FromQuery] int? categoryId)
     {
-        var query = db.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
+        var query = db.Products.AsNoTracking().Include(p => p.Category).Include(p => p.Ratings).AsQueryable();
         if (categoryId is not null)
         {
             query = query.Where(p => p.CategoryId == categoryId);
@@ -42,6 +42,7 @@ public class AdminProductsController(
         var product = await db.Products
             .AsNoTracking()
             .Include(p => p.Category)
+            .Include(p => p.Ratings)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         return product is null ? NotFound() : Ok(MapDetail(product));
@@ -68,6 +69,7 @@ public class AdminProductsController(
         await db.SaveChangesAsync();
 
         await db.Entry(product).Reference(p => p.Category).LoadAsync();
+        await db.Entry(product).Collection(p => p.Ratings).LoadAsync();
         return CreatedAtAction(nameof(GetById), new { id = product.Id }, MapDetail(product));
     }
 
@@ -79,7 +81,10 @@ public class AdminProductsController(
             return ValidationProblem(ModelState);
         }
 
-        var product = await db.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+        var product = await db.Products
+            .Include(p => p.Category)
+            .Include(p => p.Ratings)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (product is null)
         {
             return NotFound();
@@ -200,8 +205,14 @@ public class AdminProductsController(
         return slug;
     }
 
-    private static ProductListItemDto MapListItem(Product p) =>
-        new(
+    private static ProductListItemDto MapListItem(Product p)
+    {
+        var ratingCount = p.Ratings?.Count ?? 0;
+        var average = ratingCount > 0
+            ? Math.Round(p.Ratings!.Average(r => r.Stars), 1)
+            : 0;
+
+        return new(
             p.Id,
             p.Name,
             p.NameFa,
@@ -216,10 +227,19 @@ public class AdminProductsController(
             p.IsFeatured,
             p.CategoryId,
             p.Category?.Name ?? string.Empty,
-            p.Category?.NameFa ?? string.Empty);
+            p.Category?.NameFa ?? string.Empty,
+            average,
+            ratingCount);
+    }
 
-    private static ProductDetailDto MapDetail(Product p) =>
-        new(
+    private static ProductDetailDto MapDetail(Product p)
+    {
+        var ratingCount = p.Ratings?.Count ?? 0;
+        var average = ratingCount > 0
+            ? Math.Round(p.Ratings!.Average(r => r.Stars), 1)
+            : 0;
+
+        return new(
             p.Id,
             p.Name,
             p.NameFa,
@@ -236,5 +256,9 @@ public class AdminProductsController(
             p.IsFeatured,
             p.CategoryId,
             p.Category?.Name ?? string.Empty,
-            p.Category?.NameFa ?? string.Empty);
+            p.Category?.NameFa ?? string.Empty,
+            average,
+            ratingCount,
+            null);
+    }
 }
