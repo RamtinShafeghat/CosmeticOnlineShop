@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using CosmeticShop.Api.Data;
 using CosmeticShop.Api.Dtos;
 using CosmeticShop.Api.Models;
@@ -69,9 +71,11 @@ public class OrdersController(AppDbContext db) : ControllerBase
 
         var subtotal = orderItems.Sum(i => i.UnitPrice * i.Quantity);
         var shipping = subtotal >= FreeShippingThreshold ? 0m : StandardShipping;
+        var customerId = GetCustomerId();
 
         var order = new Order
         {
+            CustomerId = customerId,
             CustomerName = request.CustomerName.Trim(),
             Email = request.Email.Trim(),
             Phone = request.Phone.Trim(),
@@ -91,10 +95,38 @@ public class OrdersController(AppDbContext db) : ControllerBase
             products[item.ProductId].Stock -= item.Quantity;
         }
 
+        if (customerId is not null && request.SaveAddress)
+        {
+            var hasDefault = await db.CustomerAddresses.AnyAsync(a => a.CustomerId == customerId && a.IsDefault);
+            db.CustomerAddresses.Add(new CustomerAddress
+            {
+                CustomerId = customerId.Value,
+                Label = string.IsNullOrWhiteSpace(request.AddressLabel) ? "Home" : request.AddressLabel.Trim(),
+                FullName = order.CustomerName,
+                Phone = order.Phone,
+                Line1 = order.ShippingAddress,
+                City = order.City,
+                PostalCode = order.PostalCode,
+                IsDefault = !hasDefault
+            });
+        }
+
         db.Orders.Add(order);
         await db.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetById), new { id = order.Id }, MapOrder(order));
+    }
+
+    private int? GetCustomerId()
+    {
+        if (User?.Identity?.IsAuthenticated != true || !User.IsInRole("Customer"))
+        {
+            return null;
+        }
+
+        var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        return int.TryParse(raw, out var id) ? id : null;
     }
 
     private static OrderDto MapOrder(Order order) =>

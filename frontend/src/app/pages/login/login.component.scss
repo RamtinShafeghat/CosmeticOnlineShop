@@ -1,0 +1,60 @@
+.auth-wrap {
+  max-width: 28rem;
+}
+
+.eyebrow {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--blush-deep);
+  margin-bottom: 0.75rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0 1.25rem;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+input {
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0 0.9rem;
+  color: var(--ink);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--blush);
+}
+
+.error {
+  color: #9b3b45;
+  margin: 0;
+}
+
+.switch {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.switch a {
+  color: var(--blush-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

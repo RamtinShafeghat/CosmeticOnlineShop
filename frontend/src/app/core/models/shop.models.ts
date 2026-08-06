@@ -45,6 +45,8 @@ export interface CreateOrderRequest {
   shippingAddress: string;
   city: string;
   postalCode: string;
+  saveAddress?: boolean;
+  addressLabel?: string;
   items: CreateOrderItem[];
 }
 
@@ -71,4 +73,60 @@ export interface Order {
   total: number;
   createdAt: string;
   items: OrderItem[];
+}
+
+export interface CustomerLoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface CustomerRegisterRequest {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+export interface CustomerAuthResponse {
+  token: string;
+  email: string;
+  fullName: string;
+  phone: string;
+  expiresAtUtc: string;
+}
+
+export interface CustomerProfile {
+  email: string;
+  fullName: string;
+  phone: string;
+  expiresAtUtc: string;
+}
+
+export interface CustomerAddress {
+  id: number;
+  label: string;
+  fullName: string;
+  phone: string;
+  line1: string;
+  city: string;
+  postalCode: string;
+  isDefault: boolean;
+}
+
+export interface UpsertCustomerAddress {
+  label: string;
+  fullName: string;
+  phone: string;
+  line1: string;
+  city: string;
+  postalCode: string;
+  isDefault: boolean;
+}
+
+export interface CustomerOrderListItem {
+  id: number;
+  status: string;
+  total: number;
+  itemCount: number;
+  createdAt: string;
 }

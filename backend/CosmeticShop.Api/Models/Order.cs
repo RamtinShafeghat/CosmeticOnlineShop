@@ -3,6 +3,8 @@ namespace CosmeticShop.Api.Models;
 public class Order
 {
     public int Id { get; set; }
+    public int? CustomerId { get; set; }
+    public Customer? Customer { get; set; }
     public string CustomerName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;

@@ -1,0 +1,48 @@
+<section class="section">
+  <div class="container auth-wrap fade-up">
+    <p class="eyebrow">{{ 'auth.access' | t }}</p>
+    <h1 class="section-title">{{ 'register.title' | t }}</h1>
+    <p class="section-lead">{{ 'register.lead' | t }}</p>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <label>
+        {{ 'auth.fullName' | t }}
+        <input name="fullName" [(ngModel)]="fullName" required autocomplete="name" />
+      </label>
+      <label>
+        {{ 'auth.email' | t }}
+        <input type="email" name="email" [(ngModel)]="email" required autocomplete="email" />
+      </label>
+      <label>
+        {{ 'auth.phone' | t }}
+        <input name="phone" [(ngModel)]="phone" autocomplete="tel" />
+      </label>
+      <label>
+        {{ 'auth.password' | t }}
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          autocomplete="new-password"
+        />
+      </label>
+
+      @if (error()) {
+        <p class="error">
+          {{ error() === 'register.failed' ? ('register.failed' | t) : error() }}
+        </p>
+      }
+
+      <button class="btn" type="submit" [disabled]="busy()">
+        {{ (busy() ? 'register.submitting' : 'register.submit') | t }}
+      </button>
+    </form>
+
+    <p class="switch">
+      {{ 'register.hasAccount' | t }}
+      <a routerLink="/login">{{ 'register.loginLink' | t }}</a>
+    </p>
+  </div>
+</section>

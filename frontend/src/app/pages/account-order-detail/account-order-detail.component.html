@@ -1,0 +1,59 @@
+<a routerLink="/account/orders" class="back">{{ 'account.backOrders' | t }}</a>
+
+@if (loading()) {
+  <p class="muted">{{ 'order.loading' | t }}</p>
+} @else if (error() || !order()) {
+  <p class="error">{{ 'order.notFound' | t }}</p>
+} @else {
+  <div class="detail-head">
+    <h2>{{ 'account.orderTitle' | t: { id: order()!.id } }}</h2>
+    <span
+      class="status-pill"
+      [class.pending]="order()!.status === 'Pending'"
+      [class.confirmed]="order()!.status === 'Confirmed'"
+    >
+      {{ statusLabel(order()!.status) }}
+    </span>
+  </div>
+  <p class="muted">{{ order()!.createdAt | date: 'medium':undefined:i18n.locale() }}</p>
+
+  <div class="panel">
+    <h3>{{ 'order.shipTo' | t }}</h3>
+    <p>
+      {{ order()!.customerName }}<br />
+      {{ order()!.shippingAddress }}<br />
+      {{ order()!.city }}, {{ order()!.postalCode }}
+    </p>
+
+    <hr />
+
+    @for (item of order()!.items; track item.productId) {
+      <div class="row">
+        <span>
+          {{
+            i18n.lang() === 'fa'
+              ? item.productNameFa || item.productName
+              : item.productName
+          }}
+          × {{ item.quantity }}
+        </span>
+        <span>{{ item.lineTotal | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}</span>
+      </div>
+    }
+
+    <div class="row">
+      <span>{{ 'order.shipping' | t }}</span>
+      <span>
+        @if (order()!.shippingCost === 0) {
+          {{ 'order.free' | t }}
+        } @else {
+          {{ order()!.shippingCost | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+        }
+      </span>
+    </div>
+    <div class="row total">
+      <span>{{ 'order.total' | t }}</span>
+      <span>{{ order()!.total | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}</span>
+    </div>
+  </div>
+}

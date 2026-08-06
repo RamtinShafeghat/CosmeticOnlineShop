@@ -17,11 +17,31 @@ public class JwtTokenService(IOptions<JwtOptions> options)
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(ClaimTypes.Name, user.DisplayName),
             new(ClaimTypes.Role, "Admin")
         };
 
+        return WriteToken(claims);
+    }
+
+    public string CreateCustomerToken(Customer customer)
+    {
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, customer.Id.ToString()),
+            new(ClaimTypes.NameIdentifier, customer.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, customer.Email),
+            new(ClaimTypes.Name, customer.FullName),
+            new(ClaimTypes.Role, "Customer")
+        };
+
+        return WriteToken(claims);
+    }
+
+    private string WriteToken(IEnumerable<Claim> claims)
+    {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.UtcNow.AddMinutes(_options.ExpiresMinutes);

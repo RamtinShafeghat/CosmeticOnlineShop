@@ -4,6 +4,8 @@ export type TranslationKey =
   | 'nav.home'
   | 'nav.shop'
   | 'nav.bag'
+  | 'nav.signIn'
+  | 'nav.account'
   | 'lang.en'
   | 'lang.fa'
   | 'home.headline'
@@ -61,6 +63,59 @@ export type TranslationKey =
   | 'checkout.summary'
   | 'checkout.bagEmpty'
   | 'checkout.failed'
+  | 'checkout.loginHint'
+  | 'checkout.signIn'
+  | 'checkout.savedAddress'
+  | 'checkout.manualAddress'
+  | 'checkout.saveAddress'
+  | 'auth.access'
+  | 'auth.email'
+  | 'auth.password'
+  | 'auth.fullName'
+  | 'auth.phone'
+  | 'login.title'
+  | 'login.lead'
+  | 'login.submit'
+  | 'login.submitting'
+  | 'login.failed'
+  | 'login.noAccount'
+  | 'login.registerLink'
+  | 'register.title'
+  | 'register.lead'
+  | 'register.submit'
+  | 'register.submitting'
+  | 'register.failed'
+  | 'register.hasAccount'
+  | 'register.loginLink'
+  | 'account.eyebrow'
+  | 'account.title'
+  | 'account.greeting'
+  | 'account.signOut'
+  | 'account.orders'
+  | 'account.addresses'
+  | 'account.loadingOrders'
+  | 'account.ordersError'
+  | 'account.noOrders'
+  | 'account.shopNow'
+  | 'account.items'
+  | 'account.backOrders'
+  | 'account.orderTitle'
+  | 'account.savedAddresses'
+  | 'account.loadingAddresses'
+  | 'account.noAddresses'
+  | 'account.default'
+  | 'account.edit'
+  | 'account.delete'
+  | 'account.addAddress'
+  | 'account.editAddress'
+  | 'account.label'
+  | 'account.setDefault'
+  | 'account.saveAddress'
+  | 'account.saving'
+  | 'account.cancel'
+  | 'account.addressSaveFailed'
+  | 'account.addressDeleteFailed'
+  | 'account.addressesError'
   | 'order.loading'
   | 'order.notFound'
   | 'order.back'
@@ -93,6 +148,8 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.home': 'Home',
     'nav.shop': 'Shop',
     'nav.bag': 'Bag',
+    'nav.signIn': 'Sign in',
+    'nav.account': 'Account',
     'lang.en': 'EN',
     'lang.fa': 'FA',
     'home.headline': 'Skin that feels quietly luminous.',
@@ -153,6 +210,59 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'checkout.summary': 'Order summary',
     'checkout.bagEmpty': 'Your bag is empty.',
     'checkout.failed': 'Could not place the order. Please try again.',
+    'checkout.loginHint': 'Sign in to track purchases and reuse saved addresses.',
+    'checkout.signIn': 'Sign in',
+    'checkout.savedAddress': 'Saved address',
+    'checkout.manualAddress': 'Enter a new address',
+    'checkout.saveAddress': 'Save this address to my account',
+    'auth.access': 'Your Velora account',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.fullName': 'Full name',
+    'auth.phone': 'Phone',
+    'login.title': 'Sign in',
+    'login.lead': 'Access your orders, purchases, and saved addresses.',
+    'login.submit': 'Sign in',
+    'login.submitting': 'Signing in…',
+    'login.failed': 'Invalid email or password.',
+    'login.noAccount': 'New here?',
+    'login.registerLink': 'Create an account',
+    'register.title': 'Create account',
+    'register.lead': 'Save addresses and follow every Velora order in one place.',
+    'register.submit': 'Create account',
+    'register.submitting': 'Creating account…',
+    'register.failed': 'Could not create your account. Please try again.',
+    'register.hasAccount': 'Already have an account?',
+    'register.loginLink': 'Sign in',
+    'account.eyebrow': 'Member studio',
+    'account.title': 'My account',
+    'account.greeting': 'Welcome back, {name}.',
+    'account.signOut': 'Sign out',
+    'account.orders': 'Orders',
+    'account.addresses': 'Addresses',
+    'account.loadingOrders': 'Loading your orders…',
+    'account.ordersError': 'Unable to load orders.',
+    'account.noOrders': 'You have no orders yet.',
+    'account.shopNow': 'Shop now',
+    'account.items': 'items',
+    'account.backOrders': '← Back to orders',
+    'account.orderTitle': 'Order #{id}',
+    'account.savedAddresses': 'Saved addresses',
+    'account.loadingAddresses': 'Loading addresses…',
+    'account.noAddresses': 'No saved addresses yet.',
+    'account.default': 'Default',
+    'account.edit': 'Edit',
+    'account.delete': 'Delete',
+    'account.addAddress': 'Add address',
+    'account.editAddress': 'Edit address',
+    'account.label': 'Label',
+    'account.setDefault': 'Set as default address',
+    'account.saveAddress': 'Save address',
+    'account.saving': 'Saving…',
+    'account.cancel': 'Cancel',
+    'account.addressSaveFailed': 'Could not save the address.',
+    'account.addressDeleteFailed': 'Could not delete the address.',
+    'account.addressesError': 'Unable to load addresses.',
     'order.loading': 'Loading order…',
     'order.notFound': 'Order not found.',
     'order.back': 'Back to shop',
@@ -186,6 +296,8 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.home': 'خانه',
     'nav.shop': 'فروشگاه',
     'nav.bag': 'سبد',
+    'nav.signIn': 'ورود',
+    'nav.account': 'حساب',
     'lang.en': 'EN',
     'lang.fa': 'فا',
     'home.headline': 'پوستی که آرام می‌درخشد.',
@@ -246,6 +358,59 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'checkout.summary': 'خلاصه سفارش',
     'checkout.bagEmpty': 'سبد خرید شما خالی است.',
     'checkout.failed': 'ثبت سفارش ممکن نشد. لطفاً دوباره تلاش کنید.',
+    'checkout.loginHint': 'برای پیگیری خریدها و استفاده از آدرس‌های ذخیره‌شده وارد شوید.',
+    'checkout.signIn': 'ورود',
+    'checkout.savedAddress': 'آدرس ذخیره‌شده',
+    'checkout.manualAddress': 'وارد کردن آدرس جدید',
+    'checkout.saveAddress': 'ذخیره این آدرس در حساب من',
+    'auth.access': 'حساب ولورای شما',
+    'auth.email': 'ایمیل',
+    'auth.password': 'رمز عبور',
+    'auth.fullName': 'نام کامل',
+    'auth.phone': 'تلفن',
+    'login.title': 'ورود',
+    'login.lead': 'به سفارش‌ها، خریدها و آدرس‌های ذخیره‌شده دسترسی داشته باشید.',
+    'login.submit': 'ورود',
+    'login.submitting': 'در حال ورود…',
+    'login.failed': 'ایمیل یا رمز عبور نادرست است.',
+    'login.noAccount': 'تازه‌وارد هستید؟',
+    'login.registerLink': 'ساخت حساب',
+    'register.title': 'ساخت حساب',
+    'register.lead': 'آدرس‌ها را ذخیره کنید و همه سفارش‌های ولورا را یکجا دنبال کنید.',
+    'register.submit': 'ساخت حساب',
+    'register.submitting': 'در حال ساخت حساب…',
+    'register.failed': 'ساخت حساب ممکن نشد. لطفاً دوباره تلاش کنید.',
+    'register.hasAccount': 'قبلاً حساب دارید؟',
+    'register.loginLink': 'ورود',
+    'account.eyebrow': 'استودیوی اعضا',
+    'account.title': 'حساب من',
+    'account.greeting': 'خوش آمدید، {name}.',
+    'account.signOut': 'خروج',
+    'account.orders': 'سفارش‌ها',
+    'account.addresses': 'آدرس‌ها',
+    'account.loadingOrders': 'در حال بارگذاری سفارش‌ها…',
+    'account.ordersError': 'بارگذاری سفارش‌ها ممکن نشد.',
+    'account.noOrders': 'هنوز سفارشی ندارید.',
+    'account.shopNow': 'همین حالا خرید کنید',
+    'account.items': 'قلم',
+    'account.backOrders': '→ بازگشت به سفارش‌ها',
+    'account.orderTitle': 'سفارش #{id}',
+    'account.savedAddresses': 'آدرس‌های ذخیره‌شده',
+    'account.loadingAddresses': 'در حال بارگذاری آدرس‌ها…',
+    'account.noAddresses': 'هنوز آدرس ذخیره‌شده‌ای نیست.',
+    'account.default': 'پیش‌فرض',
+    'account.edit': 'ویرایش',
+    'account.delete': 'حذف',
+    'account.addAddress': 'افزودن آدرس',
+    'account.editAddress': 'ویرایش آدرس',
+    'account.label': 'برچسب',
+    'account.setDefault': 'تنظیم به‌عنوان آدرس پیش‌فرض',
+    'account.saveAddress': 'ذخیره آدرس',
+    'account.saving': 'در حال ذخیره…',
+    'account.cancel': 'انصراف',
+    'account.addressSaveFailed': 'ذخیره آدرس ممکن نشد.',
+    'account.addressDeleteFailed': 'حذف آدرس ممکن نشد.',
+    'account.addressesError': 'بارگذاری آدرس‌ها ممکن نشد.',
     'order.loading': 'در حال بارگذاری سفارش…',
     'order.notFound': 'سفارش پیدا نشد.',
     'order.back': 'بازگشت به فروشگاه',

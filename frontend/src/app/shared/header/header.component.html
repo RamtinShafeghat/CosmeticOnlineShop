@@ -14,6 +14,12 @@
         }
       </a>
 
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/account/orders" routerLinkActive="active">{{ 'nav.account' | t }}</a>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active">{{ 'nav.signIn' | t }}</a>
+      }
+
       <div class="lang-switch" role="group" [attr.aria-label]="'Language'">
         <button
           type="button"
