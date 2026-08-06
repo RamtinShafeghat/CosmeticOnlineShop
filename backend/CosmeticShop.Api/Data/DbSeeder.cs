@@ -1,3 +1,5 @@
+using System.Data;
+using System.Data.Common;
 using CosmeticShop.Api;
 using CosmeticShop.Api.Models;
 using CosmeticShop.Api.Services;
@@ -9,24 +11,9 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(AppDbContext db, AdminSeedOptions adminSeed)
     {
-        // Ensure schema exists first. If bilingual/admin columns are missing, recreate DB.
-        await db.Database.EnsureCreatedAsync();
-
-        try
-        {
-            _ = await db.Products.AsNoTracking().Select(p => p.NameFa).FirstOrDefaultAsync();
-            _ = await db.Categories.AsNoTracking().Select(c => c.NameFa).FirstOrDefaultAsync();
-            _ = await db.OrderItems.AsNoTracking().Select(i => i.ProductNameFa).FirstOrDefaultAsync();
-            _ = await db.AdminUsers.AsNoTracking().Select(u => u.Email).FirstOrDefaultAsync();
-            _ = await db.Customers.AsNoTracking().Select(c => c.Email).FirstOrDefaultAsync();
-            _ = await db.CustomerAddresses.AsNoTracking().Select(a => a.Label).FirstOrDefaultAsync();
-            _ = await db.Orders.AsNoTracking().Select(o => o.CustomerId).FirstOrDefaultAsync();
-        }
-        catch
-        {
-            await db.Database.EnsureDeletedAsync();
-            await db.Database.EnsureCreatedAsync();
-        }
+        // EnsureCreated only builds a brand-new DB. Older SQLite files need additive
+        // upgrades for customer auth tables/columns without wiping catalog data.
+        await EnsureCompatibleSchemaAsync(db);
 
         await EnsureAdminUserAsync(db, adminSeed);
 
@@ -250,6 +237,120 @@ public static class DbSeeder
 
         db.Products.AddRange(products);
         await db.SaveChangesAsync();
+    }
+
+    private static async Task EnsureCompatibleSchemaAsync(AppDbContext db)
+    {
+        await db.Database.EnsureCreatedAsync();
+
+        // Additive upgrades for databases created before customer accounts existed.
+        // EnsureCreated does not alter an already-created SQLite file.
+        if (!await TableExistsAsync(db, "Customers"))
+        {
+            Console.WriteLine("Adding Customers table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "Customers" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_Customers" PRIMARY KEY AUTOINCREMENT,
+                    "Email" TEXT NOT NULL,
+                    "PasswordHash" TEXT NOT NULL,
+                    "FullName" TEXT NOT NULL,
+                    "Phone" TEXT NOT NULL,
+                    "CreatedAt" TEXT NOT NULL
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE UNIQUE INDEX "IX_Customers_Email" ON "Customers" ("Email");""");
+        }
+
+        if (!await TableExistsAsync(db, "CustomerAddresses"))
+        {
+            Console.WriteLine("Adding CustomerAddresses table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "CustomerAddresses" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_CustomerAddresses" PRIMARY KEY AUTOINCREMENT,
+                    "CustomerId" INTEGER NOT NULL,
+                    "Label" TEXT NOT NULL,
+                    "FullName" TEXT NOT NULL,
+                    "Phone" TEXT NOT NULL,
+                    "Line1" TEXT NOT NULL,
+                    "City" TEXT NOT NULL,
+                    "PostalCode" TEXT NOT NULL,
+                    "IsDefault" INTEGER NOT NULL,
+                    CONSTRAINT "FK_CustomerAddresses_Customers_CustomerId"
+                        FOREIGN KEY ("CustomerId") REFERENCES "Customers" ("Id") ON DELETE CASCADE
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE INDEX "IX_CustomerAddresses_CustomerId" ON "CustomerAddresses" ("CustomerId");""");
+        }
+
+        if (await TableExistsAsync(db, "Orders") && !await ColumnExistsAsync(db, "Orders", "CustomerId"))
+        {
+            Console.WriteLine("Adding Orders.CustomerId column to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """ALTER TABLE "Orders" ADD COLUMN "CustomerId" INTEGER NULL;""");
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE INDEX "IX_Orders_CustomerId" ON "Orders" ("CustomerId");""");
+        }
+
+        if (!await TableExistsAsync(db, "AdminUsers"))
+        {
+            Console.WriteLine("Adding AdminUsers table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "AdminUsers" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_AdminUsers" PRIMARY KEY AUTOINCREMENT,
+                    "Email" TEXT NOT NULL,
+                    "PasswordHash" TEXT NOT NULL,
+                    "DisplayName" TEXT NOT NULL
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE UNIQUE INDEX "IX_AdminUsers_Email" ON "AdminUsers" ("Email");""");
+        }
+    }
+
+    private static async Task<bool> TableExistsAsync(AppDbContext db, string tableName)
+    {
+        var connection = await OpenConnectionAsync(db);
+        await using var command = connection.CreateCommand();
+        command.CommandText =
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = $name LIMIT 1;";
+        AddParameter(command, "$name", tableName);
+        var result = await command.ExecuteScalarAsync();
+        return result is not null && result is not DBNull;
+    }
+
+    private static async Task<bool> ColumnExistsAsync(AppDbContext db, string tableName, string columnName)
+    {
+        var connection = await OpenConnectionAsync(db);
+        await using var command = connection.CreateCommand();
+        command.CommandText =
+            $"SELECT 1 FROM pragma_table_info('{tableName}') WHERE name = $column LIMIT 1;";
+        AddParameter(command, "$column", columnName);
+        var result = await command.ExecuteScalarAsync();
+        return result is not null && result is not DBNull;
+    }
+
+    private static async Task<DbConnection> OpenConnectionAsync(AppDbContext db)
+    {
+        var connection = db.Database.GetDbConnection();
+        if (connection.State != ConnectionState.Open)
+        {
+            await connection.OpenAsync();
+        }
+
+        return connection;
+    }
+
+    private static void AddParameter(DbCommand command, string name, object value)
+    {
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.Value = value;
+        command.Parameters.Add(parameter);
     }
 
     private static async Task EnsureAdminUserAsync(AppDbContext db, AdminSeedOptions adminSeed)
