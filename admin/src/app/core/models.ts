@@ -33,6 +33,9 @@ export interface Product {
   categoryId: number;
   categoryName: string;
   categoryNameFa: string;
+  averageRating?: number;
+  ratingCount?: number;
+  myRating?: number | null;
 }
 
 export interface UpsertCategory {

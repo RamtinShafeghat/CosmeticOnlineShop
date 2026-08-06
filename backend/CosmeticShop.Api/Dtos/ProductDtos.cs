@@ -15,7 +15,9 @@ public record ProductListItemDto(
     bool IsFeatured,
     int CategoryId,
     string CategoryName,
-    string CategoryNameFa);
+    string CategoryNameFa,
+    double AverageRating,
+    int RatingCount);
 
 public record ProductDetailDto(
     int Id,
@@ -34,7 +36,10 @@ public record ProductDetailDto(
     bool IsFeatured,
     int CategoryId,
     string CategoryName,
-    string CategoryNameFa);
+    string CategoryNameFa,
+    double AverageRating,
+    int RatingCount,
+    int? MyRating);
 
 public record CategoryDto(
     int Id,

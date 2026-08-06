@@ -5,6 +5,13 @@
   <div class="meta">
     <p class="category">{{ i18n.categoryName(product) }}</p>
     <h3>{{ i18n.productName(product) }}</h3>
+    @if ((product.ratingCount ?? 0) > 0) {
+      <p class="rating">
+        <span class="stars" aria-hidden="true">★</span>
+        {{ product.averageRating | number: '1.1-1' }}
+        <span class="count">({{ product.ratingCount }})</span>
+      </p>
+    }
     <p class="price">
       {{ product.price | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
     </p>
