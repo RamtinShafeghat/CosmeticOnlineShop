@@ -62,7 +62,7 @@ public class AdminProductsController(
         }
 
         var product = new Product();
-        Apply(product, request);
+        Apply(product, request, applyStock: true);
         product.Slug = await EnsureUniqueSlugAsync(SlugHelper.ToSlug(request.Slug ?? request.Name));
 
         db.Products.Add(product);
@@ -95,13 +95,46 @@ public class AdminProductsController(
             return BadRequest(new { message = "Category not found." });
         }
 
-        Apply(product, request);
+        // Do not apply request.Stock here. The admin edit form often still holds the
+        // stock value from page load; writing it absolutely would restore units already
+        // sold by concurrent checkout (ExecuteUpdate). Intentional stock changes go
+        // through UpdateStock.
+        Apply(product, request, applyStock: false);
         product.Slug = await EnsureUniqueSlugAsync(
             SlugHelper.ToSlug(request.Slug ?? request.Name),
             product.Id);
 
         await db.SaveChangesAsync();
         await db.Entry(product).Reference(p => p.Category).LoadAsync();
+        return Ok(MapDetail(product));
+    }
+
+    [HttpPut("{id:int}/stock")]
+    public async Task<ActionResult<ProductDetailDto>> UpdateStock(
+        int id,
+        [FromBody] UpdateProductStockRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        var affected = await db.Products
+            .Where(p => p.Id == id)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(p => p.Stock, request.Stock));
+
+        if (affected == 0)
+        {
+            return NotFound();
+        }
+
+        var product = await db.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .Include(p => p.Ratings)
+            .FirstAsync(p => p.Id == id);
+
         return Ok(MapDetail(product));
     }
 
@@ -168,7 +201,7 @@ public class AdminProductsController(
         return Ok(new UploadImageResponse(product.ImageUrl));
     }
 
-    private static void Apply(Product product, UpsertProductRequest request)
+    private static void Apply(Product product, UpsertProductRequest request, bool applyStock)
     {
         product.Name = request.Name.Trim();
         product.NameFa = request.NameFa.Trim();
@@ -179,7 +212,11 @@ public class AdminProductsController(
         product.Price = request.Price;
         product.Brand = string.IsNullOrWhiteSpace(request.Brand) ? "Velora" : request.Brand.Trim();
         product.SkinType = string.IsNullOrWhiteSpace(request.SkinType) ? "All" : request.SkinType.Trim();
-        product.Stock = request.Stock;
+        if (applyStock)
+        {
+            product.Stock = request.Stock;
+        }
+
         product.IsFeatured = request.IsFeatured;
         product.CategoryId = request.CategoryId;
 
