@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using CosmeticShop.Api;
 using CosmeticShop.Api.Data;
 using CosmeticShop.Api.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -72,6 +73,39 @@ public class OrderAccessTests : IDisposable
         Assert.Equal(created.Id, body.Id);
         Assert.Equal("buyer@example.com", body.Email);
         Assert.Equal(created.PublicToken, body.PublicToken);
+    }
+
+    [Fact]
+    public async Task SeedAsync_BackfillsEmptyPublicTokens_WhenColumnAlreadyExists()
+    {
+        var created = await PlaceOrderAsync();
+
+        await using (var scope = _factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var order = await db.Orders.SingleAsync(o => o.Id == created.Id);
+            order.PublicToken = Guid.Empty;
+            await db.SaveChangesAsync();
+        }
+
+        // Column already exists; a later startup must still repair empty tokens.
+        await using (var scope = _factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await DbSeeder.SeedAsync(db, new AdminSeedOptions());
+        }
+
+        Guid repairedToken;
+        await using (var scope = _factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var order = await db.Orders.SingleAsync(o => o.Id == created.Id);
+            Assert.NotEqual(Guid.Empty, order.PublicToken);
+            repairedToken = order.PublicToken;
+        }
+
+        var response = await _client.GetAsync($"/api/orders/{created.Id}?token={repairedToken}");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     private async Task<OrderResponse> PlaceOrderAsync()

@@ -300,8 +300,12 @@ public static class DbSeeder
             Console.WriteLine("Adding Orders.PublicToken column to existing SQLite database…");
             await db.Database.ExecuteSqlRawAsync(
                 """ALTER TABLE "Orders" ADD COLUMN "PublicToken" TEXT NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';""");
+        }
 
-            // Give every existing order a unique opaque token so confirmation links stay private.
+        // Backfill empty tokens whenever the column already exists — not only while adding it —
+        // so a failed SaveChanges after ALTER (or any leftover empty GUID) is repaired on later startups.
+        if (await TableExistsAsync(db, "Orders") && await ColumnExistsAsync(db, "Orders", "PublicToken"))
+        {
             var ordersNeedingTokens = await db.Orders
                 .Where(o => o.PublicToken == Guid.Empty)
                 .ToListAsync();
@@ -312,6 +316,7 @@ public static class DbSeeder
 
             if (ordersNeedingTokens.Count > 0)
             {
+                Console.WriteLine($"Backfilling PublicToken for {ordersNeedingTokens.Count} order(s)…");
                 await db.SaveChangesAsync();
             }
         }
