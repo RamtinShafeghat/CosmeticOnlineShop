@@ -84,6 +84,7 @@ export interface OrderItem {
 
 export interface Order {
   id: number;
+  publicToken?: string;
   customerName: string;
   email: string;
   phone: string;

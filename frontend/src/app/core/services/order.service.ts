@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -13,7 +13,11 @@ export class OrderService {
     return this.http.post<Order>(this.baseUrl, order);
   }
 
-  getById(id: number): Observable<Order> {
-    return this.http.get<Order>(`${this.baseUrl}/${id}`);
+  getById(id: number, token?: string | null): Observable<Order> {
+    let params = new HttpParams();
+    if (token) {
+      params = params.set('token', token);
+    }
+    return this.http.get<Order>(`${this.baseUrl}/${id}`, { params });
   }
 }

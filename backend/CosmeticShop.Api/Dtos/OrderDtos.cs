@@ -50,6 +50,7 @@ public record OrderItemDto(
 
 public record OrderDto(
     int Id,
+    Guid PublicToken,
     string CustomerName,
     string Email,
     string Phone,

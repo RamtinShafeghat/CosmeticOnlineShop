@@ -16,14 +16,20 @@ public class OrdersController(AppDbContext db) : ControllerBase
     private const decimal StandardShipping = 6.95m;
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<OrderDto>> GetById(int id)
+    public async Task<ActionResult<OrderDto>> GetById(int id, [FromQuery] Guid? token = null)
     {
         var order = await db.Orders
             .AsNoTracking()
             .Include(o => o.Items)
             .FirstOrDefaultAsync(o => o.Id == id);
 
-        return order is null ? NotFound() : Ok(MapOrder(order));
+        if (order is null || !CanAccessOrder(order, token))
+        {
+            // NotFound (not Forbidden) so sequential IDs do not confirm which orders exist.
+            return NotFound();
+        }
+
+        return Ok(MapOrder(order));
     }
 
     [HttpPost]
@@ -105,6 +111,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
         var order = new Order
         {
             CustomerId = customerId,
+            PublicToken = Guid.NewGuid(),
             CustomerName = request.CustomerName.Trim(),
             Email = request.Email.Trim(),
             Phone = request.Phone.Trim(),
@@ -139,7 +146,21 @@ public class OrdersController(AppDbContext db) : ControllerBase
         await db.SaveChangesAsync();
         await transaction.CommitAsync();
 
-        return CreatedAtAction(nameof(GetById), new { id = order.Id }, MapOrder(order));
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = order.Id, token = order.PublicToken },
+            MapOrder(order));
+    }
+
+    private bool CanAccessOrder(Order order, Guid? token)
+    {
+        if (token is Guid provided && provided != Guid.Empty && order.PublicToken == provided)
+        {
+            return true;
+        }
+
+        var customerId = GetCustomerId();
+        return customerId is not null && order.CustomerId == customerId;
     }
 
     private int? GetCustomerId()
@@ -157,6 +178,7 @@ public class OrdersController(AppDbContext db) : ControllerBase
     private static OrderDto MapOrder(Order order) =>
         new(
             order.Id,
+            order.PublicToken,
             order.CustomerName,
             order.Email,
             order.Phone,
