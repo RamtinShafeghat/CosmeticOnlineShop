@@ -37,6 +37,15 @@ export type TranslationKey =
   | 'product.loading'
   | 'product.notFound'
   | 'product.backToShop'
+  | 'product.ratingAria'
+  | 'product.ratingNone'
+  | 'product.ratingOne'
+  | 'product.ratingMany'
+  | 'product.ratePrompt'
+  | 'product.yourRating'
+  | 'product.signInToRate'
+  | 'product.ratingSaved'
+  | 'product.ratingFailed'
   | 'cart.title'
   | 'cart.empty'
   | 'cart.continue'
@@ -184,6 +193,15 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'product.loading': 'Loading product…',
     'product.notFound': 'Product not found.',
     'product.backToShop': 'Back to shop',
+    'product.ratingAria': 'Product rating',
+    'product.ratingNone': 'No ratings yet',
+    'product.ratingOne': 'rating',
+    'product.ratingMany': 'ratings',
+    'product.ratePrompt': 'Tap a star to rate this product',
+    'product.yourRating': 'Your rating',
+    'product.signInToRate': 'Sign in to rate this product',
+    'product.ratingSaved': 'Thanks — your rating was saved.',
+    'product.ratingFailed': 'Could not save your rating. Please try again.',
     'cart.title': 'Your bag',
     'cart.empty': 'Your bag is empty.',
     'cart.continue': 'Continue shopping',
@@ -332,6 +350,15 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'product.loading': 'در حال بارگذاری محصول…',
     'product.notFound': 'محصول پیدا نشد.',
     'product.backToShop': 'بازگشت به فروشگاه',
+    'product.ratingAria': 'امتیاز محصول',
+    'product.ratingNone': 'هنوز امتیازی ثبت نشده',
+    'product.ratingOne': 'امتیاز',
+    'product.ratingMany': 'امتیاز',
+    'product.ratePrompt': 'برای امتیاز دادن روی ستاره‌ها بزنید',
+    'product.yourRating': 'امتیاز شما',
+    'product.signInToRate': 'برای امتیاز دادن وارد شوید',
+    'product.ratingSaved': 'متشکریم — امتیاز شما ذخیره شد.',
+    'product.ratingFailed': 'امتیاز ذخیره نشد. دوباره تلاش کنید.',
     'cart.title': 'سبد خرید شما',
     'cart.empty': 'سبد خرید شما خالی است.',
     'cart.continue': 'ادامه خرید',

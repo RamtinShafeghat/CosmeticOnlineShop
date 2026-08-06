@@ -18,6 +18,56 @@
           <p class="price">
             {{ product()!.price | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
           </p>
+
+          <div class="rating-block" (mouseleave)="clearHover()">
+            <div
+              class="stars"
+              [class.interactive]="auth.isAuthenticated()"
+              [attr.aria-label]="'product.ratingAria' | t"
+            >
+              @for (star of starValues; track star) {
+                <button
+                  type="button"
+                  class="star"
+                  [class.filled]="star <= displayStars()"
+                  [disabled]="!auth.isAuthenticated() || ratingBusy()"
+                  (mouseenter)="setHover(star)"
+                  (focus)="setHover(star)"
+                  (click)="rate(star)"
+                >
+                  ★
+                </button>
+              }
+            </div>
+            <p class="rating-meta">
+              @if ((product()!.ratingCount ?? 0) > 0) {
+                <span>
+                  {{ product()!.averageRating | number: '1.1-1' }}
+                  · {{ product()!.ratingCount }}
+                  {{ (product()!.ratingCount === 1 ? 'product.ratingOne' : 'product.ratingMany') | t }}
+                </span>
+              } @else {
+                <span>{{ 'product.ratingNone' | t }}</span>
+              }
+            </p>
+            @if (auth.isAuthenticated()) {
+              @if (product()!.myRating) {
+                <p class="rating-hint">{{ 'product.yourRating' | t }}: {{ product()!.myRating }}</p>
+              } @else {
+                <p class="rating-hint">{{ 'product.ratePrompt' | t }}</p>
+              }
+            } @else {
+              <p class="rating-hint">
+                <a routerLink="/login">{{ 'product.signInToRate' | t }}</a>
+              </p>
+            }
+            @if (ratingMessage() === 'saved') {
+              <p class="rating-feedback">{{ 'product.ratingSaved' | t }}</p>
+            } @else if (ratingMessage() === 'failed') {
+              <p class="rating-feedback error">{{ 'product.ratingFailed' | t }}</p>
+            }
+          </div>
+
           <p class="description">{{ i18n.productDescription(product()!) }}</p>
           <p class="meta">
             {{ 'product.skinType' | t }}: {{ i18n.skinType(product()!.skinType) }}

@@ -18,4 +18,5 @@ public class Product
     public bool IsFeatured { get; set; }
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
+    public ICollection<ProductRating> Ratings { get; set; } = new List<ProductRating>();
 }

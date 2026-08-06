@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Product } from '../models/shop.models';
+import { Product, ProductRatingSummary } from '../models/shop.models';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -33,5 +33,9 @@ export class ProductService {
 
   getBySlug(slug: string): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/slug/${slug}`);
+  }
+
+  rateProduct(productId: number, stars: number): Observable<ProductRatingSummary> {
+    return this.http.put<ProductRatingSummary>(`${this.baseUrl}/${productId}/rating`, { stars });
   }
 }
