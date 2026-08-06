@@ -38,7 +38,9 @@ export class ProductDetailComponent implements OnInit {
       }
 
       this.loading.set(true);
+      this.error.set(false);
       this.added.set(false);
+      this.product.set(null);
       this.productService.getBySlug(slug).subscribe({
         next: (product) => {
           this.product.set(product);

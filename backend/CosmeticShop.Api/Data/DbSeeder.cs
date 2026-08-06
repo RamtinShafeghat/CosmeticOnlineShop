@@ -9,23 +9,22 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(AppDbContext db, AdminSeedOptions adminSeed)
     {
-        // SQLite EnsureCreated does not add new columns; recreate if schema is missing fields.
-        if (await db.Database.CanConnectAsync())
+        // Ensure schema exists first. If bilingual/admin columns are missing, recreate DB.
+        await db.Database.EnsureCreatedAsync();
+
+        try
         {
-            try
-            {
-                _ = await db.Products.AsNoTracking().Select(p => p.NameFa).FirstOrDefaultAsync();
-                _ = await db.Categories.AsNoTracking().Select(c => c.NameFa).FirstOrDefaultAsync();
-                _ = await db.OrderItems.AsNoTracking().Select(i => i.ProductNameFa).FirstOrDefaultAsync();
-                _ = await db.AdminUsers.AsNoTracking().Select(u => u.Email).FirstOrDefaultAsync();
-            }
-            catch
-            {
-                await db.Database.EnsureDeletedAsync();
-            }
+            _ = await db.Products.AsNoTracking().Select(p => p.NameFa).FirstOrDefaultAsync();
+            _ = await db.Categories.AsNoTracking().Select(c => c.NameFa).FirstOrDefaultAsync();
+            _ = await db.OrderItems.AsNoTracking().Select(i => i.ProductNameFa).FirstOrDefaultAsync();
+            _ = await db.AdminUsers.AsNoTracking().Select(u => u.Email).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            await db.Database.EnsureDeletedAsync();
+            await db.Database.EnsureCreatedAsync();
         }
 
-        await db.Database.EnsureCreatedAsync();
         await EnsureAdminUserAsync(db, adminSeed);
 
         if (await db.Products.AnyAsync())
