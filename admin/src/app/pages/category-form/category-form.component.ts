@@ -2,12 +2,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
+import { LanguageService } from '../../core/i18n/language.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { UpsertCategory } from '../../core/models';
 
 @Component({
   selector: 'app-category-form',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.scss'
 })
@@ -15,6 +17,7 @@ export class CategoryFormComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  readonly i18n = inject(LanguageService);
 
   id: number | null = null;
   form: UpsertCategory = {
@@ -42,7 +45,7 @@ export class CategoryFormComponent implements OnInit {
             descriptionFa: category.descriptionFa
           };
         },
-        error: () => this.error.set('Category not found.')
+        error: () => this.error.set(this.i18n.t('categoryForm.notFound'))
       });
     }
   }
@@ -63,7 +66,7 @@ export class CategoryFormComponent implements OnInit {
       },
       error: (err) => {
         this.saving.set(false);
-        this.error.set(err?.error?.message || 'Save failed.');
+        this.error.set(err?.error?.message || this.i18n.t('categoryForm.saveFailed'));
       }
     });
   }

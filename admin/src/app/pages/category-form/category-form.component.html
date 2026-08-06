@@ -1,33 +1,33 @@
 <section class="page">
-  <a routerLink="/categories" class="back">← Back to categories</a>
+  <a routerLink="/categories" class="back">{{ 'categoryForm.back' | t }}</a>
   <div class="head">
     <div>
-      <p class="eyebrow">Category editor</p>
-      <h1>{{ id ? 'Edit category' : 'New category' }}</h1>
+      <p class="eyebrow">{{ 'categoryForm.eyebrow' | t }}</p>
+      <h1>{{ (id ? 'categoryForm.edit' : 'categoryForm.new') | t }}</h1>
     </div>
   </div>
 
   <form class="form-panel" (ngSubmit)="save()">
     <div class="form-grid">
       <label>
-        Name (EN)
+        {{ 'categoryForm.nameEn' | t }}
         <input name="name" [(ngModel)]="form.name" required />
       </label>
       <label>
-        Name (FA)
+        {{ 'categoryForm.nameFa' | t }}
         <input name="nameFa" [(ngModel)]="form.nameFa" />
       </label>
     </div>
     <label>
-      Slug (optional)
+      {{ 'categoryForm.slug' | t }}
       <input name="slug" [(ngModel)]="form.slug" />
     </label>
     <label>
-      Description (EN)
+      {{ 'categoryForm.descEn' | t }}
       <textarea name="description" rows="3" [(ngModel)]="form.description"></textarea>
     </label>
     <label>
-      Description (FA)
+      {{ 'categoryForm.descFa' | t }}
       <textarea name="descriptionFa" rows="3" [(ngModel)]="form.descriptionFa"></textarea>
     </label>
 
@@ -36,7 +36,7 @@
     }
 
     <button class="btn" type="submit" [disabled]="saving()">
-      {{ saving() ? 'Saving…' : 'Save category' }}
+      {{ saving() ? ('common.saving' | t) : ('common.save' | t) }}
     </button>
   </form>
 </section>

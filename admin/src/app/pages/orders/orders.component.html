@@ -1,9 +1,9 @@
 <section class="page">
   <div class="head">
     <div>
-      <p class="eyebrow">Fulfillment</p>
-      <h1>Orders</h1>
-      <p class="lead">Every checkout from the Velora storefront.</p>
+      <p class="eyebrow">{{ 'orders.eyebrow' | t }}</p>
+      <h1>{{ 'orders.title' | t }}</h1>
+      <p class="lead">{{ 'orders.lead' | t }}</p>
     </div>
   </div>
 
@@ -15,13 +15,13 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Customer</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th>Items</th>
-          <th>Total</th>
-          <th>Placed</th>
+          <th>{{ 'common.id' | t }}</th>
+          <th>{{ 'common.customer' | t }}</th>
+          <th>{{ 'common.email' | t }}</th>
+          <th>{{ 'common.status' | t }}</th>
+          <th>{{ 'orders.items' | t }}</th>
+          <th>{{ 'common.total' | t }}</th>
+          <th>{{ 'orders.placed' | t }}</th>
         </tr>
       </thead>
       <tbody>
@@ -30,16 +30,16 @@
             <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
             <td>{{ order.customerName }}</td>
             <td>{{ order.email }}</td>
-            <td><span class="badge ok">{{ order.status }}</span></td>
+            <td><span class="badge ok">{{ i18n.status(order.status) }}</span></td>
             <td>{{ order.itemCount }}</td>
-            <td>{{ order.total | currency }}</td>
-            <td>{{ order.createdAt | date: 'medium' }}</td>
+            <td>{{ order.total | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</td>
+            <td>{{ order.createdAt | date: 'medium' : undefined : i18n.locale() }}</td>
           </tr>
         }
       </tbody>
     </table>
     @if (orders().length === 0 && !error()) {
-      <p class="muted empty">No orders yet.</p>
+      <p class="muted empty">{{ 'orders.empty' | t }}</p>
     }
   </div>
 </section>

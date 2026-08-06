@@ -1,11 +1,11 @@
 <section class="page">
   <div class="head">
     <div>
-      <p class="eyebrow">Merchandising</p>
-      <h1>Products</h1>
-      <p class="lead">Curate rituals, pricing, stock, and imagery.</p>
+      <p class="eyebrow">{{ 'products.eyebrow' | t }}</p>
+      <h1>{{ 'products.title' | t }}</h1>
+      <p class="lead">{{ 'products.lead' | t }}</p>
     </div>
-    <a routerLink="/products/new" class="btn">New product</a>
+    <a routerLink="/products/new" class="btn">{{ 'products.new' | t }}</a>
   </div>
 
   @if (error()) {
@@ -19,11 +19,11 @@
     <table>
       <thead>
         <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Price</th>
-          <th>Stock</th>
+          <th>{{ 'products.image' | t }}</th>
+          <th>{{ 'products.name' | t }}</th>
+          <th>{{ 'products.category' | t }}</th>
+          <th>{{ 'products.price' | t }}</th>
+          <th>{{ 'products.stock' | t }}</th>
           <th></th>
         </tr>
       </thead>
@@ -33,19 +33,19 @@
             <td>
               <div class="thumb">
                 @if (product.imageUrl) {
-                  <img [src]="product.imageUrl | assetUrl" [alt]="product.name" />
+                  <img [src]="product.imageUrl | assetUrl" [alt]="i18n.productName(product)" />
                 }
               </div>
             </td>
             <td>
-              <strong>{{ product.name }}</strong>
-              <div class="muted">{{ product.nameFa }}</div>
+              <strong>{{ i18n.productName(product) }}</strong>
+              <div class="muted">{{ i18n.lang() === 'fa' ? product.name : product.nameFa }}</div>
               @if (product.isFeatured) {
-                <span class="badge">Featured</span>
+                <span class="badge">{{ 'common.featured' | t }}</span>
               }
             </td>
-            <td>{{ product.categoryName }}</td>
-            <td>{{ product.price | currency }}</td>
+            <td>{{ i18n.productCategoryName(product) }}</td>
+            <td>{{ product.price | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</td>
             <td>
               @if (product.stock < 20) {
                 <span class="badge">{{ product.stock }}</span>
@@ -54,8 +54,8 @@
               }
             </td>
             <td class="actions">
-              <a [routerLink]="['/products', product.id]">Edit</a>
-              <button type="button" (click)="remove(product)">Delete</button>
+              <a [routerLink]="['/products', product.id]">{{ 'common.edit' | t }}</a>
+              <button type="button" (click)="remove(product)">{{ 'common.delete' | t }}</button>
             </td>
           </tr>
         }

@@ -1,11 +1,11 @@
 <section class="page">
   <div class="head">
     <div>
-      <p class="eyebrow">Catalog structure</p>
-      <h1>Categories</h1>
-      <p class="lead">Shape browse paths in English and Persian.</p>
+      <p class="eyebrow">{{ 'categories.eyebrow' | t }}</p>
+      <h1>{{ 'categories.title' | t }}</h1>
+      <p class="lead">{{ 'categories.lead' | t }}</p>
     </div>
-    <a routerLink="/categories/new" class="btn">New category</a>
+    <a routerLink="/categories/new" class="btn">{{ 'categories.new' | t }}</a>
   </div>
 
   @if (error()) {
@@ -19,10 +19,10 @@
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Persian</th>
-          <th>Slug</th>
-          <th>Products</th>
+          <th>{{ 'categories.name' | t }}</th>
+          <th>{{ 'categories.persian' | t }}</th>
+          <th>{{ 'categories.slug' | t }}</th>
+          <th>{{ 'categories.products' | t }}</th>
           <th></th>
         </tr>
       </thead>
@@ -36,8 +36,8 @@
             <td><span class="badge">{{ category.slug }}</span></td>
             <td>{{ category.productCount }}</td>
             <td class="actions">
-              <a [routerLink]="['/categories', category.id]">Edit</a>
-              <button type="button" (click)="remove(category)">Delete</button>
+              <a [routerLink]="['/categories', category.id]">{{ 'common.edit' | t }}</a>
+              <button type="button" (click)="remove(category)">{{ 'common.delete' | t }}</button>
             </td>
           </tr>
         }

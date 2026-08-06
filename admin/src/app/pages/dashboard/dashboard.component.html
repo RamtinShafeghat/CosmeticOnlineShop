@@ -1,15 +1,13 @@
 <section class="page dashboard">
   <div class="hero">
     <div>
-      <p class="eyebrow">Today in the studio</p>
-      <h1>Dashboard</h1>
-      <p class="lead">
-        A calm overview of catalog health, featured rituals, and the latest customer orders.
-      </p>
+      <p class="eyebrow">{{ 'dashboard.eyebrow' | t }}</p>
+      <h1>{{ 'dashboard.title' | t }}</h1>
+      <p class="lead">{{ 'dashboard.lead' | t }}</p>
     </div>
     <div class="hero-actions">
-      <a routerLink="/products/new" class="btn">New product</a>
-      <a routerLink="/orders" class="btn-secondary">View orders</a>
+      <a routerLink="/products/new" class="btn">{{ 'dashboard.newProduct' | t }}</a>
+      <a routerLink="/orders" class="btn-secondary">{{ 'dashboard.viewOrders' | t }}</a>
     </div>
   </div>
 
@@ -19,27 +17,36 @@
 
   <div class="stats">
     <article class="stat">
-      <p class="label">Categories</p>
+      <p class="label">{{ 'dashboard.categories' | t }}</p>
       <p class="value">{{ categories().length }}</p>
-      <a routerLink="/categories">Manage categories</a>
+      <a routerLink="/categories">{{ 'dashboard.manageCategories' | t }}</a>
     </article>
     <article class="stat">
-      <p class="label">Products</p>
+      <p class="label">{{ 'dashboard.products' | t }}</p>
       <p class="value">{{ products().length }}</p>
-      <p class="meta">{{ featuredCount() }} featured</p>
-      <a routerLink="/products">Manage products</a>
+      <p class="meta">{{ 'dashboard.featuredMeta' | t: { count: featuredCount() } }}</p>
+      <a routerLink="/products">{{ 'dashboard.manageProducts' | t }}</a>
     </article>
     <article class="stat">
-      <p class="label">Orders</p>
+      <p class="label">{{ 'dashboard.orders' | t }}</p>
       <p class="value">{{ orders().length }}</p>
-      <p class="meta">{{ revenue() | currency }} total</p>
-      <a routerLink="/orders">Open orders</a>
+      <p class="meta">
+        {{
+          'dashboard.revenueMeta'
+            | t
+              : {
+                  amount:
+                    (revenue() | currency: 'USD' : 'symbol' : '1.0-0' : i18n.locale()) || ''
+                }
+        }}
+      </p>
+      <a routerLink="/orders">{{ 'dashboard.openOrders' | t }}</a>
     </article>
     <article class="stat accent">
-      <p class="label">Low stock</p>
+      <p class="label">{{ 'dashboard.lowStock' | t }}</p>
       <p class="value">{{ lowStockCount() }}</p>
-      <p class="meta">Below 20 units</p>
-      <a routerLink="/products">Review inventory</a>
+      <p class="meta">{{ 'dashboard.lowStockMeta' | t }}</p>
+      <a routerLink="/products">{{ 'dashboard.reviewInventory' | t }}</a>
     </article>
   </div>
 
@@ -47,37 +54,37 @@
     <section class="panel spotlight">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Featured edit</p>
-          <h2>Catalog pulse</h2>
+          <p class="eyebrow">{{ 'dashboard.featuredEdit' | t }}</p>
+          <h2>{{ 'dashboard.catalogPulse' | t }}</h2>
         </div>
       </div>
       <div class="spotlight-body">
         <div>
           <p class="big">{{ featuredCount() }}</p>
-          <p class="muted">products currently featured on the storefront.</p>
+          <p class="muted">{{ 'dashboard.featuredCopy' | t }}</p>
         </div>
         <div>
           <p class="big">{{ categories().length }}</p>
-          <p class="muted">active categories shaping the browse experience.</p>
+          <p class="muted">{{ 'dashboard.categoriesCopy' | t }}</p>
         </div>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-head">
-        <h2>Recent orders</h2>
-        <a routerLink="/orders">Open all</a>
+        <h2>{{ 'dashboard.recentOrders' | t }}</h2>
+        <a routerLink="/orders">{{ 'dashboard.openAll' | t }}</a>
       </div>
       @if (orders().length === 0) {
-        <p class="muted">No orders yet. When customers check out, they’ll appear here.</p>
+        <p class="muted">{{ 'dashboard.noOrders' | t }}</p>
       } @else {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Total</th>
+              <th>{{ 'common.id' | t }}</th>
+              <th>{{ 'common.customer' | t }}</th>
+              <th>{{ 'common.status' | t }}</th>
+              <th>{{ 'common.total' | t }}</th>
             </tr>
           </thead>
           <tbody>
@@ -85,8 +92,8 @@
               <tr>
                 <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
                 <td>{{ order.customerName }}</td>
-                <td><span class="badge ok">{{ order.status }}</span></td>
-                <td>{{ order.total | currency }}</td>
+                <td><span class="badge ok">{{ i18n.status(order.status) }}</span></td>
+                <td>{{ order.total | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</td>
               </tr>
             }
           </tbody>

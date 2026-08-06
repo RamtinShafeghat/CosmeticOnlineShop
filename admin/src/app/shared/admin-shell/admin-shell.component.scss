@@ -166,12 +166,28 @@ nav a.active {
   font-size: 1.35rem;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .topbar-meta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   color: var(--ink-soft);
   font-size: 0.88rem;
+}
+
+.topbar .lang-switch {
+  border-radius: 999px;
+}
+
+.topbar .lang-btn {
+  min-width: 2.4rem;
 }
 
 .live-dot {

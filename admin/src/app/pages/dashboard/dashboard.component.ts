@@ -2,17 +2,20 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
+import { LanguageService } from '../../core/i18n/language.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { AdminOrderListItem, Category, Product } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, CurrencyPipe, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   private readonly api = inject(ApiService);
+  readonly i18n = inject(LanguageService);
 
   readonly categories = signal<Category[]>([]);
   readonly products = signal<Product[]>([]);
@@ -32,15 +35,15 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.api.getCategories().subscribe({
       next: (items) => this.categories.set(items),
-      error: () => this.error.set('Unable to load dashboard data.')
+      error: () => this.error.set(this.i18n.t('dashboard.loadError'))
     });
     this.api.getProducts().subscribe({
       next: (items) => this.products.set(items),
-      error: () => this.error.set('Unable to load dashboard data.')
+      error: () => this.error.set(this.i18n.t('dashboard.loadError'))
     });
     this.api.getOrders().subscribe({
       next: (items) => this.orders.set(items),
-      error: () => this.error.set('Unable to load dashboard data.')
+      error: () => this.error.set(this.i18n.t('dashboard.loadError'))
     });
   }
 }
