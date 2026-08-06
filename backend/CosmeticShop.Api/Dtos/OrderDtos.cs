@@ -31,6 +31,11 @@ public class CreateOrderDto
     [Required, MaxLength(20)]
     public string PostalCode { get; set; } = string.Empty;
 
+    public bool SaveAddress { get; set; }
+
+    [MaxLength(60)]
+    public string? AddressLabel { get; set; }
+
     [Required, MinLength(1)]
     public List<CreateOrderItemDto> Items { get; set; } = new();
 }

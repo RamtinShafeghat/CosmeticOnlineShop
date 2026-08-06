@@ -1,0 +1,104 @@
+<div class="addresses-layout">
+  <div>
+    <h2>{{ 'account.savedAddresses' | t }}</h2>
+
+    @if (loading()) {
+      <p class="muted">{{ 'account.loadingAddresses' | t }}</p>
+    } @else if (addresses().length === 0) {
+      <p class="muted">{{ 'account.noAddresses' | t }}</p>
+    } @else {
+      <div class="address-list">
+        @for (address of addresses(); track address.id) {
+          <article class="address-card">
+            <div class="address-top">
+              <strong>{{ address.label }}</strong>
+              @if (address.isDefault) {
+                <span class="badge">{{ 'account.default' | t }}</span>
+              }
+            </div>
+            <p>
+              {{ address.fullName }}<br />
+              {{ address.line1 }}<br />
+              {{ address.city }}, {{ address.postalCode }}
+              @if (address.phone) {
+                <br />{{ address.phone }}
+              }
+            </p>
+            <div class="actions">
+              <button type="button" (click)="startEdit(address)">{{ 'account.edit' | t }}</button>
+              <button type="button" class="danger" (click)="remove(address)">
+                {{ 'account.delete' | t }}
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+
+  <form class="form" (ngSubmit)="save()">
+    <h2>
+      {{ (editingId() == null ? 'account.addAddress' : 'account.editAddress') | t }}
+    </h2>
+    <label>
+      {{ 'account.label' | t }}
+      <input name="label" [(ngModel)]="form.label" required />
+    </label>
+    <label>
+      {{ 'auth.fullName' | t }}
+      <input name="fullName" [(ngModel)]="form.fullName" required />
+    </label>
+    <label>
+      {{ 'auth.phone' | t }}
+      <input name="phone" [(ngModel)]="form.phone" />
+    </label>
+    <label>
+      {{ 'checkout.address' | t }}
+      <input name="line1" [(ngModel)]="form.line1" required />
+    </label>
+    <div class="row">
+      <label>
+        {{ 'checkout.city' | t }}
+        <input name="city" [(ngModel)]="form.city" required />
+      </label>
+      <label>
+        {{ 'checkout.postal' | t }}
+        <input name="postalCode" [(ngModel)]="form.postalCode" required />
+      </label>
+    </div>
+    <label class="checkbox">
+      <input type="checkbox" name="isDefault" [(ngModel)]="form.isDefault" />
+      {{ 'account.setDefault' | t }}
+    </label>
+
+    @if (error(); as err) {
+      <p class="error">
+        @switch (err) {
+          @case ('account.addressSaveFailed') {
+            {{ 'account.addressSaveFailed' | t }}
+          }
+          @case ('account.addressDeleteFailed') {
+            {{ 'account.addressDeleteFailed' | t }}
+          }
+          @case ('account.addressesError') {
+            {{ 'account.addressesError' | t }}
+          }
+          @default {
+            {{ err }}
+          }
+        }
+      </p>
+    }
+
+    <div class="form-actions">
+      <button class="btn" type="submit" [disabled]="saving()">
+        {{ (saving() ? 'account.saving' : 'account.saveAddress') | t }}
+      </button>
+      @if (editingId() != null) {
+        <button type="button" class="btn btn-ghost" (click)="startCreate()">
+          {{ 'account.cancel' | t }}
+        </button>
+      }
+    </div>
+  </form>
+</div>

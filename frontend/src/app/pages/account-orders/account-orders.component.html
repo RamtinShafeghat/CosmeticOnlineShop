@@ -1,0 +1,34 @@
+@if (loading()) {
+  <p class="muted">{{ 'account.loadingOrders' | t }}</p>
+} @else if (error()) {
+  <p class="error">{{ 'account.ordersError' | t }}</p>
+} @else if (orders().length === 0) {
+  <div class="empty">
+    <p>{{ 'account.noOrders' | t }}</p>
+    <a routerLink="/shop" class="btn">{{ 'account.shopNow' | t }}</a>
+  </div>
+} @else {
+  <div class="orders-list">
+    @for (order of orders(); track order.id) {
+      <a class="order-card" [routerLink]="['/account/orders', order.id]">
+        <div>
+          <p class="order-id">#{{ order.id }}</p>
+          <p class="meta">{{ order.createdAt | date: 'medium':undefined:i18n.locale() }}</p>
+        </div>
+        <div class="order-right">
+          <span
+            class="status-pill"
+            [class.pending]="order.status === 'Pending'"
+            [class.confirmed]="order.status === 'Confirmed'"
+          >
+            {{ statusLabel(order.status) }}
+          </span>
+          <p class="total">
+            {{ order.itemCount }} {{ 'account.items' | t }} ·
+            {{ order.total | currency: 'USD':'symbol':'1.2-2':i18n.locale() }}
+          </p>
+        </div>
+      </a>
+    }
+  </div>
+}

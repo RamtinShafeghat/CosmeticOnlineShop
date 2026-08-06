@@ -1,0 +1,76 @@
+.muted {
+  color: var(--ink-soft);
+}
+
+.error {
+  color: #9b3b45;
+}
+
+.empty {
+  padding: 1.5rem 0;
+}
+
+.orders-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.order-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+  transition: border-color 0.2s ease;
+}
+
+.order-card:hover {
+  border-color: var(--blush);
+}
+
+.order-id {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+}
+
+.meta,
+.total {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.order-right {
+  text-align: end;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.status-pill.pending {
+  color: #8a5a2b;
+  background: rgba(196, 140, 70, 0.12);
+  border-color: rgba(196, 140, 70, 0.35);
+}
+
+.status-pill.confirmed {
+  color: #2f6b4f;
+  background: rgba(47, 107, 79, 0.1);
+  border-color: rgba(47, 107, 79, 0.3);
+}
+
+@media (max-width: 640px) {
+  .order-card {
+    flex-direction: column;
+  }
+
+  .order-right {
+    text-align: start;
+  }
+}

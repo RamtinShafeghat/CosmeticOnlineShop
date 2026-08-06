@@ -8,6 +8,31 @@
     } @else {
       <div class="checkout-layout fade-up">
         <form class="form" (ngSubmit)="submit()">
+          @if (!auth.isAuthenticated()) {
+            <p class="login-hint">
+              {{ 'checkout.loginHint' | t }}
+              <a routerLink="/login" [queryParams]="{ returnUrl: '/checkout' }">
+                {{ 'checkout.signIn' | t }}
+              </a>
+            </p>
+          } @else if (addresses().length > 0) {
+            <label>
+              {{ 'checkout.savedAddress' | t }}
+              <select
+                name="selectedAddressId"
+                [ngModel]="selectedAddressId"
+                (ngModelChange)="onAddressSelect($event)"
+              >
+                <option [ngValue]="''">{{ 'checkout.manualAddress' | t }}</option>
+                @for (address of addresses(); track address.id) {
+                  <option [ngValue]="address.id">
+                    {{ address.label }} — {{ address.line1 }}, {{ address.city }}
+                  </option>
+                }
+              </select>
+            </label>
+          }
+
           <label>
             {{ 'checkout.fullName' | t }}
             <input name="customerName" [(ngModel)]="form.customerName" required />
@@ -38,6 +63,19 @@
               <input name="postalCode" [(ngModel)]="form.postalCode" required />
             </label>
           </div>
+
+          @if (auth.isAuthenticated()) {
+            <label class="checkbox">
+              <input type="checkbox" name="saveAddress" [(ngModel)]="saveAddress" />
+              {{ 'checkout.saveAddress' | t }}
+            </label>
+            @if (saveAddress) {
+              <label>
+                {{ 'account.label' | t }}
+                <input name="addressLabel" [(ngModel)]="addressLabel" />
+              </label>
+            }
+          }
 
           @if (errorMessage()) {
             <p class="error">{{ errorMessage() }}</p>

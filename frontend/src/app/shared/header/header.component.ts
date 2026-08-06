@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LanguageService } from '../../core/i18n/language.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 
 @Component({
@@ -13,5 +14,6 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class HeaderComponent {
   readonly cart = inject(CartService);
+  readonly auth = inject(AuthService);
   readonly i18n = inject(LanguageService);
 }

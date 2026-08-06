@@ -18,6 +18,9 @@ public static class DbSeeder
             _ = await db.Categories.AsNoTracking().Select(c => c.NameFa).FirstOrDefaultAsync();
             _ = await db.OrderItems.AsNoTracking().Select(i => i.ProductNameFa).FirstOrDefaultAsync();
             _ = await db.AdminUsers.AsNoTracking().Select(u => u.Email).FirstOrDefaultAsync();
+            _ = await db.Customers.AsNoTracking().Select(c => c.Email).FirstOrDefaultAsync();
+            _ = await db.CustomerAddresses.AsNoTracking().Select(a => a.Label).FirstOrDefaultAsync();
+            _ = await db.Orders.AsNoTracking().Select(o => o.CustomerId).FirstOrDefaultAsync();
         }
         catch
         {
