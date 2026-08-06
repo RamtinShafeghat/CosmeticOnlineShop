@@ -1,20 +1,55 @@
+:root {
+  --ink: #221c1e;
+  --ink-soft: #6d6164;
+  --blush: #d48a93;
+  --blush-deep: #b86771;
+  --petal: #f6e4e7;
+  --foam: #fffaf8;
+  --mist: #f4efec;
+  --panel: rgba(255, 252, 250, 0.82);
+  --line: rgba(34, 28, 30, 0.1);
+  --sidebar: #171314;
+  --sidebar-soft: #22191b;
+  --ok: #2f6b4f;
+  --danger: #9b3b45;
+  --shadow: 0 18px 50px rgba(48, 28, 34, 0.1);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', sans-serif;
+  --radius: 18px;
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: 'Outfit', sans-serif;
-  color: #1f1a1b;
-  background: #f7f3f1;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 520px at -10% -10%, rgba(212, 138, 147, 0.22), transparent 55%),
+    radial-gradient(900px 480px at 110% 0%, rgba(236, 214, 196, 0.35), transparent 50%),
+    linear-gradient(180deg, var(--foam), var(--mist));
 }
 
 h1,
 h2,
-h3 {
+h3,
+.display {
+  font-family: var(--font-display);
   font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+a {
+  color: var(--blush-deep);
 }
 
 button,
@@ -22,4 +57,246 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+.page {
+  animation: fadeUp 0.45s ease both;
+}
+
+.page-head,
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.35rem;
+}
+
+.page h1,
+.head h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+}
+
+.lead,
+.muted {
+  margin: 0.4rem 0 0;
+  color: var(--ink-soft);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  padding: 1.1rem 1.2rem;
+  overflow: hidden;
+}
+
+.btn,
+.btn-secondary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.85rem;
+  padding: 0 1.15rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--foam);
+}
+
+.btn:hover {
+  background: var(--blush-deep);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--blush-deep);
+  border: 0;
+  padding: 0;
+  min-height: auto;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.95rem;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.table-wrap,
+.panel table {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.9rem 0.45rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+th {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background: rgba(212, 138, 147, 0.06);
+}
+
+.actions {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.actions a,
+.actions button {
+  color: var(--blush-deep);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.6rem;
+  padding: 0 0.55rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--petal);
+  color: var(--blush-deep);
+}
+
+.badge.ok {
+  background: rgba(47, 107, 79, 0.12);
+  color: var(--ok);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.ok {
+  color: var(--ok);
+}
+
+.back {
+  color: var(--blush-deep);
+  text-decoration: none;
+}
+
+.form-panel {
+  display: grid;
+  gap: 0.95rem;
+  max-width: 56rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 1.35rem;
+}
+
+.form-panel label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.form-panel input,
+.form-panel textarea,
+.form-panel select,
+.field input,
+.field textarea,
+.field select {
+  border: 1px solid var(--line);
+  min-height: 2.85rem;
+  padding: 0.55rem 0.8rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-panel input:focus,
+.form-panel textarea:focus,
+.form-panel select:focus {
+  border-color: var(--blush);
+  box-shadow: 0 0 0 3px rgba(212, 138, 147, 0.15);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.95rem;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softDrift {
+  from {
+    transform: scale(1.02) translateY(0);
+  }
+  to {
+    transform: scale(1.06) translateY(-1.5%);
+  }
+}
+
+@media (max-width: 860px) {
+  .form-grid,
+  .page-head,
+  .head {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

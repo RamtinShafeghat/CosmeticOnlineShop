@@ -1,6 +1,11 @@
 <section class="page">
-  <h1>Orders</h1>
-  <p class="lead">All customer orders placed from the storefront.</p>
+  <div class="head">
+    <div>
+      <p class="eyebrow">Fulfillment</p>
+      <h1>Orders</h1>
+      <p class="lead">Every checkout from the Velora storefront.</p>
+    </div>
+  </div>
 
   @if (error()) {
     <p class="error">{{ error() }}</p>
@@ -25,7 +30,7 @@
             <td><a [routerLink]="['/orders', order.id]">#{{ order.id }}</a></td>
             <td>{{ order.customerName }}</td>
             <td>{{ order.email }}</td>
-            <td>{{ order.status }}</td>
+            <td><span class="badge ok">{{ order.status }}</span></td>
             <td>{{ order.itemCount }}</td>
             <td>{{ order.total | currency }}</td>
             <td>{{ order.createdAt | date: 'medium' }}</td>
@@ -34,7 +39,7 @@
       </tbody>
     </table>
     @if (orders().length === 0 && !error()) {
-      <p class="muted">No orders yet.</p>
+      <p class="muted empty">No orders yet.</p>
     }
   </div>
 </section>

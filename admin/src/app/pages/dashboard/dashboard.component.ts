@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AdminOrderListItem, Category, Product } from '../../core/models';
@@ -18,6 +18,16 @@ export class DashboardComponent implements OnInit {
   readonly products = signal<Product[]>([]);
   readonly orders = signal<AdminOrderListItem[]>([]);
   readonly error = signal<string | null>(null);
+
+  readonly featuredCount = computed(
+    () => this.products().filter((product) => product.isFeatured).length
+  );
+  readonly lowStockCount = computed(
+    () => this.products().filter((product) => product.stock < 20).length
+  );
+  readonly revenue = computed(() =>
+    this.orders().reduce((sum, order) => sum + order.total, 0)
+  );
 
   ngOnInit(): void {
     this.api.getCategories().subscribe({
