@@ -100,6 +100,53 @@ public class OrderStockTests : IDisposable
         Assert.Equal(5, remaining);
     }
 
+    [Fact]
+    public async Task CreateOrder_ConcurrentCheckouts_DoNotOversellLastUnit()
+    {
+        var product = await SeedProductAsync(stock: 1);
+        var payload = new
+        {
+            customerName = "Race Buyer",
+            email = "race@example.com",
+            phone = "555-0199",
+            shippingAddress = "9 Race St",
+            city = "Tehran",
+            postalCode = "99999",
+            items = new[]
+            {
+                new { productId = product.Id, quantity = 1 }
+            }
+        };
+
+        // Separate clients so requests truly overlap on the shared host/DB.
+        var clients = Enumerable.Range(0, 8).Select(_ => _factory.CreateClient()).ToArray();
+        try
+        {
+            var responses = await Task.WhenAll(
+                clients.Select(client => client.PostAsJsonAsync("/api/orders", payload)));
+
+            var created = responses.Count(r => r.StatusCode == HttpStatusCode.Created);
+            var rejected = responses.Count(r => r.StatusCode == HttpStatusCode.BadRequest);
+
+            Assert.Equal(1, created);
+            Assert.Equal(clients.Length - 1, rejected);
+
+            await using var scope = _factory.Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var remaining = await db.Products.Where(p => p.Id == product.Id).Select(p => p.Stock).SingleAsync();
+            Assert.Equal(0, remaining);
+            Assert.Equal(1, await db.Orders.CountAsync());
+            Assert.True(remaining >= 0);
+        }
+        finally
+        {
+            foreach (var client in clients)
+            {
+                client.Dispose();
+            }
+        }
+    }
+
     private async Task<Product> SeedProductAsync(int stock)
     {
         await using var scope = _factory.Services.CreateAsyncScope();
