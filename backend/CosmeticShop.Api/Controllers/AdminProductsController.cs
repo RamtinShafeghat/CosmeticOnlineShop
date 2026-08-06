@@ -119,14 +119,25 @@ public class AdminProductsController(
             return ValidationProblem(ModelState);
         }
 
+        // Compare-and-swap on ExpectedStock so a stale admin form cannot restore
+        // units already reserved by concurrent checkout (ExecuteUpdate).
         var affected = await db.Products
-            .Where(p => p.Id == id)
+            .Where(p => p.Id == id && p.Stock == request.ExpectedStock)
             .ExecuteUpdateAsync(setters =>
                 setters.SetProperty(p => p.Stock, request.Stock));
 
         if (affected == 0)
         {
-            return NotFound();
+            var exists = await db.Products.AnyAsync(p => p.Id == id);
+            if (!exists)
+            {
+                return NotFound();
+            }
+
+            return Conflict(new
+            {
+                message = "Stock was changed by another operation. Reload the product and try again."
+            });
         }
 
         var product = await db.Products

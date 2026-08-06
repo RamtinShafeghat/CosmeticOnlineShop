@@ -61,8 +61,11 @@ export class ApiService {
     return this.http.put<Product>(`${this.base}/admin/products/${id}`, payload);
   }
 
-  updateProductStock(id: number, stock: number): Observable<Product> {
-    return this.http.put<Product>(`${this.base}/admin/products/${id}/stock`, { stock });
+  updateProductStock(id: number, stock: number, expectedStock: number): Observable<Product> {
+    return this.http.put<Product>(`${this.base}/admin/products/${id}/stock`, {
+      stock,
+      expectedStock
+    });
   }
 
   deleteProduct(id: number): Observable<void> {
