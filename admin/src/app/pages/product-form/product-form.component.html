@@ -1,93 +1,92 @@
 <section class="page">
-  <a routerLink="/products" class="back">← Back to products</a>
+  <a routerLink="/products" class="back">{{ 'productForm.back' | t }}</a>
   <div class="head">
     <div>
-      <p class="eyebrow">Product editor</p>
-      <h1>{{ id ? 'Edit product' : 'New product' }}</h1>
+      <p class="eyebrow">{{ 'productForm.eyebrow' | t }}</p>
+      <h1>{{ (id ? 'productForm.edit' : 'productForm.new') | t }}</h1>
     </div>
   </div>
 
   <form class="form-panel" (ngSubmit)="save()">
     <div class="form-grid">
       <label>
-        Name (EN)
+        {{ 'productForm.nameEn' | t }}
         <input name="name" [(ngModel)]="form.name" required />
       </label>
       <label>
-        Name (FA)
+        {{ 'productForm.nameFa' | t }}
         <input name="nameFa" [(ngModel)]="form.nameFa" />
       </label>
       <label>
-        Slug (optional)
+        {{ 'productForm.slug' | t }}
         <input name="slug" [(ngModel)]="form.slug" />
       </label>
       <label>
-        Category
+        {{ 'productForm.category' | t }}
         <select name="categoryId" [(ngModel)]="form.categoryId" required>
           @for (category of categories; track category.id) {
-            <option [ngValue]="category.id">{{ category.name }}</option>
+            <option [ngValue]="category.id">{{ i18n.categoryName(category) }}</option>
           }
         </select>
       </label>
       <label>
-        Price
+        {{ 'productForm.price' | t }}
         <input type="number" step="0.01" min="0" name="price" [(ngModel)]="form.price" required />
       </label>
       <label>
-        Stock
+        {{ 'productForm.stock' | t }}
         <input type="number" min="0" name="stock" [(ngModel)]="form.stock" required />
       </label>
       <label>
-        Brand
+        {{ 'productForm.brand' | t }}
         <input name="brand" [(ngModel)]="form.brand" />
       </label>
       <label>
-        Skin type
+        {{ 'productForm.skinType' | t }}
         <select name="skinType" [(ngModel)]="form.skinType">
-          <option value="All">All</option>
-          <option value="Dry">Dry</option>
-          <option value="Normal">Normal</option>
-          <option value="Sensitive">Sensitive</option>
+          @for (skin of skinTypes; track skin) {
+            <option [value]="skin">{{ i18n.skinType(skin) }}</option>
+          }
         </select>
       </label>
     </div>
 
     <label class="checkbox">
       <input type="checkbox" name="isFeatured" [(ngModel)]="form.isFeatured" />
-      Featured on the storefront
+      {{ 'productForm.featured' | t }}
     </label>
 
     <label>
-      Short description (EN)
+      {{ 'productForm.shortEn' | t }}
       <textarea name="shortDescription" rows="2" [(ngModel)]="form.shortDescription"></textarea>
     </label>
     <label>
-      Short description (FA)
+      {{ 'productForm.shortFa' | t }}
       <textarea name="shortDescriptionFa" rows="2" [(ngModel)]="form.shortDescriptionFa"></textarea>
     </label>
     <label>
-      Description (EN)
+      {{ 'productForm.descEn' | t }}
       <textarea name="description" rows="4" [(ngModel)]="form.description"></textarea>
     </label>
     <label>
-      Description (FA)
+      {{ 'productForm.descFa' | t }}
       <textarea name="descriptionFa" rows="4" [(ngModel)]="form.descriptionFa"></textarea>
     </label>
 
     <div class="image-block">
       <div>
         <label>
-          Product image (from your computer)
+          {{ 'productForm.imageFile' | t }}
           <input type="file" accept="image/*" (change)="onFileSelected($event)" />
         </label>
         <label>
-          Or image URL
+          {{ 'productForm.imageUrl' | t }}
           <input name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
         </label>
       </div>
       @if (previewUrl) {
         <div class="preview">
-          <img [src]="previewUrl | assetUrl" alt="Product preview" />
+          <img [src]="previewUrl | assetUrl" alt="" />
         </div>
       }
     </div>
@@ -101,7 +100,11 @@
 
     <button class="btn" type="submit" [disabled]="saving() || uploading()">
       {{
-        uploading() ? 'Uploading image…' : saving() ? 'Saving…' : 'Save product'
+        uploading()
+          ? ('productForm.uploading' | t)
+          : saving()
+            ? ('common.saving' | t)
+            : ('common.save' | t)
       }}
     </button>
   </form>

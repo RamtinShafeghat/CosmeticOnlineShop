@@ -1,24 +1,45 @@
 <section class="login">
+  <div class="lang-float">
+    <div class="lang-switch" role="group">
+      <button
+        type="button"
+        class="lang-btn"
+        [class.active]="i18n.lang() === 'en'"
+        (click)="i18n.setLang('en')"
+      >
+        {{ 'lang.en' | t }}
+      </button>
+      <button
+        type="button"
+        class="lang-btn"
+        [class.active]="i18n.lang() === 'fa'"
+        (click)="i18n.setLang('fa')"
+      >
+        {{ 'lang.fa' | t }}
+      </button>
+    </div>
+  </div>
+
   <div class="login-media" aria-hidden="true">
     <div class="media-overlay"></div>
     <div class="media-copy">
       <p class="brand">Velora</p>
-      <h1>Beauty operations, quietly refined.</h1>
-      <p>Shape the catalog, refresh imagery, and follow every order from one calm studio.</p>
+      <h1>{{ 'login.headline' | t }}</h1>
+      <p>{{ 'login.lead' | t }}</p>
     </div>
   </div>
 
   <form class="card" (ngSubmit)="submit()">
-    <p class="eyebrow">Admin access</p>
-    <h2>Sign in</h2>
-    <p class="hint">Use your Velora studio credentials to continue.</p>
+    <p class="eyebrow">{{ 'login.access' | t }}</p>
+    <h2>{{ 'login.title' | t }}</h2>
+    <p class="hint">{{ 'login.hint' | t }}</p>
 
     <label>
-      Email
+      {{ 'common.email' | t }}
       <input type="email" name="email" [(ngModel)]="email" required />
     </label>
     <label>
-      Password
+      {{ 'common.password' | t }}
       <input type="password" name="password" [(ngModel)]="password" required />
     </label>
 
@@ -27,7 +48,7 @@
     }
 
     <button class="btn" type="submit" [disabled]="loading()">
-      {{ loading() ? 'Signing in…' : 'Enter studio' }}
+      {{ loading() ? ('login.submitting' | t) : ('login.submit' | t) }}
     </button>
   </form>
 </section>

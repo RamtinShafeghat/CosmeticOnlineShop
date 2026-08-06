@@ -3,12 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AssetUrlPipe } from '../../core/asset-url.pipe';
+import { LanguageService } from '../../core/i18n/language.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { Category, UpsertProduct } from '../../core/models';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [FormsModule, RouterLink, AssetUrlPipe],
+  imports: [FormsModule, RouterLink, AssetUrlPipe, TranslatePipe],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
@@ -16,6 +18,7 @@ export class ProductFormComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  readonly i18n = inject(LanguageService);
 
   id: number | null = null;
   categories: Category[] = [];
@@ -44,6 +47,8 @@ export class ProductFormComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly message = signal<string | null>(null);
 
+  readonly skinTypes = ['All', 'Dry', 'Normal', 'Sensitive'] as const;
+
   ngOnInit(): void {
     this.api.getCategories().subscribe({
       next: (categories) => {
@@ -52,7 +57,7 @@ export class ProductFormComponent implements OnInit {
           this.form.categoryId = categories[0].id;
         }
       },
-      error: () => this.error.set('Unable to load categories.')
+      error: () => this.error.set(this.i18n.t('productForm.loadCategoriesFailed'))
     });
 
     const rawId = this.route.snapshot.paramMap.get('id');
@@ -78,7 +83,7 @@ export class ProductFormComponent implements OnInit {
           };
           this.previewUrl = product.imageUrl || null;
         },
-        error: () => this.error.set('Product not found.')
+        error: () => this.error.set(this.i18n.t('productForm.notFound'))
       });
     }
   }
@@ -94,7 +99,7 @@ export class ProductFormComponent implements OnInit {
 
   save(): void {
     if (!this.form.categoryId) {
-      this.error.set('Please choose a category.');
+      this.error.set(this.i18n.t('productForm.chooseCategory'));
       return;
     }
 
@@ -126,7 +131,7 @@ export class ProductFormComponent implements OnInit {
       },
       error: (err) => {
         this.saving.set(false);
-        this.error.set(err?.error?.message || 'Save failed.');
+        this.error.set(err?.error?.message || this.i18n.t('productForm.saveFailed'));
       }
     });
   }
@@ -148,10 +153,7 @@ export class ProductFormComponent implements OnInit {
       error: (err) => {
         this.uploading.set(false);
         this.saving.set(false);
-        this.error.set(
-          err?.error?.message ||
-            'Product saved, but image upload failed. You can try uploading again.'
-        );
+        this.error.set(err?.error?.message || this.i18n.t('productForm.uploadFailed'));
       }
     });
   }
