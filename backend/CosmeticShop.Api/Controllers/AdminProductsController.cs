@@ -119,10 +119,11 @@ public class AdminProductsController(
             return ValidationProblem(ModelState);
         }
 
+        var stock = request.Stock!.Value;
         var affected = await db.Products
             .Where(p => p.Id == id)
             .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(p => p.Stock, request.Stock));
+                setters.SetProperty(p => p.Stock, stock));
 
         if (affected == 0)
         {

@@ -115,6 +115,7 @@ export type TranslationKey =
   | 'productForm.imageFile'
   | 'productForm.imageUrl'
   | 'productForm.chooseCategory'
+  | 'productForm.stockRequired'
   | 'productForm.notFound'
   | 'productForm.saveFailed'
   | 'productForm.uploadFailed'
@@ -272,6 +273,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'productForm.imageFile': 'Product image (from your computer)',
     'productForm.imageUrl': 'Or image URL',
     'productForm.chooseCategory': 'Please choose a category.',
+    'productForm.stockRequired': 'Please enter a valid stock quantity (0 or more).',
     'productForm.notFound': 'Product not found.',
     'productForm.saveFailed': 'Save failed.',
     'productForm.uploadFailed':
@@ -429,6 +431,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'productForm.imageFile': 'تصویر محصول (از رایانه شما)',
     'productForm.imageUrl': 'یا آدرس تصویر',
     'productForm.chooseCategory': 'لطفاً یک دسته‌بندی انتخاب کنید.',
+    'productForm.stockRequired': 'لطفاً موجودی معتبر وارد کنید (۰ یا بیشتر).',
     'productForm.notFound': 'محصول پیدا نشد.',
     'productForm.saveFailed': 'ذخیره ناموفق بود.',
     'productForm.uploadFailed':
