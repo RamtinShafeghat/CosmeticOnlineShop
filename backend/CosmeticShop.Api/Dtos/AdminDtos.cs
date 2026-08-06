@@ -89,3 +89,9 @@ public record AdminOrderListItemDto(
     DateTime CreatedAt);
 
 public record UploadImageResponse(string ImageUrl);
+
+public class UpdateProductStockRequest
+{
+    [Range(0, 100000)]
+    public int Stock { get; set; }
+}

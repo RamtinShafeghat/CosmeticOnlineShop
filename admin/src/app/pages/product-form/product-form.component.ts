@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { of, switchMap } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AssetUrlPipe } from '../../core/asset-url.pipe';
 import { LanguageService } from '../../core/i18n/language.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
-import { Category, UpsertProduct } from '../../core/models';
+import { Category, Product, UpsertProduct } from '../../core/models';
 
 @Component({
   selector: 'app-product-form',
@@ -24,6 +25,8 @@ export class ProductFormComponent implements OnInit {
   categories: Category[] = [];
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+  /** Stock captured when the edit form loaded; used to detect intentional stock edits. */
+  private loadedStock: number | null = null;
 
   form: UpsertProduct = {
     name: '',
@@ -65,6 +68,7 @@ export class ProductFormComponent implements OnInit {
       this.id = Number(rawId);
       this.api.getProduct(this.id).subscribe({
         next: (product) => {
+          this.loadedStock = product.stock;
           this.form = {
             name: product.name,
             nameFa: product.nameFa,
@@ -113,15 +117,26 @@ export class ProductFormComponent implements OnInit {
       imageUrl: this.form.imageUrl || undefined
     };
 
+    const stockChanged =
+      this.id != null && this.loadedStock != null && this.form.stock !== this.loadedStock;
+
     const request$ =
       this.id == null
         ? this.api.createProduct(payload)
-        : this.api.updateProduct(this.id, payload);
+        : this.api.updateProduct(this.id, payload).pipe(
+            switchMap((product) =>
+              stockChanged
+                ? this.api.updateProductStock(product.id, this.form.stock)
+                : of(product)
+            )
+          );
 
     request$.subscribe({
-      next: (product) => {
+      next: (product: Product) => {
         this.id = product.id;
         this.form.imageUrl = product.imageUrl;
+        this.loadedStock = product.stock;
+        this.form.stock = product.stock;
         if (this.selectedFile) {
           this.uploadImage(product.id);
         } else {
