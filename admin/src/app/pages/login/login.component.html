@@ -1,8 +1,17 @@
 <section class="login">
+  <div class="login-media" aria-hidden="true">
+    <div class="media-overlay"></div>
+    <div class="media-copy">
+      <p class="brand">Velora</p>
+      <h1>Beauty operations, quietly refined.</h1>
+      <p>Shape the catalog, refresh imagery, and follow every order from one calm studio.</p>
+    </div>
+  </div>
+
   <form class="card" (ngSubmit)="submit()">
-    <p class="brand">Velora Admin</p>
-    <h1>Sign in</h1>
-    <p class="hint">Manage categories, products, and orders.</p>
+    <p class="eyebrow">Admin access</p>
+    <h2>Sign in</h2>
+    <p class="hint">Use your Velora studio credentials to continue.</p>
 
     <label>
       Email
@@ -18,7 +27,7 @@
     }
 
     <button class="btn" type="submit" [disabled]="loading()">
-      {{ loading() ? 'Signing in…' : 'Sign in' }}
+      {{ loading() ? 'Signing in…' : 'Enter studio' }}
     </button>
   </form>
 </section>

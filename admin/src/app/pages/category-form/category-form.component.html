@@ -1,16 +1,23 @@
 <section class="page">
   <a routerLink="/categories" class="back">← Back to categories</a>
-  <h1>{{ id ? 'Edit category' : 'New category' }}</h1>
+  <div class="head">
+    <div>
+      <p class="eyebrow">Category editor</p>
+      <h1>{{ id ? 'Edit category' : 'New category' }}</h1>
+    </div>
+  </div>
 
-  <form class="form panel" (ngSubmit)="save()">
-    <label>
-      Name (EN)
-      <input name="name" [(ngModel)]="form.name" required />
-    </label>
-    <label>
-      Name (FA)
-      <input name="nameFa" [(ngModel)]="form.nameFa" />
-    </label>
+  <form class="form-panel" (ngSubmit)="save()">
+    <div class="form-grid">
+      <label>
+        Name (EN)
+        <input name="name" [(ngModel)]="form.name" required />
+      </label>
+      <label>
+        Name (FA)
+        <input name="nameFa" [(ngModel)]="form.nameFa" />
+      </label>
+    </div>
     <label>
       Slug (optional)
       <input name="slug" [(ngModel)]="form.slug" />

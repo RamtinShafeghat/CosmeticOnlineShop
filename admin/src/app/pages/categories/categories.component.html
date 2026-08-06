@@ -1,8 +1,9 @@
 <section class="page">
   <div class="head">
     <div>
+      <p class="eyebrow">Catalog structure</p>
       <h1>Categories</h1>
-      <p class="lead">Create and edit shop categories (EN / FA).</p>
+      <p class="lead">Shape browse paths in English and Persian.</p>
     </div>
     <a routerLink="/categories/new" class="btn">New category</a>
   </div>
@@ -28,9 +29,11 @@
       <tbody>
         @for (category of categories(); track category.id) {
           <tr>
-            <td>{{ category.name }}</td>
+            <td>
+              <strong>{{ category.name }}</strong>
+            </td>
             <td>{{ category.nameFa }}</td>
-            <td>{{ category.slug }}</td>
+            <td><span class="badge">{{ category.slug }}</span></td>
             <td>{{ category.productCount }}</td>
             <td class="actions">
               <a [routerLink]="['/categories', category.id]">Edit</a>

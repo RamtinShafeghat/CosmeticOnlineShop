@@ -1,9 +1,14 @@
 <section class="page">
   <a routerLink="/products" class="back">← Back to products</a>
-  <h1>{{ id ? 'Edit product' : 'New product' }}</h1>
+  <div class="head">
+    <div>
+      <p class="eyebrow">Product editor</p>
+      <h1>{{ id ? 'Edit product' : 'New product' }}</h1>
+    </div>
+  </div>
 
-  <form class="form panel" (ngSubmit)="save()">
-    <div class="grid">
+  <form class="form-panel" (ngSubmit)="save()">
+    <div class="form-grid">
       <label>
         Name (EN)
         <input name="name" [(ngModel)]="form.name" required />
@@ -49,7 +54,7 @@
 
     <label class="checkbox">
       <input type="checkbox" name="isFeatured" [(ngModel)]="form.isFeatured" />
-      Featured product
+      Featured on the storefront
     </label>
 
     <label>
@@ -70,16 +75,20 @@
     </label>
 
     <div class="image-block">
-      <label>
-        Product image (from your computer)
-        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
-      </label>
-      <label>
-        Or image URL
-        <input name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
-      </label>
+      <div>
+        <label>
+          Product image (from your computer)
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        </label>
+        <label>
+          Or image URL
+          <input name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+        </label>
+      </div>
       @if (previewUrl) {
-        <img [src]="previewUrl | assetUrl" alt="Product preview" />
+        <div class="preview">
+          <img [src]="previewUrl | assetUrl" alt="Product preview" />
+        </div>
       }
     </div>
 
