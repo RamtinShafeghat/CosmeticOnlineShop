@@ -34,7 +34,24 @@ public class OrdersController(AppDbContext db) : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var productIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
+        // Aggregate duplicate product lines first. Per-line stock checks against the same
+        // balance would otherwise accept split quantities that exceed available stock.
+        var quantityByProductId = request.Items
+            .GroupBy(i => i.ProductId)
+            .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
+
+        foreach (var (productId, quantity) in quantityByProductId)
+        {
+            if (quantity < 1 || quantity > 99)
+            {
+                return BadRequest(new
+                {
+                    message = $"Quantity for product {productId} must be between 1 and 99."
+                });
+            }
+        }
+
+        var productIds = quantityByProductId.Keys.ToList();
         var products = await db.Products
             .Where(p => productIds.Contains(p.Id))
             .ToDictionaryAsync(p => p.Id);
@@ -44,10 +61,10 @@ public class OrdersController(AppDbContext db) : ControllerBase
             return BadRequest(new { message = "One or more products were not found." });
         }
 
-        foreach (var item in request.Items)
+        foreach (var (productId, quantity) in quantityByProductId)
         {
-            var product = products[item.ProductId];
-            if (product.Stock < item.Quantity)
+            var product = products[productId];
+            if (product.Stock < quantity)
             {
                 return BadRequest(new
                 {
@@ -56,16 +73,16 @@ public class OrdersController(AppDbContext db) : ControllerBase
             }
         }
 
-        var orderItems = request.Items.Select(item =>
+        var orderItems = quantityByProductId.Select(pair =>
         {
-            var product = products[item.ProductId];
+            var product = products[pair.Key];
             return new OrderItem
             {
                 ProductId = product.Id,
                 ProductName = product.Name,
                 ProductNameFa = product.NameFa,
                 UnitPrice = product.Price,
-                Quantity = item.Quantity
+                Quantity = pair.Value
             };
         }).ToList();
 
@@ -90,9 +107,9 @@ public class OrdersController(AppDbContext db) : ControllerBase
             Items = orderItems
         };
 
-        foreach (var item in request.Items)
+        foreach (var (productId, quantity) in quantityByProductId)
         {
-            products[item.ProductId].Stock -= item.Quantity;
+            products[productId].Stock -= quantity;
         }
 
         if (customerId is not null && request.SaveAddress)
