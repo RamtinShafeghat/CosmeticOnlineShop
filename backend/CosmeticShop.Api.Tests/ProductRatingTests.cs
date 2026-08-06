@@ -4,7 +4,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using CosmeticShop.Api.Data;
 using CosmeticShop.Api.Models;
-using CosmeticShop.Api.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
