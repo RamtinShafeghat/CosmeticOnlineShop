@@ -295,6 +295,27 @@ public static class DbSeeder
                 """CREATE INDEX "IX_Orders_CustomerId" ON "Orders" ("CustomerId");""");
         }
 
+        if (await TableExistsAsync(db, "Orders") && !await ColumnExistsAsync(db, "Orders", "PublicToken"))
+        {
+            Console.WriteLine("Adding Orders.PublicToken column to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """ALTER TABLE "Orders" ADD COLUMN "PublicToken" TEXT NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';""");
+
+            // Give every existing order a unique opaque token so confirmation links stay private.
+            var ordersNeedingTokens = await db.Orders
+                .Where(o => o.PublicToken == Guid.Empty)
+                .ToListAsync();
+            foreach (var order in ordersNeedingTokens)
+            {
+                order.PublicToken = Guid.NewGuid();
+            }
+
+            if (ordersNeedingTokens.Count > 0)
+            {
+                await db.SaveChangesAsync();
+            }
+        }
+
         if (!await TableExistsAsync(db, "AdminUsers"))
         {
             Console.WriteLine("Adding AdminUsers table to existing SQLite database…");

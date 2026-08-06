@@ -220,6 +220,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     private static OrderDto MapOrder(Order order) =>
         new(
             order.Id,
+            order.PublicToken,
             order.CustomerName,
             order.Email,
             order.Phone,

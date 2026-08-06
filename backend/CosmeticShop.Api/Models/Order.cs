@@ -5,6 +5,11 @@ public class Order
     public int Id { get; set; }
     public int? CustomerId { get; set; }
     public Customer? Customer { get; set; }
+    /// <summary>
+    /// Opaque token required for unauthenticated order confirmation lookups.
+    /// Prevents sequential-ID enumeration of customer PII.
+    /// </summary>
+    public Guid PublicToken { get; set; } = Guid.NewGuid();
     public string CustomerName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;

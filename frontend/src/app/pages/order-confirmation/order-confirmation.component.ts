@@ -25,13 +25,14 @@ export class OrderConfirmationComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    const token = this.route.snapshot.queryParamMap.get('token');
     if (!id) {
       this.error.set(true);
       this.loading.set(false);
       return;
     }
 
-    this.orderService.getById(id).subscribe({
+    this.orderService.getById(id, token).subscribe({
       next: (order) => {
         this.order.set(order);
         this.loading.set(false);

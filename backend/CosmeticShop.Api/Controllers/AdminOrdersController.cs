@@ -85,6 +85,7 @@ public class AdminOrdersController(AppDbContext db) : ControllerBase
     private static OrderDto MapOrder(Models.Order order) =>
         new(
             order.Id,
+            order.PublicToken,
             order.CustomerName,
             order.Email,
             order.Phone,

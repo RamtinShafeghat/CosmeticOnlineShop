@@ -100,7 +100,9 @@ export class CheckoutComponent implements OnInit {
       next: (order) => {
         this.cart.clear();
         this.submitting.set(false);
-        void this.router.navigate(['/order', order.id]);
+        void this.router.navigate(['/order', order.id], {
+          queryParams: { token: order.publicToken }
+        });
       },
       error: (err) => {
         this.submitting.set(false);
