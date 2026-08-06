@@ -130,7 +130,12 @@ export type TranslationKey =
   | 'orders.items'
   | 'orders.placed'
   | 'orders.empty'
+  | 'orders.emptyPending'
+  | 'orders.emptyConfirmed'
   | 'orders.loadError'
+  | 'orders.tabPending'
+  | 'orders.tabConfirmed'
+  | 'orders.confirm'
   | 'orderDetail.back'
   | 'orderDetail.eyebrow'
   | 'orderDetail.title'
@@ -141,6 +146,10 @@ export type TranslationKey =
   | 'orderDetail.total'
   | 'orderDetail.notFound'
   | 'orderDetail.loading'
+  | 'orderDetail.confirm'
+  | 'orderDetail.confirming'
+  | 'orderDetail.confirmFailed'
+  | 'orderDetail.confirmedNote'
   | 'status.Confirmed'
   | 'status.Pending';
 
@@ -275,11 +284,16 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'skin.Sensitive': 'Sensitive',
     'orders.eyebrow': 'Fulfillment',
     'orders.title': 'Orders',
-    'orders.lead': 'Every checkout from the Velora storefront.',
+    'orders.lead': 'Review pending checkouts, then confirm them for the customer.',
     'orders.items': 'Items',
     'orders.placed': 'Placed',
     'orders.empty': 'No orders yet.',
+    'orders.emptyPending': 'No pending orders right now.',
+    'orders.emptyConfirmed': 'No confirmed orders yet.',
     'orders.loadError': 'Unable to load orders.',
+    'orders.tabPending': 'Pending',
+    'orders.tabConfirmed': 'Confirmed',
+    'orders.confirm': 'Confirm',
     'orderDetail.back': '← Back to orders',
     'orderDetail.eyebrow': 'Order detail',
     'orderDetail.title': 'Order #{id}',
@@ -290,6 +304,10 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'orderDetail.total': 'Total',
     'orderDetail.notFound': 'Order not found.',
     'orderDetail.loading': 'Loading order…',
+    'orderDetail.confirm': 'Confirm order',
+    'orderDetail.confirming': 'Confirming…',
+    'orderDetail.confirmFailed': 'Could not confirm this order.',
+    'orderDetail.confirmedNote': 'This order is confirmed and visible as confirmed to the customer.',
     'status.Confirmed': 'Confirmed',
     'status.Pending': 'Pending'
   },
@@ -423,11 +441,16 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'skin.Sensitive': 'حساس',
     'orders.eyebrow': 'تحویل سفارش',
     'orders.title': 'سفارش‌ها',
-    'orders.lead': 'همه خریدهای انجام‌شده از فروشگاه ولورا.',
+    'orders.lead': 'سفارش‌های در انتظار را بررسی کنید و سپس برای مشتری تأیید کنید.',
     'orders.items': 'اقلام',
     'orders.placed': 'زمان ثبت',
     'orders.empty': 'هنوز سفارشی ثبت نشده است.',
+    'orders.emptyPending': 'در حال حاضر سفارش در انتظاری نیست.',
+    'orders.emptyConfirmed': 'هنوز سفارش تأییدشده‌ای نیست.',
     'orders.loadError': 'بارگذاری سفارش‌ها ممکن نشد.',
+    'orders.tabPending': 'در انتظار',
+    'orders.tabConfirmed': 'تأیید شده',
+    'orders.confirm': 'تأیید',
     'orderDetail.back': '→ بازگشت به سفارش‌ها',
     'orderDetail.eyebrow': 'جزئیات سفارش',
     'orderDetail.title': 'سفارش #{id}',
@@ -438,6 +461,10 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'orderDetail.total': 'جمع کل',
     'orderDetail.notFound': 'سفارش پیدا نشد.',
     'orderDetail.loading': 'در حال بارگذاری سفارش…',
+    'orderDetail.confirm': 'تأیید سفارش',
+    'orderDetail.confirming': 'در حال تأیید…',
+    'orderDetail.confirmFailed': 'تأیید این سفارش ممکن نشد.',
+    'orderDetail.confirmedNote': 'این سفارش تأیید شده و برای مشتری به‌صورت تأیید شده نمایش داده می‌شود.',
     'status.Confirmed': 'تأیید شده',
     'status.Pending': 'در انتظار'
   }

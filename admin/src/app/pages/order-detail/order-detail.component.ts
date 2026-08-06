@@ -20,6 +20,8 @@ export class OrderDetailComponent implements OnInit {
 
   readonly order = signal<Order | null>(null);
   readonly error = signal<string | null>(null);
+  readonly confirming = signal(false);
+  readonly message = signal<string | null>(null);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -31,6 +33,27 @@ export class OrderDetailComponent implements OnInit {
     this.api.getOrder(id).subscribe({
       next: (order) => this.order.set(order),
       error: () => this.error.set(this.i18n.t('orderDetail.notFound'))
+    });
+  }
+
+  confirm(): void {
+    const current = this.order();
+    if (!current || current.status !== 'Pending') {
+      return;
+    }
+
+    this.confirming.set(true);
+    this.message.set(null);
+    this.api.confirmOrder(current.id).subscribe({
+      next: (order) => {
+        this.order.set(order);
+        this.confirming.set(false);
+        this.message.set(this.i18n.t('orderDetail.confirmedNote'));
+      },
+      error: () => {
+        this.confirming.set(false);
+        this.error.set(this.i18n.t('orderDetail.confirmFailed'));
+      }
     });
   }
 }

@@ -8,16 +8,30 @@
     } @else {
       <p class="eyebrow">{{ 'order.thanks' | t }}</p>
       <h1 class="section-title">
-        {{ 'order.confirmed' | t: { id: order()!.id } }}
+        @if (order()!.status === 'Confirmed') {
+          {{ 'order.confirmed' | t: { id: order()!.id } }}
+        } @else {
+          {{ 'order.pendingTitle' | t: { id: order()!.id } }}
+        }
       </h1>
       <p class="section-lead">
-        {{ 'order.receipt' | t: { email: order()!.email } }}
+        @if (order()!.status === 'Confirmed') {
+          {{ 'order.receipt' | t: { email: order()!.email } }}
+        } @else {
+          {{ 'order.receiptPending' | t: { email: order()!.email } }}
+        }
       </p>
 
       <div class="panel">
         <div class="row">
           <span>{{ 'order.status' | t }}</span>
-          <span>{{ statusLabel(order()!.status) }}</span>
+          <span
+            class="status-pill"
+            [class.pending]="order()!.status === 'Pending'"
+            [class.confirmed]="order()!.status === 'Confirmed'"
+          >
+            {{ statusLabel(order()!.status) }}
+          </span>
         </div>
         <div class="row">
           <span>{{ 'order.placed' | t }}</span>

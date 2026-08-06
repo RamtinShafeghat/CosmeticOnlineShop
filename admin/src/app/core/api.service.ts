@@ -74,11 +74,16 @@ export class ApiService {
     );
   }
 
-  getOrders(): Observable<AdminOrderListItem[]> {
-    return this.http.get<AdminOrderListItem[]>(`${this.base}/admin/orders`);
+  getOrders(status?: string): Observable<AdminOrderListItem[]> {
+    const params = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.http.get<AdminOrderListItem[]>(`${this.base}/admin/orders${params}`);
   }
 
   getOrder(id: number): Observable<Order> {
     return this.http.get<Order>(`${this.base}/admin/orders/${id}`);
+  }
+
+  confirmOrder(id: number): Observable<Order> {
+    return this.http.post<Order>(`${this.base}/admin/orders/${id}/confirm`, {});
   }
 }

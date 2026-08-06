@@ -66,7 +66,9 @@ export type TranslationKey =
   | 'order.back'
   | 'order.thanks'
   | 'order.confirmed'
+  | 'order.pendingTitle'
   | 'order.receipt'
+  | 'order.receiptPending'
   | 'order.status'
   | 'order.placed'
   | 'order.shipTo'
@@ -156,8 +158,11 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'order.back': 'Back to shop',
     'order.thanks': 'Thank you',
     'order.confirmed': 'Order #{id} confirmed',
+    'order.pendingTitle': 'Order #{id} received',
     'order.receipt':
-      'We’ve emailed a receipt to {email}. Your Velora order is on its way to being prepared.',
+      'We’ve emailed a receipt to {email}. Your Velora order has been confirmed and is being prepared.',
+    'order.receiptPending':
+      'We’ve received your order and sent a note to {email}. It will show as confirmed once our studio reviews it.',
     'order.status': 'Status',
     'order.placed': 'Placed',
     'order.shipTo': 'Ship to',
@@ -246,8 +251,11 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'order.back': 'بازگشت به فروشگاه',
     'order.thanks': 'متشکریم',
     'order.confirmed': 'سفارش #{id} تأیید شد',
+    'order.pendingTitle': 'سفارش #{id} دریافت شد',
     'order.receipt':
-      'رسید به {email} ایمیل شد. سفارش ولورای شما در حال آماده‌سازی است.',
+      'رسید به {email} ایمیل شد. سفارش ولورای شما تأیید شده و در حال آماده‌سازی است.',
+    'order.receiptPending':
+      'سفارش شما دریافت شد و یادداشتی به {email} ارسال شد. پس از بررسی استودیو، وضعیت به تأیید شده تغییر می‌کند.',
     'order.status': 'وضعیت',
     'order.placed': 'زمان ثبت',
     'order.shipTo': 'ارسال به',
