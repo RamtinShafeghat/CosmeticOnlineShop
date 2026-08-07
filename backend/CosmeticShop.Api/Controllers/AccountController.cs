@@ -188,6 +188,115 @@ public class AccountController(AppDbContext db) : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("wishlist")]
+    public async Task<ActionResult<IEnumerable<ProductListItemDto>>> GetWishlist()
+    {
+        var customerId = GetCustomerId();
+        if (customerId is null)
+        {
+            return Unauthorized();
+        }
+
+        var rows = await db.WishlistItems
+            .AsNoTracking()
+            .Where(w => w.CustomerId == customerId)
+            .OrderByDescending(w => w.CreatedAt)
+            .ThenByDescending(w => w.Id)
+            .Select(w => new
+            {
+                w.Product!.Id,
+                w.Product.Name,
+                w.Product.NameFa,
+                w.Product.Slug,
+                w.Product.ShortDescription,
+                w.Product.ShortDescriptionFa,
+                w.Product.Price,
+                w.Product.ImageUrl,
+                w.Product.Brand,
+                w.Product.SkinType,
+                w.Product.Stock,
+                w.Product.IsFeatured,
+                w.Product.CategoryId,
+                CategoryName = w.Product.Category!.Name,
+                CategoryNameFa = w.Product.Category!.NameFa,
+                AverageRating = w.Product.Ratings.Average(r => (double?)r.Stars) ?? 0,
+                RatingCount = w.Product.Ratings.Count()
+            })
+            .ToListAsync();
+
+        var products = rows.Select(p => new ProductListItemDto(
+            p.Id,
+            p.Name,
+            p.NameFa,
+            p.Slug,
+            p.ShortDescription,
+            p.ShortDescriptionFa,
+            p.Price,
+            p.ImageUrl,
+            p.Brand,
+            p.SkinType,
+            p.Stock,
+            p.IsFeatured,
+            p.CategoryId,
+            p.CategoryName,
+            p.CategoryNameFa,
+            Math.Round(p.AverageRating, 1),
+            p.RatingCount));
+
+        return Ok(products);
+    }
+
+    [HttpPut("wishlist/{productId:int}")]
+    public async Task<IActionResult> AddToWishlist(int productId)
+    {
+        var customerId = GetCustomerId();
+        if (customerId is null)
+        {
+            return Unauthorized();
+        }
+
+        var productExists = await db.Products.AnyAsync(p => p.Id == productId);
+        if (!productExists)
+        {
+            return NotFound();
+        }
+
+        var alreadySaved = await db.WishlistItems
+            .AnyAsync(w => w.CustomerId == customerId && w.ProductId == productId);
+        if (!alreadySaved)
+        {
+            db.WishlistItems.Add(new WishlistItem
+            {
+                CustomerId = customerId.Value,
+                ProductId = productId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await db.SaveChangesAsync();
+        }
+
+        return NoContent();
+    }
+
+    [HttpDelete("wishlist/{productId:int}")]
+    public async Task<IActionResult> RemoveFromWishlist(int productId)
+    {
+        var customerId = GetCustomerId();
+        if (customerId is null)
+        {
+            return Unauthorized();
+        }
+
+        var item = await db.WishlistItems
+            .FirstOrDefaultAsync(w => w.CustomerId == customerId && w.ProductId == productId);
+        if (item is not null)
+        {
+            db.WishlistItems.Remove(item);
+            await db.SaveChangesAsync();
+        }
+
+        return NoContent();
+    }
+
     private async Task ClearDefaultAddressesAsync(int customerId)
     {
         var defaults = await db.CustomerAddresses

@@ -36,6 +36,33 @@
       }
     </div>
 
+    @if (brands().length > 0 || skinTypes().length > 0) {
+      <div class="attribute-filters fade-up">
+        @if (brands().length > 0) {
+          <label class="attribute-filter">
+            {{ 'shop.brand' | t }}
+            <select name="brand" [(ngModel)]="brand" (ngModelChange)="onFilterChange()">
+              <option value="">{{ 'shop.allBrands' | t }}</option>
+              @for (brandOption of brands(); track brandOption) {
+                <option [value]="brandOption">{{ brandOption }}</option>
+              }
+            </select>
+          </label>
+        }
+        @if (skinTypes().length > 0) {
+          <label class="attribute-filter">
+            {{ 'shop.skinTypeFilter' | t }}
+            <select name="skinType" [(ngModel)]="skinType" (ngModelChange)="onFilterChange()">
+              <option value="">{{ 'shop.allSkinTypes' | t }}</option>
+              @for (skinOption of skinTypes(); track skinOption) {
+                <option [value]="skinOption">{{ i18n.skinType(skinOption) }}</option>
+              }
+            </select>
+          </label>
+        }
+      </div>
+    }
+
     @if (loading()) {
       <p class="status">{{ 'shop.loading' | t }}</p>
     } @else if (errorKey()) {

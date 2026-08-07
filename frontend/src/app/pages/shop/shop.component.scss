@@ -29,7 +29,40 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin: 0 0 1.25rem;
+}
+
+.attribute-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
   margin: 0 0 2.5rem;
+}
+
+.attribute-filter {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.attribute-filter select {
+  min-height: 2.75rem;
+  min-width: 11rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0 0.75rem;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+  outline: none;
+}
+
+.attribute-filter select:focus {
+  border-color: var(--blush);
 }
 
 .filter {

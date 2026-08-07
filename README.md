@@ -13,7 +13,8 @@ An online cosmetics shop with an **ASP.NET Core** Web API backend, an **Angular*
 
 ## Features
 
-- Product catalog with categories, search, and featured items
+- Product catalog with categories, search, featured items, and brand / skin type filters
+- Customer wishlist (save favorites with the heart button; managed under Account)
 - Product detail pages, cart, checkout, and orders
 - Bilingual UI: English and Persian (فارسی), with RTL layout
 - **Admin dashboard** (separate app): manage categories & products, upload product images, view orders
@@ -84,10 +85,14 @@ Windows helpers: `scripts\run-api.cmd`, `scripts\run-web.cmd`, `scripts\run-admi
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | `GET` | `/api/categories` | List categories |
-| `GET` | `/api/products` | List products |
+| `GET` | `/api/products` | List products (`categoryId`, `search`, `featured`, `brand`, `skinType`) |
+| `GET` | `/api/products/filters` | Distinct brand and skin type filter options |
 | `GET` | `/api/products/{id}` | Product by id |
 | `POST` | `/api/orders` | Place an order |
 | `GET` | `/api/orders/{id}` | Get order details |
+| `GET` | `/api/account/wishlist` | List saved products (customer JWT) |
+| `PUT` | `/api/account/wishlist/{productId}` | Save a product (customer JWT) |
+| `DELETE` | `/api/account/wishlist/{productId}` | Remove a saved product (customer JWT) |
 
 ## Admin API overview (JWT required)
 

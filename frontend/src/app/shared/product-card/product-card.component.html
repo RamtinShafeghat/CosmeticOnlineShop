@@ -1,6 +1,16 @@
 <a class="product-card" [routerLink]="['/product', product.slug]">
   <div class="media">
     <img [src]="product.imageUrl | assetUrl" [alt]="i18n.productName(product)" loading="lazy" />
+    <button
+      type="button"
+      class="wishlist-toggle"
+      [class.saved]="wishlist.has(product.id)"
+      [attr.aria-label]="(wishlist.has(product.id) ? 'wishlist.remove' : 'wishlist.add') | t"
+      [title]="(wishlist.has(product.id) ? 'wishlist.remove' : 'wishlist.add') | t"
+      (click)="toggleWishlist($event)"
+    >
+      {{ wishlist.has(product.id) ? '♥' : '♡' }}
+    </button>
   </div>
   <div class="meta">
     <p class="category">{{ i18n.categoryName(product) }}</p>

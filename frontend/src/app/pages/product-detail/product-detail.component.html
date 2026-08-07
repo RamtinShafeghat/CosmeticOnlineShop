@@ -94,6 +94,16 @@
               {{ 'product.addToBag' | t }}
             </button>
             <a routerLink="/cart" class="btn btn-ghost">{{ 'product.viewBag' | t }}</a>
+            <button
+              type="button"
+              class="btn btn-ghost wishlist-btn"
+              [class.saved]="wishlist.has(product()!.id)"
+              [disabled]="wishlistBusy()"
+              (click)="toggleWishlist()"
+            >
+              {{ wishlist.has(product()!.id) ? '♥' : '♡' }}
+              {{ (wishlist.has(product()!.id) ? 'wishlist.remove' : 'wishlist.add') | t }}
+            </button>
           </div>
 
           @if (added()) {

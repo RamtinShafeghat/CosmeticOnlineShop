@@ -41,6 +41,10 @@ public record ProductDetailDto(
     int RatingCount,
     int? MyRating);
 
+public record ProductFilterOptionsDto(
+    IReadOnlyList<string> Brands,
+    IReadOnlyList<string> SkinTypes);
+
 public record CategoryDto(
     int Id,
     string Name,
