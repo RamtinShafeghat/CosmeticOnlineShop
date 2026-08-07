@@ -360,6 +360,43 @@ public static class DbSeeder
             await db.Database.ExecuteSqlRawAsync(
                 """CREATE UNIQUE INDEX "IX_AdminUsers_Email" ON "AdminUsers" ("Email");""");
         }
+
+        // Bilingual / catalog columns added after the original SQLite schema. EnsureCreated
+        // never alters an existing file, so older DBs 500 on every catalog/checkout query
+        // until these are added.
+        await EnsureColumnAsync(db, "Categories", "NameFa",
+            """ALTER TABLE "Categories" ADD COLUMN "NameFa" TEXT NOT NULL DEFAULT '';""");
+        await EnsureColumnAsync(db, "Categories", "DescriptionFa",
+            """ALTER TABLE "Categories" ADD COLUMN "DescriptionFa" TEXT NOT NULL DEFAULT '';""");
+
+        await EnsureColumnAsync(db, "Products", "NameFa",
+            """ALTER TABLE "Products" ADD COLUMN "NameFa" TEXT NOT NULL DEFAULT '';""");
+        await EnsureColumnAsync(db, "Products", "DescriptionFa",
+            """ALTER TABLE "Products" ADD COLUMN "DescriptionFa" TEXT NOT NULL DEFAULT '';""");
+        await EnsureColumnAsync(db, "Products", "ShortDescriptionFa",
+            """ALTER TABLE "Products" ADD COLUMN "ShortDescriptionFa" TEXT NOT NULL DEFAULT '';""");
+        await EnsureColumnAsync(db, "Products", "Brand",
+            """ALTER TABLE "Products" ADD COLUMN "Brand" TEXT NOT NULL DEFAULT 'Velora';""");
+        await EnsureColumnAsync(db, "Products", "SkinType",
+            """ALTER TABLE "Products" ADD COLUMN "SkinType" TEXT NOT NULL DEFAULT 'All';""");
+
+        await EnsureColumnAsync(db, "OrderItems", "ProductNameFa",
+            """ALTER TABLE "OrderItems" ADD COLUMN "ProductNameFa" TEXT NOT NULL DEFAULT '';""");
+    }
+
+    private static async Task EnsureColumnAsync(
+        AppDbContext db,
+        string tableName,
+        string columnName,
+        string alterSql)
+    {
+        if (!await TableExistsAsync(db, tableName) || await ColumnExistsAsync(db, tableName, columnName))
+        {
+            return;
+        }
+
+        Console.WriteLine($"Adding {tableName}.{columnName} column to existing SQLite database…");
+        await db.Database.ExecuteSqlRawAsync(alterSql);
     }
 
     private static async Task<bool> TableExistsAsync(AppDbContext db, string tableName)
