@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { CategoryFormComponent } from './pages/category-form/category-form.component';
+import { CustomerDetailComponent } from './pages/customer-detail/customer-detail.component';
+import { CustomersComponent } from './pages/customers/customers.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LoginComponent } from './pages/login/login.component';
 import { OrderDetailComponent } from './pages/order-detail/order-detail.component';
@@ -25,7 +27,9 @@ export const routes: Routes = [
       { path: 'products/new', component: ProductFormComponent },
       { path: 'products/:id', component: ProductFormComponent },
       { path: 'orders', component: OrdersComponent },
-      { path: 'orders/:id', component: OrderDetailComponent }
+      { path: 'orders/:id', component: OrderDetailComponent },
+      { path: 'customers', component: CustomersComponent },
+      { path: 'customers/:id', component: CustomerDetailComponent }
     ]
   },
   { path: '**', redirectTo: '' }
