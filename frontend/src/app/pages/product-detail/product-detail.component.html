@@ -85,25 +85,32 @@
                 name="quantity"
               />
             </label>
-            <button
-              class="btn"
-              type="button"
-              (click)="addToBag()"
-              [disabled]="product()!.stock < 1"
-            >
-              {{ 'product.addToBag' | t }}
-            </button>
-            <a routerLink="/cart" class="btn btn-ghost">{{ 'product.viewBag' | t }}</a>
-            <button
-              type="button"
-              class="btn btn-ghost wishlist-btn"
-              [class.saved]="wishlist.has(product()!.id)"
-              [disabled]="wishlistBusy()"
-              (click)="toggleWishlist()"
-            >
-              {{ wishlist.has(product()!.id) ? '♥' : '♡' }}
-              {{ (wishlist.has(product()!.id) ? 'wishlist.remove' : 'wishlist.add') | t }}
-            </button>
+            <div class="actions-primary">
+              <button
+                class="btn"
+                type="button"
+                (click)="addToBag()"
+                [disabled]="product()!.stock < 1"
+              >
+                {{ 'product.addToBag' | t }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost wishlist-btn"
+                [class.saved]="wishlist.has(product()!.id)"
+                [disabled]="wishlistBusy()"
+                [attr.aria-label]="(wishlist.has(product()!.id) ? 'wishlist.remove' : 'wishlist.add') | t"
+                [title]="(wishlist.has(product()!.id) ? 'wishlist.remove' : 'wishlist.add') | t"
+                (click)="toggleWishlist()"
+              >
+                <svg class="heart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <a routerLink="/cart" class="btn btn-ghost view-bag">{{ 'product.viewBag' | t }}</a>
           </div>
 
           @if (added()) {
