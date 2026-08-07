@@ -17,7 +17,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpGet("orders")]
     public async Task<ActionResult<IEnumerable<CustomerOrderListItemDto>>> GetOrders()
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -41,7 +41,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpGet("orders/{id:int}")]
     public async Task<ActionResult<OrderDto>> GetOrder(int id)
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -58,7 +58,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpGet("addresses")]
     public async Task<ActionResult<IEnumerable<CustomerAddressDto>>> GetAddresses()
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -83,7 +83,7 @@ public class AccountController(AppDbContext db) : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -123,7 +123,7 @@ public class AccountController(AppDbContext db) : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -156,7 +156,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpDelete("addresses/{id:int}")]
     public async Task<IActionResult> DeleteAddress(int id)
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -191,7 +191,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpGet("wishlist")]
     public async Task<ActionResult<IEnumerable<ProductListItemDto>>> GetWishlist()
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -249,7 +249,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpPut("wishlist/{productId:int}")]
     public async Task<IActionResult> AddToWishlist(int productId)
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -280,7 +280,7 @@ public class AccountController(AppDbContext db) : ControllerBase
     [HttpDelete("wishlist/{productId:int}")]
     public async Task<IActionResult> RemoveFromWishlist(int productId)
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -308,11 +308,17 @@ public class AccountController(AppDbContext db) : ControllerBase
         }
     }
 
-    private int? GetCustomerId()
+    private async Task<int?> GetCustomerIdAsync()
     {
         var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        return int.TryParse(raw, out var id) ? id : null;
+        if (!int.TryParse(raw, out var id))
+        {
+            return null;
+        }
+
+        // Admin may have deleted the account while this JWT is still valid.
+        return await db.Customers.AnyAsync(c => c.Id == id) ? id : null;
     }
 
     private static CustomerAddressDto MapAddress(CustomerAddress address) =>
