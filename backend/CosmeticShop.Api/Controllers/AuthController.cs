@@ -70,16 +70,14 @@ public class AuthController(
     [HttpGet("me")]
     public async Task<ActionResult<CustomerProfileDto>> Me()
     {
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
         }
 
-        var customer = await db.Customers.AsNoTracking().FirstOrDefaultAsync(c => c.Id == customerId);
-        return customer is null
-            ? NotFound()
-            : Ok(new CustomerProfileDto(customer.Id, customer.Email, customer.FullName, customer.Phone));
+        var customer = await db.Customers.AsNoTracking().FirstAsync(c => c.Id == customerId.Value);
+        return Ok(new CustomerProfileDto(customer.Id, customer.Email, customer.FullName, customer.Phone));
     }
 
     private CustomerAuthResponse BuildAuthResponse(Customer customer)
@@ -89,10 +87,15 @@ public class AuthController(
         return new CustomerAuthResponse(token, customer.Email, customer.FullName, customer.Phone, expires);
     }
 
-    private int? GetCustomerId()
+    private async Task<int?> GetCustomerIdAsync()
     {
         var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        return int.TryParse(raw, out var id) ? id : null;
+        if (!int.TryParse(raw, out var id))
+        {
+            return null;
+        }
+
+        return await db.Customers.AnyAsync(c => c.Id == id) ? id : null;
     }
 }

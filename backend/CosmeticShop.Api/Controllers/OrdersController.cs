@@ -106,7 +106,9 @@ public class OrdersController(AppDbContext db) : ControllerBase
 
         var subtotal = orderItems.Sum(i => i.UnitPrice * i.Quantity);
         var shipping = subtotal >= FreeShippingThreshold ? 0m : StandardShipping;
-        var customerId = GetCustomerId();
+        // JWT may outlive an admin-deleted customer. Linking CustomerId (or saving an
+        // address) to a missing row trips the FK and returns HTTP 500 — treat as guest.
+        var customerId = await ResolveActiveCustomerIdAsync();
 
         var order = new Order
         {
@@ -173,6 +175,17 @@ public class OrdersController(AppDbContext db) : ControllerBase
         var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
         return int.TryParse(raw, out var id) ? id : null;
+    }
+
+    private async Task<int?> ResolveActiveCustomerIdAsync()
+    {
+        var customerId = GetCustomerId();
+        if (customerId is null)
+        {
+            return null;
+        }
+
+        return await db.Customers.AnyAsync(c => c.Id == customerId) ? customerId : null;
     }
 
     private static OrderDto MapOrder(Order order) =>

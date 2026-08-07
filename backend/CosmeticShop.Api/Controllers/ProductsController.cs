@@ -155,7 +155,7 @@ public class ProductsController(AppDbContext db) : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is null)
         {
             return Unauthorized();
@@ -255,7 +255,7 @@ public class ProductsController(AppDbContext db) : ControllerBase
         }
 
         int? myRating = null;
-        var customerId = GetCustomerId();
+        var customerId = await GetCustomerIdAsync();
         if (customerId is not null)
         {
             myRating = await db.ProductRatings
@@ -288,7 +288,7 @@ public class ProductsController(AppDbContext db) : ControllerBase
             myRating);
     }
 
-    private int? GetCustomerId()
+    private async Task<int?> GetCustomerIdAsync()
     {
         if (User?.Identity?.IsAuthenticated != true || !User.IsInRole("Customer"))
         {
@@ -297,6 +297,12 @@ public class ProductsController(AppDbContext db) : ControllerBase
 
         var raw = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        return int.TryParse(raw, out var parsed) ? parsed : null;
+        if (!int.TryParse(raw, out var parsed))
+        {
+            return null;
+        }
+
+        // Admin may have deleted the account while this JWT is still valid.
+        return await db.Customers.AnyAsync(c => c.Id == parsed) ? parsed : null;
     }
 }
