@@ -345,6 +345,28 @@ public static class DbSeeder
                 """CREATE INDEX "IX_ProductRatings_CustomerId" ON "ProductRatings" ("CustomerId");""");
         }
 
+        if (!await TableExistsAsync(db, "WishlistItems"))
+        {
+            Console.WriteLine("Adding WishlistItems table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "WishlistItems" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_WishlistItems" PRIMARY KEY AUTOINCREMENT,
+                    "CustomerId" INTEGER NOT NULL,
+                    "ProductId" INTEGER NOT NULL,
+                    "CreatedAt" TEXT NOT NULL,
+                    CONSTRAINT "FK_WishlistItems_Customers_CustomerId"
+                        FOREIGN KEY ("CustomerId") REFERENCES "Customers" ("Id") ON DELETE CASCADE,
+                    CONSTRAINT "FK_WishlistItems_Products_ProductId"
+                        FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE CASCADE
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE UNIQUE INDEX "IX_WishlistItems_CustomerId_ProductId" ON "WishlistItems" ("CustomerId", "ProductId");""");
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE INDEX "IX_WishlistItems_ProductId" ON "WishlistItems" ("ProductId");""");
+        }
+
         if (!await TableExistsAsync(db, "AdminUsers"))
         {
             Console.WriteLine("Adding AdminUsers table to existing SQLite database…");

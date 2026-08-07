@@ -1,0 +1,14 @@
+@if (!wishlist.loaded()) {
+  <p class="muted">{{ 'account.loadingWishlist' | t }}</p>
+} @else if (wishlist.items().length === 0) {
+  <div class="empty">
+    <p>{{ 'account.noWishlist' | t }}</p>
+    <a routerLink="/shop" class="btn">{{ 'account.shopNow' | t }}</a>
+  </div>
+} @else {
+  <div class="product-grid">
+    @for (product of wishlist.items(); track product.id) {
+      <app-product-card [product]="product" />
+    }
+  </div>
+}

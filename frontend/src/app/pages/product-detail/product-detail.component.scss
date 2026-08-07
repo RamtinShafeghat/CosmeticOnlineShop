@@ -131,6 +131,11 @@ input[type='number'] {
   padding: 0 0.6rem;
 }
 
+.wishlist-btn.saved {
+  color: var(--blush-deep);
+  border-color: var(--blush-deep);
+}
+
 .added {
   margin-top: 1rem;
   color: var(--blush-deep);

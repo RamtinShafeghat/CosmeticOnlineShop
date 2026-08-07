@@ -31,6 +31,11 @@ export interface Product {
   myRating?: number | null;
 }
 
+export interface ProductFilterOptions {
+  brands: string[];
+  skinTypes: string[];
+}
+
 export interface ProductRatingSummary {
   productId: number;
   averageRating: number;
