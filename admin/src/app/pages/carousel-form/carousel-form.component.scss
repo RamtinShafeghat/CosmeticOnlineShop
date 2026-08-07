@@ -1,0 +1,61 @@
+.eyebrow {
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--blush-deep);
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+}
+
+.hint {
+  margin: -0.4rem 0 1rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 0.95rem !important;
+  color: var(--ink) !important;
+}
+
+.image-block {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px dashed rgba(212, 138, 147, 0.45);
+  background: rgba(246, 228, 231, 0.28);
+}
+
+.image-block > div {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.preview {
+  min-height: 14rem;
+  background: var(--petal);
+  overflow: hidden;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fadeUp 0.4s ease;
+}
+
+@media (max-width: 800px) {
+  .image-block {
+    grid-template-columns: 1fr;
+  }
+}

@@ -7,11 +7,13 @@ import {
   AdminCustomerListItem,
   AdminLoginResponse,
   AdminOrderListItem,
+  CarouselSlide,
   Category,
   Order,
   Product,
   UpdateCustomer,
   UpsertCategory,
+  UpsertCarouselSlide,
   UpsertProduct
 } from './models';
 
@@ -80,6 +82,35 @@ export class ApiService {
     form.append('file', file, file.name);
     return this.http.post<{ imageUrl: string }>(
       `${this.base}/admin/products/${id}/image`,
+      form
+    );
+  }
+
+  getCarouselSlides(): Observable<CarouselSlide[]> {
+    return this.http.get<CarouselSlide[]>(`${this.base}/admin/carousel-slides`);
+  }
+
+  getCarouselSlide(id: number): Observable<CarouselSlide> {
+    return this.http.get<CarouselSlide>(`${this.base}/admin/carousel-slides/${id}`);
+  }
+
+  createCarouselSlide(payload: UpsertCarouselSlide): Observable<CarouselSlide> {
+    return this.http.post<CarouselSlide>(`${this.base}/admin/carousel-slides`, payload);
+  }
+
+  updateCarouselSlide(id: number, payload: UpsertCarouselSlide): Observable<CarouselSlide> {
+    return this.http.put<CarouselSlide>(`${this.base}/admin/carousel-slides/${id}`, payload);
+  }
+
+  deleteCarouselSlide(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/admin/carousel-slides/${id}`);
+  }
+
+  uploadCarouselSlideImage(id: number, file: File): Observable<{ imageUrl: string }> {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return this.http.post<{ imageUrl: string }>(
+      `${this.base}/admin/carousel-slides/${id}/image`,
       form
     );
   }

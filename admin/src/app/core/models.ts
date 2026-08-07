@@ -63,6 +63,28 @@ export interface UpsertProduct {
   categoryId: number;
 }
 
+export interface CarouselSlide {
+  id: number;
+  imageUrl: string;
+  title: string;
+  titleFa: string;
+  linkUrl: string;
+  productId: number | null;
+  productName: string | null;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+export interface UpsertCarouselSlide {
+  title: string;
+  titleFa: string;
+  imageUrl?: string;
+  linkUrl?: string;
+  productId: number | null;
+  sortOrder: number;
+  isActive: boolean;
+}
+
 export interface AdminOrderListItem {
   id: number;
   customerName: string;

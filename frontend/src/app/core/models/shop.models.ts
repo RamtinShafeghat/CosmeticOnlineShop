@@ -31,6 +31,14 @@ export interface Product {
   myRating?: number | null;
 }
 
+export interface CarouselSlide {
+  id: number;
+  imageUrl: string;
+  title: string;
+  titleFa: string;
+  link: string | null;
+}
+
 export interface ProductFilterOptions {
   brands: string[];
   skinTypes: string[];

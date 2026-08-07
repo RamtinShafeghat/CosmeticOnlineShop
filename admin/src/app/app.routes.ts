@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
+import { CarouselComponent } from './pages/carousel/carousel.component';
+import { CarouselFormComponent } from './pages/carousel-form/carousel-form.component';
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { CategoryFormComponent } from './pages/category-form/category-form.component';
 import { CustomerDetailComponent } from './pages/customer-detail/customer-detail.component';
@@ -26,6 +28,9 @@ export const routes: Routes = [
       { path: 'products', component: ProductsComponent },
       { path: 'products/new', component: ProductFormComponent },
       { path: 'products/:id', component: ProductFormComponent },
+      { path: 'carousel', component: CarouselComponent },
+      { path: 'carousel/new', component: CarouselFormComponent },
+      { path: 'carousel/:id', component: CarouselFormComponent },
       { path: 'orders', component: OrdersComponent },
       { path: 'orders/:id', component: OrderDetailComponent },
       { path: 'customers', component: CustomersComponent },

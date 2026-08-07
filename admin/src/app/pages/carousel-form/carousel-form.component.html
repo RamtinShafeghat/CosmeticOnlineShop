@@ -1,0 +1,81 @@
+<section class="page">
+  <a routerLink="/carousel" class="back">{{ 'carouselForm.back' | t }}</a>
+  <div class="head">
+    <div>
+      <p class="eyebrow">{{ 'carouselForm.eyebrow' | t }}</p>
+      <h1>{{ (id ? 'carouselForm.edit' : 'carouselForm.new') | t }}</h1>
+    </div>
+  </div>
+
+  <form class="form-panel" (ngSubmit)="save()">
+    <div class="form-grid">
+      <label>
+        {{ 'carouselForm.titleEn' | t }}
+        <input name="title" [(ngModel)]="form.title" />
+      </label>
+      <label>
+        {{ 'carouselForm.titleFa' | t }}
+        <input name="titleFa" [(ngModel)]="form.titleFa" />
+      </label>
+      <label>
+        {{ 'carouselForm.sortOrder' | t }}
+        <input type="number" name="sortOrder" [(ngModel)]="form.sortOrder" />
+      </label>
+      <label>
+        {{ 'carouselForm.pinProduct' | t }}
+        <select name="productId" [(ngModel)]="form.productId">
+          <option [ngValue]="null">{{ 'carouselForm.noProductOption' | t }}</option>
+          @for (product of products; track product.id) {
+            <option [ngValue]="product.id">{{ i18n.productName(product) }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        {{ 'carouselForm.linkUrl' | t }}
+        <input name="linkUrl" [(ngModel)]="form.linkUrl" placeholder="/shop/skincare" />
+      </label>
+    </div>
+
+    <p class="hint">{{ 'carouselForm.linkHint' | t }}</p>
+
+    <label class="checkbox">
+      <input type="checkbox" name="isActive" [(ngModel)]="form.isActive" />
+      {{ 'carouselForm.active' | t }}
+    </label>
+
+    <div class="image-block">
+      <div>
+        <label>
+          {{ 'carouselForm.imageFile' | t }}
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        </label>
+        <label>
+          {{ 'carouselForm.imageUrl' | t }}
+          <input name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+        </label>
+      </div>
+      @if (previewUrl) {
+        <div class="preview">
+          <img [src]="previewUrl | assetUrl" alt="" />
+        </div>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    @if (message()) {
+      <p class="ok">{{ message() }}</p>
+    }
+
+    <button class="btn" type="submit" [disabled]="saving() || uploading()">
+      {{
+        uploading()
+          ? ('carouselForm.uploading' | t)
+          : saving()
+            ? ('common.saving' | t)
+            : ('common.save' | t)
+      }}
+    </button>
+  </form>
+</section>
