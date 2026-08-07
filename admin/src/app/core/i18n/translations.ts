@@ -22,6 +22,7 @@ export type TranslationKey =
   | 'nav.categories'
   | 'nav.products'
   | 'nav.orders'
+  | 'nav.customers'
   | 'nav.signOut'
   | 'shell.sub'
   | 'shell.eyebrow'
@@ -150,6 +151,37 @@ export type TranslationKey =
   | 'orderDetail.confirming'
   | 'orderDetail.confirmFailed'
   | 'orderDetail.confirmedNote'
+  | 'customers.eyebrow'
+  | 'customers.title'
+  | 'customers.lead'
+  | 'customers.searchPlaceholder'
+  | 'customers.name'
+  | 'customers.phone'
+  | 'customers.orders'
+  | 'customers.totalSpent'
+  | 'customers.joined'
+  | 'customers.empty'
+  | 'customers.emptySearch'
+  | 'customers.loadError'
+  | 'customerDetail.back'
+  | 'customerDetail.eyebrow'
+  | 'customerDetail.loading'
+  | 'customerDetail.notFound'
+  | 'customerDetail.memberSince'
+  | 'customerDetail.profile'
+  | 'customerDetail.newPassword'
+  | 'customerDetail.newPasswordHint'
+  | 'customerDetail.saved'
+  | 'customerDetail.saveFailed'
+  | 'customerDetail.delete'
+  | 'customerDetail.deleting'
+  | 'customerDetail.deleteConfirm'
+  | 'customerDetail.deleteFailed'
+  | 'customerDetail.addresses'
+  | 'customerDetail.noAddresses'
+  | 'customerDetail.default'
+  | 'customerDetail.orders'
+  | 'customerDetail.noOrders'
   | 'status.Confirmed'
   | 'status.Pending';
 
@@ -176,6 +208,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.categories': 'Categories',
     'nav.products': 'Products',
     'nav.orders': 'Orders',
+    'nav.customers': 'Customers',
     'nav.signOut': 'Sign out',
     'shell.sub': 'Studio Admin',
     'shell.eyebrow': 'Velora control room',
@@ -308,6 +341,38 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'orderDetail.confirming': 'Confirming…',
     'orderDetail.confirmFailed': 'Could not confirm this order.',
     'orderDetail.confirmedNote': 'This order is confirmed and visible as confirmed to the customer.',
+    'customers.eyebrow': 'Community',
+    'customers.title': 'Customers',
+    'customers.lead': 'Review registered customers, their orders, and account details.',
+    'customers.searchPlaceholder': 'Search by name, email, or phone…',
+    'customers.name': 'Name',
+    'customers.phone': 'Phone',
+    'customers.orders': 'Orders',
+    'customers.totalSpent': 'Total spent',
+    'customers.joined': 'Joined',
+    'customers.empty': 'No customers have registered yet.',
+    'customers.emptySearch': 'No customers match your search.',
+    'customers.loadError': 'Unable to load customers.',
+    'customerDetail.back': '← Back to customers',
+    'customerDetail.eyebrow': 'Customer profile',
+    'customerDetail.loading': 'Loading customer…',
+    'customerDetail.notFound': 'Customer not found.',
+    'customerDetail.memberSince': 'Member since',
+    'customerDetail.profile': 'Profile',
+    'customerDetail.newPassword': 'New password (optional)',
+    'customerDetail.newPasswordHint': 'Leave blank to keep the current password',
+    'customerDetail.saved': 'Customer profile updated.',
+    'customerDetail.saveFailed': 'Save failed.',
+    'customerDetail.delete': 'Delete customer',
+    'customerDetail.deleting': 'Deleting…',
+    'customerDetail.deleteConfirm':
+      'Delete customer "{name}"? Their orders are kept as guest orders.',
+    'customerDetail.deleteFailed': 'Delete failed.',
+    'customerDetail.addresses': 'Addresses',
+    'customerDetail.noAddresses': 'No saved addresses.',
+    'customerDetail.default': 'Default',
+    'customerDetail.orders': 'Orders',
+    'customerDetail.noOrders': 'No orders placed yet.',
     'status.Confirmed': 'Confirmed',
     'status.Pending': 'Pending'
   },
@@ -333,6 +398,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.categories': 'دسته‌بندی‌ها',
     'nav.products': 'محصولات',
     'nav.orders': 'سفارش‌ها',
+    'nav.customers': 'مشتریان',
     'nav.signOut': 'خروج',
     'shell.sub': 'پنل مدیریت',
     'shell.eyebrow': 'اتاق کنترل ولورا',
@@ -465,6 +531,38 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'orderDetail.confirming': 'در حال تأیید…',
     'orderDetail.confirmFailed': 'تأیید این سفارش ممکن نشد.',
     'orderDetail.confirmedNote': 'این سفارش تأیید شده و برای مشتری به‌صورت تأیید شده نمایش داده می‌شود.',
+    'customers.eyebrow': 'جامعه مشتریان',
+    'customers.title': 'مشتریان',
+    'customers.lead': 'مشتریان ثبت‌نام‌شده، سفارش‌ها و جزئیات حساب آن‌ها را بررسی کنید.',
+    'customers.searchPlaceholder': 'جستجو بر اساس نام، ایمیل یا تلفن…',
+    'customers.name': 'نام',
+    'customers.phone': 'تلفن',
+    'customers.orders': 'سفارش‌ها',
+    'customers.totalSpent': 'مجموع خرید',
+    'customers.joined': 'تاریخ عضویت',
+    'customers.empty': 'هنوز مشتری‌ای ثبت‌نام نکرده است.',
+    'customers.emptySearch': 'مشتری‌ای با این جستجو پیدا نشد.',
+    'customers.loadError': 'بارگذاری مشتریان ممکن نشد.',
+    'customerDetail.back': '→ بازگشت به مشتریان',
+    'customerDetail.eyebrow': 'پروفایل مشتری',
+    'customerDetail.loading': 'در حال بارگذاری مشتری…',
+    'customerDetail.notFound': 'مشتری پیدا نشد.',
+    'customerDetail.memberSince': 'عضو از',
+    'customerDetail.profile': 'پروفایل',
+    'customerDetail.newPassword': 'رمز عبور جدید (اختیاری)',
+    'customerDetail.newPasswordHint': 'برای حفظ رمز فعلی خالی بگذارید',
+    'customerDetail.saved': 'پروفایل مشتری به‌روزرسانی شد.',
+    'customerDetail.saveFailed': 'ذخیره ناموفق بود.',
+    'customerDetail.delete': 'حذف مشتری',
+    'customerDetail.deleting': 'در حال حذف…',
+    'customerDetail.deleteConfirm':
+      'مشتری «{name}» حذف شود؟ سفارش‌های او به‌صورت سفارش مهمان باقی می‌مانند.',
+    'customerDetail.deleteFailed': 'حذف ناموفق بود.',
+    'customerDetail.addresses': 'آدرس‌ها',
+    'customerDetail.noAddresses': 'آدرسی ذخیره نشده است.',
+    'customerDetail.default': 'پیش‌فرض',
+    'customerDetail.orders': 'سفارش‌ها',
+    'customerDetail.noOrders': 'هنوز سفارشی ثبت نشده است.',
     'status.Confirmed': 'تأیید شده',
     'status.Pending': 'در انتظار'
   }

@@ -1,0 +1,106 @@
+<section class="page">
+  <a routerLink="/customers" class="back">{{ 'customerDetail.back' | t }}</a>
+
+  @if (error() && !customer()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (!customer()) {
+    <p class="muted">{{ 'customerDetail.loading' | t }}</p>
+  } @else {
+    <div class="head">
+      <div>
+        <p class="eyebrow">{{ 'customerDetail.eyebrow' | t }}</p>
+        <h1>{{ customer()!.fullName }}</h1>
+        <p class="lead">
+          {{ 'customerDetail.memberSince' | t }}
+          {{ customer()!.createdAt | date: 'mediumDate' : undefined : i18n.locale() }}
+          · {{ customer()!.orderCount }} {{ 'customers.orders' | t }}
+          · {{ customer()!.totalSpent | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}
+        </p>
+      </div>
+      <button type="button" class="danger-btn" [disabled]="deleting()" (click)="remove()">
+        {{ deleting() ? ('customerDetail.deleting' | t) : ('customerDetail.delete' | t) }}
+      </button>
+    </div>
+
+    @if (message()) {
+      <p class="ok">{{ message() }}</p>
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <div class="detail-grid">
+      <form class="panel" (ngSubmit)="save()">
+        <h2>{{ 'customerDetail.profile' | t }}</h2>
+        <label>
+          {{ 'customers.name' | t }}
+          <input name="fullName" [(ngModel)]="form.fullName" required />
+        </label>
+        <label>
+          {{ 'common.email' | t }}
+          <input name="email" type="email" [(ngModel)]="form.email" required />
+        </label>
+        <label>
+          {{ 'customers.phone' | t }}
+          <input name="phone" [(ngModel)]="form.phone" />
+        </label>
+        <label>
+          {{ 'customerDetail.newPassword' | t }}
+          <input
+            name="newPassword"
+            type="password"
+            [(ngModel)]="newPassword"
+            autocomplete="new-password"
+            minlength="6"
+            [placeholder]="'customerDetail.newPasswordHint' | t"
+          />
+        </label>
+        <button class="btn" type="submit" [disabled]="saving()">
+          {{ saving() ? ('common.saving' | t) : ('common.save' | t) }}
+        </button>
+      </form>
+
+      <div class="stack">
+        <div class="panel">
+          <h2>{{ 'customerDetail.addresses' | t }}</h2>
+          @for (address of customer()!.addresses; track address.id) {
+            <div class="address">
+              <p class="label">
+                {{ address.label }}
+                @if (address.isDefault) {
+                  <span class="badge ok">{{ 'customerDetail.default' | t }}</span>
+                }
+              </p>
+              <p>{{ address.fullName }} · {{ address.phone || '—' }}</p>
+              <p>{{ address.line1 }}, {{ address.city }}, {{ address.postalCode }}</p>
+            </div>
+          } @empty {
+            <p class="muted">{{ 'customerDetail.noAddresses' | t }}</p>
+          }
+        </div>
+
+        <div class="panel">
+          <h2>{{ 'customerDetail.orders' | t }}</h2>
+          @for (order of customer()!.orders; track order.id) {
+            <div class="line">
+              <span>
+                <a [routerLink]="['/orders', order.id]">#{{ order.id }}</a>
+                <span
+                  class="badge"
+                  [class.ok]="order.status === 'Confirmed'"
+                  [class.warn]="order.status === 'Pending'"
+                >
+                  {{ i18n.status(order.status) }}
+                </span>
+              </span>
+              <span>{{ order.createdAt | date: 'mediumDate' : undefined : i18n.locale() }}</span>
+              <span>{{ order.total | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</span>
+            </div>
+          } @empty {
+            <p class="muted">{{ 'customerDetail.noOrders' | t }}</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</section>

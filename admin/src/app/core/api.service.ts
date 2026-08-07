@@ -3,11 +3,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
+  AdminCustomerDetail,
+  AdminCustomerListItem,
   AdminLoginResponse,
   AdminOrderListItem,
   Category,
   Order,
   Product,
+  UpdateCustomer,
   UpsertCategory,
   UpsertProduct
 } from './models';
@@ -85,5 +88,22 @@ export class ApiService {
 
   confirmOrder(id: number): Observable<Order> {
     return this.http.post<Order>(`${this.base}/admin/orders/${id}/confirm`, {});
+  }
+
+  getCustomers(search?: string): Observable<AdminCustomerListItem[]> {
+    const params = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.http.get<AdminCustomerListItem[]>(`${this.base}/admin/customers${params}`);
+  }
+
+  getCustomer(id: number): Observable<AdminCustomerDetail> {
+    return this.http.get<AdminCustomerDetail>(`${this.base}/admin/customers/${id}`);
+  }
+
+  updateCustomer(id: number, payload: UpdateCustomer): Observable<AdminCustomerDetail> {
+    return this.http.put<AdminCustomerDetail>(`${this.base}/admin/customers/${id}`, payload);
+  }
+
+  deleteCustomer(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/admin/customers/${id}`);
   }
 }

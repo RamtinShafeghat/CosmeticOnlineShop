@@ -1,0 +1,60 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <p class="eyebrow">{{ 'customers.eyebrow' | t }}</p>
+      <h1>{{ 'customers.title' | t }}</h1>
+      <p class="lead">{{ 'customers.lead' | t }}</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      class="search"
+      name="search"
+      [ngModel]="search"
+      (ngModelChange)="onSearchChange($event)"
+      [placeholder]="'customers.searchPlaceholder' | t"
+    />
+  </div>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'common.id' | t }}</th>
+          <th>{{ 'customers.name' | t }}</th>
+          <th>{{ 'common.email' | t }}</th>
+          <th>{{ 'customers.phone' | t }}</th>
+          <th>{{ 'customers.orders' | t }}</th>
+          <th>{{ 'customers.totalSpent' | t }}</th>
+          <th>{{ 'customers.joined' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (customer of customers(); track customer.id) {
+          <tr>
+            <td><a [routerLink]="['/customers', customer.id]">#{{ customer.id }}</a></td>
+            <td>
+              <a [routerLink]="['/customers', customer.id]">{{ customer.fullName }}</a>
+            </td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone || '—' }}</td>
+            <td>{{ customer.orderCount }}</td>
+            <td>{{ customer.totalSpent | currency: 'USD' : 'symbol' : '1.2-2' : i18n.locale() }}</td>
+            <td>{{ customer.createdAt | date: 'mediumDate' : undefined : i18n.locale() }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (customers().length === 0 && !error()) {
+      <p class="muted empty">
+        {{ (search.trim() ? 'customers.emptySearch' : 'customers.empty') | t }}
+      </p>
+    }
+  </div>
+</section>

@@ -73,6 +73,46 @@ export interface AdminOrderListItem {
   createdAt: string;
 }
 
+export interface AdminCustomerListItem {
+  id: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  orderCount: number;
+  totalSpent: number;
+}
+
+export interface CustomerAddress {
+  id: number;
+  label: string;
+  fullName: string;
+  phone: string;
+  line1: string;
+  city: string;
+  postalCode: string;
+  isDefault: boolean;
+}
+
+export interface AdminCustomerDetail {
+  id: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  orderCount: number;
+  totalSpent: number;
+  addresses: CustomerAddress[];
+  orders: AdminOrderListItem[];
+}
+
+export interface UpdateCustomer {
+  fullName: string;
+  email: string;
+  phone: string;
+  newPassword?: string;
+}
+
 export interface OrderItem {
   productId: number;
   productName: string;
