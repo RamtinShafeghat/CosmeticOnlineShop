@@ -3,6 +3,7 @@ import { authGuard } from './core/auth.guard';
 import { AccountAddressesComponent } from './pages/account-addresses/account-addresses.component';
 import { AccountOrderDetailComponent } from './pages/account-order-detail/account-order-detail.component';
 import { AccountOrdersComponent } from './pages/account-orders/account-orders.component';
+import { AccountWishlistComponent } from './pages/account-wishlist/account-wishlist.component';
 import { AccountComponent } from './pages/account/account.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
@@ -31,7 +32,8 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'orders' },
       { path: 'orders', component: AccountOrdersComponent },
       { path: 'orders/:id', component: AccountOrderDetailComponent },
-      { path: 'addresses', component: AccountAddressesComponent }
+      { path: 'addresses', component: AccountAddressesComponent },
+      { path: 'wishlist', component: AccountWishlistComponent }
     ]
   },
   { path: '**', redirectTo: '' }

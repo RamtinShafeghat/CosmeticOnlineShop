@@ -28,6 +28,10 @@ export type TranslationKey =
   | 'shop.error'
   | 'shop.empty'
   | 'shop.categoryMissing'
+  | 'shop.brand'
+  | 'shop.skinTypeFilter'
+  | 'shop.allBrands'
+  | 'shop.allSkinTypes'
   | 'product.addToBag'
   | 'product.viewBag'
   | 'product.added'
@@ -102,6 +106,11 @@ export type TranslationKey =
   | 'account.signOut'
   | 'account.orders'
   | 'account.addresses'
+  | 'account.wishlist'
+  | 'account.loadingWishlist'
+  | 'account.noWishlist'
+  | 'wishlist.add'
+  | 'wishlist.remove'
   | 'account.loadingOrders'
   | 'account.ordersError'
   | 'account.noOrders'
@@ -184,6 +193,10 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'shop.error': 'Unable to load products. Is the API running?',
     'shop.empty': 'No products match your filters.',
     'shop.categoryMissing': 'Category not found.',
+    'shop.brand': 'Brand',
+    'shop.skinTypeFilter': 'Skin type',
+    'shop.allBrands': 'All brands',
+    'shop.allSkinTypes': 'All skin types',
     'product.addToBag': 'Add to bag',
     'product.viewBag': 'View bag',
     'product.added': 'Added to your bag.',
@@ -258,6 +271,11 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'account.signOut': 'Sign out',
     'account.orders': 'Orders',
     'account.addresses': 'Addresses',
+    'account.wishlist': 'Wishlist',
+    'account.loadingWishlist': 'Loading your wishlist…',
+    'account.noWishlist': 'Your wishlist is empty. Tap the heart on any product to save it.',
+    'wishlist.add': 'Save to wishlist',
+    'wishlist.remove': 'Remove from wishlist',
     'account.loadingOrders': 'Loading your orders…',
     'account.ordersError': 'Unable to load orders.',
     'account.noOrders': 'You have no orders yet.',
@@ -341,6 +359,10 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'shop.error': 'بارگذاری محصولات ممکن نشد. آیا API در حال اجراست؟',
     'shop.empty': 'محصولی با این فیلترها یافت نشد.',
     'shop.categoryMissing': 'دسته‌بندی پیدا نشد.',
+    'shop.brand': 'برند',
+    'shop.skinTypeFilter': 'نوع پوست',
+    'shop.allBrands': 'همه برندها',
+    'shop.allSkinTypes': 'همه انواع پوست',
     'product.addToBag': 'افزودن به سبد',
     'product.viewBag': 'مشاهده سبد',
     'product.added': 'به سبد اضافه شد.',
@@ -415,6 +437,11 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'account.signOut': 'خروج',
     'account.orders': 'سفارش‌ها',
     'account.addresses': 'آدرس‌ها',
+    'account.wishlist': 'علاقه‌مندی‌ها',
+    'account.loadingWishlist': 'در حال بارگذاری علاقه‌مندی‌ها…',
+    'account.noWishlist': 'فهرست علاقه‌مندی‌های شما خالی است. با لمس قلب روی هر محصول آن را ذخیره کنید.',
+    'wishlist.add': 'افزودن به علاقه‌مندی‌ها',
+    'wishlist.remove': 'حذف از علاقه‌مندی‌ها',
     'account.loadingOrders': 'در حال بارگذاری سفارش‌ها…',
     'account.ordersError': 'بارگذاری سفارش‌ها ممکن نشد.',
     'account.noOrders': 'هنوز سفارشی ندارید.',

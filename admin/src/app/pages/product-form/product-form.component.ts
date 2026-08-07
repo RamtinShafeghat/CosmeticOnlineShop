@@ -134,8 +134,12 @@ export class ProductFormComponent implements OnInit {
         ? this.api.createProduct(payload)
         : this.api.updateProduct(this.id, payload).pipe(
             switchMap((product) =>
-              stockChanged
-                ? this.api.updateProductStock(product.id, stockValue)
+              stockChanged && this.loadedStock != null
+                ? this.api.updateProductStock(
+                    product.id,
+                    stockValue,
+                    this.loadedStock
+                  )
                 : of(product)
             )
           );

@@ -85,14 +85,15 @@ public class AdminProductStockTests : IDisposable
     }
 
     [Fact]
-    public async Task UpdateProductStock_SetsAbsoluteStock()
+    public async Task UpdateProductStock_SetsAbsoluteStock_WhenExpectedMatches()
     {
         var product = await SeedProductAsync(stock: 10);
         await AuthorizeAsAdminAsync();
 
         var response = await _client.PutAsJsonAsync($"/api/admin/products/{product.Id}/stock", new
         {
-            stock = 25
+            stock = 25,
+            expectedStock = 10
         });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -136,6 +137,40 @@ public class AdminProductStockTests : IDisposable
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var remaining = await db.Products.Where(p => p.Id == product.Id).Select(p => p.Stock).SingleAsync();
         Assert.Equal(42, remaining);
+    }
+
+    [Fact]
+    public async Task UpdateProductStock_RejectsStaleExpectedStock_AfterConcurrentCheckout()
+    {
+        var product = await SeedProductAsync(stock: 10);
+        await AuthorizeAsAdminAsync();
+
+        // Checkout reserves 3 while the admin form still believes stock is 10.
+        await using (var scope = _factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var reserved = await db.Products
+                .Where(p => p.Id == product.Id && p.Stock >= 3)
+                .ExecuteUpdateAsync(setters =>
+                    setters.SetProperty(p => p.Stock, p => p.Stock - 3));
+            Assert.Equal(1, reserved);
+        }
+
+        // Stale restock (10 → 11) must not restore the 3 sold units.
+        var response = await _client.PutAsJsonAsync($"/api/admin/products/{product.Id}/stock", new
+        {
+            stock = 11,
+            expectedStock = 10
+        });
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+
+        await using (var scope = _factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var remaining = await db.Products.Where(p => p.Id == product.Id).Select(p => p.Stock).SingleAsync();
+            Assert.Equal(7, remaining);
+        }
     }
 
     private async Task AuthorizeAsAdminAsync()

@@ -1,7 +1,7 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AssetUrlPipe } from '../../core/asset-url.pipe';
 import { LanguageService } from '../../core/i18n/language.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
@@ -9,6 +9,7 @@ import { Product } from '../../core/models/shop.models';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { ProductService } from '../../core/services/product.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,10 +20,13 @@ import { ProductService } from '../../core/services/product.service';
 })
 export class ProductDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
   private readonly cart = inject(CartService);
   readonly auth = inject(AuthService);
   readonly i18n = inject(LanguageService);
+  readonly wishlist = inject(WishlistService);
+  readonly wishlistBusy = signal(false);
 
   readonly product = signal<Product | null>(null);
   readonly loading = signal(true);
@@ -70,6 +74,24 @@ export class ProductDetailComponent implements OnInit {
     }
     this.cart.add(product, this.quantity);
     this.added.set(true);
+  }
+
+  toggleWishlist(): void {
+    const product = this.product();
+    if (!product || this.wishlistBusy()) {
+      return;
+    }
+
+    if (!this.auth.isAuthenticated()) {
+      void this.router.navigate(['/login']);
+      return;
+    }
+
+    this.wishlistBusy.set(true);
+    this.wishlist.toggle(product).subscribe({
+      next: () => this.wishlistBusy.set(false),
+      error: () => this.wishlistBusy.set(false)
+    });
   }
 
   displayStars(): number {

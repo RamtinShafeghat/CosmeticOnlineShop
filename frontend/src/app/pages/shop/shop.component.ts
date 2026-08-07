@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LanguageService } from '../../core/i18n/language.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
-import { Category, Product } from '../../core/models/shop.models';
+import { Category, Product, ProductFilterOptions } from '../../core/models/shop.models';
 import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
@@ -26,12 +26,27 @@ export class ShopComponent implements OnInit {
   readonly loading = signal(true);
   readonly errorKey = signal<'shop.error' | 'shop.categoryMissing' | null>(null);
   readonly activeCategorySlug = signal<string | null>(null);
+  readonly brands = signal<string[]>([]);
+  readonly skinTypes = signal<string[]>([]);
   search = '';
+  brand = '';
+  skinType = '';
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe({
       next: (categories) => this.categories.set(categories),
       error: () => this.errorKey.set('shop.error')
+    });
+
+    this.productService.getFilterOptions().subscribe({
+      next: (options: ProductFilterOptions) => {
+        this.brands.set(options.brands);
+        // "All" is covered by the default "any skin type" choice.
+        this.skinTypes.set(options.skinTypes.filter((s) => s !== 'All'));
+      },
+      error: () => {
+        // Filter dropdowns stay hidden if options cannot load; the shop still works.
+      }
     });
 
     this.route.paramMap.subscribe((params) => {
@@ -42,6 +57,10 @@ export class ShopComponent implements OnInit {
   }
 
   onSearch(): void {
+    this.loadProducts();
+  }
+
+  onFilterChange(): void {
     this.loadProducts();
   }
 
@@ -66,7 +85,9 @@ export class ShopComponent implements OnInit {
       this.productService
         .getProducts({
           categoryId,
-          search: this.search.trim() || undefined
+          search: this.search.trim() || undefined,
+          brand: this.brand || undefined,
+          skinType: this.skinType || undefined
         })
         .subscribe({
           next: (products) => {

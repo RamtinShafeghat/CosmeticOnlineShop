@@ -17,7 +17,9 @@ public class ProductsController(AppDbContext db) : ControllerBase
     public async Task<ActionResult<IEnumerable<ProductListItemDto>>> GetProducts(
         [FromQuery] int? categoryId,
         [FromQuery] string? search,
-        [FromQuery] bool? featured)
+        [FromQuery] bool? featured,
+        [FromQuery] string? brand,
+        [FromQuery] string? skinType)
     {
         var query = db.Products
             .AsNoTracking()
@@ -31,6 +33,20 @@ public class ProductsController(AppDbContext db) : ControllerBase
         if (featured is true)
         {
             query = query.Where(p => p.IsFeatured);
+        }
+
+        if (!string.IsNullOrWhiteSpace(brand))
+        {
+            var brandTerm = brand.Trim().ToLower();
+            query = query.Where(p => p.Brand.ToLower() == brandTerm);
+        }
+
+        if (!string.IsNullOrWhiteSpace(skinType))
+        {
+            // Products labeled "All" suit every skin type, so they match any specific filter.
+            var skinTerm = skinType.Trim().ToLower();
+            query = query.Where(p =>
+                p.SkinType.ToLower() == skinTerm || p.SkinType.ToLower() == "all");
         }
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -90,6 +106,28 @@ public class ProductsController(AppDbContext db) : ControllerBase
             p.RatingCount));
 
         return Ok(products);
+    }
+
+    [HttpGet("filters")]
+    public async Task<ActionResult<ProductFilterOptionsDto>> GetFilterOptions()
+    {
+        var brands = await db.Products
+            .AsNoTracking()
+            .Where(p => p.Brand != "")
+            .Select(p => p.Brand)
+            .Distinct()
+            .OrderBy(b => b)
+            .ToListAsync();
+
+        var skinTypes = await db.Products
+            .AsNoTracking()
+            .Where(p => p.SkinType != "")
+            .Select(p => p.SkinType)
+            .Distinct()
+            .OrderBy(s => s)
+            .ToListAsync();
+
+        return Ok(new ProductFilterOptionsDto(brands, skinTypes));
     }
 
     [HttpGet("{id:int}")]

@@ -12,4 +12,5 @@ public class Customer
     public ICollection<CustomerAddress> Addresses { get; set; } = new List<CustomerAddress>();
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<ProductRating> Ratings { get; set; } = new List<ProductRating>();
+    public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 }
