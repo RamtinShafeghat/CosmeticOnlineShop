@@ -107,18 +107,27 @@ export class ProductFormComponent implements OnInit {
       return;
     }
 
+    // Empty <input type="number"> binds null via ngModel. Do not treat that as an
+    // intentional stock change — UpdateStock would otherwise receive null→0 and wipe inventory.
+    const stockValue = this.form.stock;
+    if (stockValue == null || !Number.isFinite(stockValue) || stockValue < 0) {
+      this.error.set(this.i18n.t('productForm.stockRequired'));
+      return;
+    }
+
     this.saving.set(true);
     this.error.set(null);
     this.message.set(null);
 
     const payload: UpsertProduct = {
       ...this.form,
+      stock: stockValue,
       slug: this.form.slug || undefined,
       imageUrl: this.form.imageUrl || undefined
     };
 
     const stockChanged =
-      this.id != null && this.loadedStock != null && this.form.stock !== this.loadedStock;
+      this.id != null && this.loadedStock != null && stockValue !== this.loadedStock;
 
     const request$ =
       this.id == null
@@ -128,7 +137,7 @@ export class ProductFormComponent implements OnInit {
               stockChanged && this.loadedStock != null
                 ? this.api.updateProductStock(
                     product.id,
-                    this.form.stock,
+                    stockValue,
                     this.loadedStock
                   )
                 : of(product)

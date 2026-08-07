@@ -92,8 +92,11 @@ public record UploadImageResponse(string ImageUrl);
 
 public class UpdateProductStockRequest
 {
+    // Nullable + Required so JSON null / omitted stock is rejected instead of
+    // silently binding to 0 and wiping inventory (admin cleared the stock field).
+    [Required]
     [Range(0, 100000)]
-    public int Stock { get; set; }
+    public int? Stock { get; set; }
 
     /// <summary>
     /// Stock the client last observed. The update applies only when the DB still

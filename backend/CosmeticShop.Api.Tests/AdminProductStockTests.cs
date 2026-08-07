@@ -108,6 +108,38 @@ public class AdminProductStockTests : IDisposable
     }
 
     [Fact]
+    public async Task UpdateProductStock_RejectsNullStock_WithoutWipingInventory()
+    {
+        var product = await SeedProductAsync(stock: 42);
+        await AuthorizeAsAdminAsync();
+
+        // Mirrors the admin form when the stock <input type="number"> is cleared:
+        // Angular binds null and previously POSTed { "stock": null }, which bound to 0.
+        using var nullContent = new StringContent(
+            """{"stock":null}""",
+            System.Text.Encoding.UTF8,
+            "application/json");
+        var nullResponse = await _client.PutAsync(
+            $"/api/admin/products/{product.Id}/stock",
+            nullContent);
+        Assert.Equal(HttpStatusCode.BadRequest, nullResponse.StatusCode);
+
+        using var omittedContent = new StringContent(
+            "{}",
+            System.Text.Encoding.UTF8,
+            "application/json");
+        var omittedResponse = await _client.PutAsync(
+            $"/api/admin/products/{product.Id}/stock",
+            omittedContent);
+        Assert.Equal(HttpStatusCode.BadRequest, omittedResponse.StatusCode);
+
+        await using var scope = _factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var remaining = await db.Products.Where(p => p.Id == product.Id).Select(p => p.Stock).SingleAsync();
+        Assert.Equal(42, remaining);
+    }
+
+    [Fact]
     public async Task UpdateProductStock_RejectsStaleExpectedStock_AfterConcurrentCheckout()
     {
         var product = await SeedProductAsync(stock: 10);

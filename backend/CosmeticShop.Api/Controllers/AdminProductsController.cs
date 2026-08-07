@@ -119,12 +119,14 @@ public class AdminProductsController(
             return ValidationProblem(ModelState);
         }
 
+        var stock = request.Stock!.Value;
+
         // Compare-and-swap on ExpectedStock so a stale admin form cannot restore
         // units already reserved by concurrent checkout (ExecuteUpdate).
         var affected = await db.Products
             .Where(p => p.Id == id && p.Stock == request.ExpectedStock)
             .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(p => p.Stock, request.Stock));
+                setters.SetProperty(p => p.Stock, stock));
 
         if (affected == 0)
         {
