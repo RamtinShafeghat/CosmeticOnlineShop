@@ -383,6 +383,65 @@ public static class DbSeeder
                 """CREATE UNIQUE INDEX "IX_AdminUsers_Email" ON "AdminUsers" ("Email");""");
         }
 
+        if (!await TableExistsAsync(db, "CarouselSlides"))
+        {
+            Console.WriteLine("Adding CarouselSlides table to existing SQLite database…");
+            await db.Database.ExecuteSqlRawAsync(
+                """
+                CREATE TABLE "CarouselSlides" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_CarouselSlides" PRIMARY KEY AUTOINCREMENT,
+                    "ImageUrl" TEXT NOT NULL,
+                    "Title" TEXT NOT NULL,
+                    "TitleFa" TEXT NOT NULL,
+                    "LinkUrl" TEXT NOT NULL,
+                    "ProductId" INTEGER NULL,
+                    "SortOrder" INTEGER NOT NULL,
+                    "IsActive" INTEGER NOT NULL,
+                    CONSTRAINT "FK_CarouselSlides_Products_ProductId"
+                        FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE SET NULL
+                );
+                """);
+            await db.Database.ExecuteSqlRawAsync(
+                """CREATE INDEX "IX_CarouselSlides_ProductId" ON "CarouselSlides" ("ProductId");""");
+
+            // Seed the storefront hero with the images it previously had hardcoded, so the
+            // landing page keeps looking the same until the admin curates it.
+            db.CarouselSlides.AddRange(
+                new CarouselSlide
+                {
+                    ImageUrl = "https://images.unsplash.com/photo-1596462502278-27bfdd403348?auto=format&fit=crop&w=1800&q=80",
+                    Title = "Soft blush cosmetics still life",
+                    TitleFa = "چیدمان آرایشی با تن‌های ملایم صورتی",
+                    SortOrder = 0,
+                    IsActive = true
+                },
+                new CarouselSlide
+                {
+                    ImageUrl = "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1800&q=80",
+                    Title = "Makeup brushes and beauty products",
+                    TitleFa = "قلم‌موهای آرایشی و محصولات زیبایی",
+                    SortOrder = 1,
+                    IsActive = true
+                },
+                new CarouselSlide
+                {
+                    ImageUrl = "https://images.unsplash.com/photo-1571781926291-c77df43ee830?auto=format&fit=crop&w=1800&q=80",
+                    Title = "Skincare bottles on a calm surface",
+                    TitleFa = "شیشه‌های مراقبت پوست روی سطحی آرام",
+                    SortOrder = 2,
+                    IsActive = true
+                },
+                new CarouselSlide
+                {
+                    ImageUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1800&q=80",
+                    Title = "Cream textures and spa ritual",
+                    TitleFa = "بافت کرم‌ها و آیین اسپا",
+                    SortOrder = 3,
+                    IsActive = true
+                });
+            await db.SaveChangesAsync();
+        }
+
         // Bilingual / catalog columns added after the original SQLite schema. EnsureCreated
         // never alters an existing file, so older DBs 500 on every catalog/checkout query
         // until these are added.

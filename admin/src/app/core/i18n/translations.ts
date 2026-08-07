@@ -21,6 +21,7 @@ export type TranslationKey =
   | 'nav.dashboard'
   | 'nav.categories'
   | 'nav.products'
+  | 'nav.carousel'
   | 'nav.orders'
   | 'nav.customers'
   | 'nav.signOut'
@@ -122,6 +123,41 @@ export type TranslationKey =
   | 'productForm.uploadFailed'
   | 'productForm.uploading'
   | 'productForm.loadCategoriesFailed'
+  | 'carousel.eyebrow'
+  | 'carousel.title'
+  | 'carousel.lead'
+  | 'carousel.new'
+  | 'carousel.image'
+  | 'carousel.titleCol'
+  | 'carousel.linkedProduct'
+  | 'carousel.order'
+  | 'carousel.status'
+  | 'carousel.active'
+  | 'carousel.hidden'
+  | 'carousel.noProduct'
+  | 'carousel.loadError'
+  | 'carousel.deleteConfirm'
+  | 'carousel.deleted'
+  | 'carousel.deleteFailed'
+  | 'carouselForm.back'
+  | 'carouselForm.eyebrow'
+  | 'carouselForm.new'
+  | 'carouselForm.edit'
+  | 'carouselForm.titleEn'
+  | 'carouselForm.titleFa'
+  | 'carouselForm.sortOrder'
+  | 'carouselForm.pinProduct'
+  | 'carouselForm.noProductOption'
+  | 'carouselForm.linkUrl'
+  | 'carouselForm.linkHint'
+  | 'carouselForm.active'
+  | 'carouselForm.imageFile'
+  | 'carouselForm.imageUrl'
+  | 'carouselForm.uploading'
+  | 'carouselForm.notFound'
+  | 'carouselForm.saveFailed'
+  | 'carouselForm.uploadFailed'
+  | 'carouselForm.loadProductsFailed'
   | 'skin.All'
   | 'skin.Dry'
   | 'skin.Normal'
@@ -208,6 +244,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.dashboard': 'Dashboard',
     'nav.categories': 'Categories',
     'nav.products': 'Products',
+    'nav.carousel': 'Carousel',
     'nav.orders': 'Orders',
     'nav.customers': 'Customers',
     'nav.signOut': 'Sign out',
@@ -313,6 +350,43 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
       'Product saved, but image upload failed. You can try uploading again.',
     'productForm.uploading': 'Uploading image…',
     'productForm.loadCategoriesFailed': 'Unable to load categories.',
+    'carousel.eyebrow': 'Landing page',
+    'carousel.title': 'Carousel',
+    'carousel.lead': 'Choose the images and pinned products shown in the storefront hero.',
+    'carousel.new': 'New slide',
+    'carousel.image': 'Image',
+    'carousel.titleCol': 'Title',
+    'carousel.linkedProduct': 'Linked product',
+    'carousel.order': 'Order',
+    'carousel.status': 'Status',
+    'carousel.active': 'Shown',
+    'carousel.hidden': 'Hidden',
+    'carousel.noProduct': '—',
+    'carousel.loadError': 'Unable to load carousel slides.',
+    'carousel.deleteConfirm': 'Delete slide "{name}"?',
+    'carousel.deleted': 'Deleted {name}.',
+    'carousel.deleteFailed': 'Delete failed.',
+    'carouselForm.back': '← Back to carousel',
+    'carouselForm.eyebrow': 'Slide editor',
+    'carouselForm.new': 'New slide',
+    'carouselForm.edit': 'Edit slide',
+    'carouselForm.titleEn': 'Label (EN, admin only)',
+    'carouselForm.titleFa': 'Label (FA, admin only)',
+    'carouselForm.sortOrder': 'Display order',
+    'carouselForm.pinProduct': 'Pin a product (optional)',
+    'carouselForm.noProductOption': 'None',
+    'carouselForm.linkUrl': 'Custom link (optional)',
+    'carouselForm.linkHint':
+      'Clicking the slide opens the custom link if set, otherwise the pinned product page.',
+    'carouselForm.active': 'Show on the storefront',
+    'carouselForm.imageFile': 'Slide image (from your computer)',
+    'carouselForm.imageUrl': 'Or image URL',
+    'carouselForm.uploading': 'Uploading image…',
+    'carouselForm.notFound': 'Slide not found.',
+    'carouselForm.saveFailed': 'Save failed.',
+    'carouselForm.uploadFailed':
+      'Slide saved, but image upload failed. You can try uploading again.',
+    'carouselForm.loadProductsFailed': 'Unable to load products.',
     'skin.All': 'All',
     'skin.Dry': 'Dry',
     'skin.Normal': 'Normal',
@@ -399,6 +473,7 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
     'nav.dashboard': 'داشبورد',
     'nav.categories': 'دسته‌بندی‌ها',
     'nav.products': 'محصولات',
+    'nav.carousel': 'کاروسل',
     'nav.orders': 'سفارش‌ها',
     'nav.customers': 'مشتریان',
     'nav.signOut': 'خروج',
@@ -504,6 +579,42 @@ export const TRANSLATIONS: Record<Lang, Record<TranslationKey, string>> = {
       'محصول ذخیره شد، اما آپلود تصویر ناموفق بود. دوباره تلاش کنید.',
     'productForm.uploading': 'در حال آپلود تصویر…',
     'productForm.loadCategoriesFailed': 'بارگذاری دسته‌بندی‌ها ممکن نشد.',
+    'carousel.eyebrow': 'صفحه فرود',
+    'carousel.title': 'کاروسل',
+    'carousel.lead': 'تصاویر و محصولات سنجاق‌شده در نمایش اصلی فروشگاه را انتخاب کنید.',
+    'carousel.new': 'اسلاید جدید',
+    'carousel.image': 'تصویر',
+    'carousel.titleCol': 'عنوان',
+    'carousel.linkedProduct': 'محصول متصل',
+    'carousel.order': 'ترتیب',
+    'carousel.status': 'وضعیت',
+    'carousel.active': 'نمایش داده می‌شود',
+    'carousel.hidden': 'پنهان',
+    'carousel.noProduct': '—',
+    'carousel.loadError': 'بارگذاری اسلایدهای کاروسل ممکن نشد.',
+    'carousel.deleteConfirm': 'اسلاید «{name}» حذف شود؟',
+    'carousel.deleted': '«{name}» حذف شد.',
+    'carousel.deleteFailed': 'حذف ناموفق بود.',
+    'carouselForm.back': '→ بازگشت به کاروسل',
+    'carouselForm.eyebrow': 'ویرایشگر اسلاید',
+    'carouselForm.new': 'اسلاید جدید',
+    'carouselForm.edit': 'ویرایش اسلاید',
+    'carouselForm.titleEn': 'برچسب (انگلیسی، فقط داخلی)',
+    'carouselForm.titleFa': 'برچسب (فارسی، فقط داخلی)',
+    'carouselForm.sortOrder': 'ترتیب نمایش',
+    'carouselForm.pinProduct': 'سنجاق کردن محصول (اختیاری)',
+    'carouselForm.noProductOption': 'هیچ‌کدام',
+    'carouselForm.linkUrl': 'لینک اختصاصی (اختیاری)',
+    'carouselForm.linkHint':
+      'کلیک روی اسلاید ابتدا لینک اختصاصی را باز می‌کند، وگرنه صفحه محصول سنجاق‌شده.',
+    'carouselForm.active': 'نمایش در فروشگاه',
+    'carouselForm.imageFile': 'تصویر اسلاید (از رایانه شما)',
+    'carouselForm.imageUrl': 'یا آدرس تصویر',
+    'carouselForm.uploading': 'در حال آپلود تصویر…',
+    'carouselForm.notFound': 'اسلاید پیدا نشد.',
+    'carouselForm.saveFailed': 'ذخیره ناموفق بود.',
+    'carouselForm.uploadFailed': 'اسلاید ذخیره شد، اما آپلود تصویر ناموفق بود. دوباره تلاش کنید.',
+    'carouselForm.loadProductsFailed': 'بارگذاری محصولات ممکن نشد.',
     'skin.All': 'همه',
     'skin.Dry': 'خشک',
     'skin.Normal': 'معمولی',

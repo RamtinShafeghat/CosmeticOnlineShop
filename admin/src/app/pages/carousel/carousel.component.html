@@ -1,0 +1,64 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <p class="eyebrow">{{ 'carousel.eyebrow' | t }}</p>
+      <h1>{{ 'carousel.title' | t }}</h1>
+      <p class="lead">{{ 'carousel.lead' | t }}</p>
+    </div>
+    <a routerLink="/carousel/new" class="btn">{{ 'carousel.new' | t }}</a>
+  </div>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @if (message()) {
+    <p class="ok">{{ message() }}</p>
+  }
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'carousel.image' | t }}</th>
+          <th>{{ 'carousel.titleCol' | t }}</th>
+          <th>{{ 'carousel.linkedProduct' | t }}</th>
+          <th>{{ 'carousel.order' | t }}</th>
+          <th>{{ 'carousel.status' | t }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (slide of slides(); track slide.id) {
+          <tr>
+            <td>
+              <div class="thumb">
+                @if (slide.imageUrl) {
+                  <img [src]="slide.imageUrl | assetUrl" [alt]="slide.title" />
+                }
+              </div>
+            </td>
+            <td>
+              <strong>{{ slide.title || '—' }}</strong>
+              @if (slide.titleFa) {
+                <div class="muted">{{ slide.titleFa }}</div>
+              }
+            </td>
+            <td>{{ slide.productName || ('carousel.noProduct' | t) }}</td>
+            <td>{{ slide.sortOrder }}</td>
+            <td>
+              @if (slide.isActive) {
+                <span class="badge">{{ 'carousel.active' | t }}</span>
+              } @else {
+                {{ 'carousel.hidden' | t }}
+              }
+            </td>
+            <td class="actions">
+              <a [routerLink]="['/carousel', slide.id]">{{ 'common.edit' | t }}</a>
+              <button type="button" (click)="remove(slide)">{{ 'common.delete' | t }}</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

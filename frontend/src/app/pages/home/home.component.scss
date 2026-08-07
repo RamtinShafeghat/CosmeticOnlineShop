@@ -14,6 +14,7 @@
 }
 
 .hero-slide {
+  display: block;
   position: absolute;
   inset: 0;
   background-position: center;
@@ -25,6 +26,10 @@
     opacity 1.1s ease,
     transform 7s ease;
   will-change: opacity, transform;
+}
+
+a.hero-slide {
+  cursor: pointer;
 }
 
 .hero-slide.active {

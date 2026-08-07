@@ -1,0 +1,29 @@
+.eyebrow {
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--blush-deep);
+}
+
+.thumb {
+  width: 4.6rem;
+  height: 2.9rem;
+  overflow: hidden;
+  background: var(--petal);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+tr:hover .thumb img {
+  transform: scale(1.05);
+}
+
+.badge {
+  margin-top: 0.35rem;
+}
