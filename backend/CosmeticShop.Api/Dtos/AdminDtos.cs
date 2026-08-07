@@ -94,4 +94,11 @@ public class UpdateProductStockRequest
 {
     [Range(0, 100000)]
     public int Stock { get; set; }
+
+    /// <summary>
+    /// Stock the client last observed. The update applies only when the DB still
+    /// matches this value, so concurrent checkout reservations are not overwritten.
+    /// </summary>
+    [Range(0, 100000)]
+    public int ExpectedStock { get; set; }
 }
