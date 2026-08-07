@@ -27,8 +27,6 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   color: var(--ink-soft);
-  font-size: 1.15rem;
-  line-height: 1;
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
@@ -42,6 +40,19 @@
 .wishlist-toggle.saved {
   color: var(--blush-deep);
   border-color: var(--blush-deep);
+}
+
+.heart-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  transition: fill 0.2s ease;
+}
+
+.wishlist-toggle.saved .heart-icon {
+  fill: currentColor;
 }
 
 .media img {

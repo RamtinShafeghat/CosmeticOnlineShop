@@ -114,6 +114,15 @@ h1 {
   align-items: end;
 }
 
+.actions-primary {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-bag {
+  margin-inline-start: auto;
+}
+
 label {
   display: grid;
   gap: 0.35rem;
@@ -131,9 +140,28 @@ input[type='number'] {
   padding: 0 0.6rem;
 }
 
+.wishlist-btn {
+  width: 3rem;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
 .wishlist-btn.saved {
   color: var(--blush-deep);
   border-color: var(--blush-deep);
+}
+
+.heart-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  transition: fill 0.2s ease;
+}
+
+.wishlist-btn.saved .heart-icon {
+  fill: currentColor;
 }
 
 .added {
